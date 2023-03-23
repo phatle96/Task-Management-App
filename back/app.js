@@ -13,7 +13,7 @@ app.use('/task', task_route);
 app.use('/subtask', subtask_route);
 app.use('/person', person_route);
 
-const db = require('./connect.js');
+const db = require('./db.js');
 db.connect();
 
 module.exports = app;
