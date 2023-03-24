@@ -3,7 +3,7 @@ const app = require("../utils/app");
 const db = require("../utils/db");
 const mongoose = require('mongoose');
 
-require('dotenv').config()
+require('dotenv').config();
 const mongoDB = process.env.MONGODB_URL
 
 describe('Test List API', () => {
@@ -12,9 +12,9 @@ describe('Test List API', () => {
 	beforeAll(async () => {
         try {
             await mongoose.connect(mongoDB);
-            console.log('DB connected');
+            console.log(`DB is connected to ${mongoDB}`);
         } catch (err) {
-            console.log('Could not connect to DB');
+            console.log(`Could not connect to DB (${mongoDB})`);
         }
 	});
 

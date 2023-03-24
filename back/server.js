@@ -1,4 +1,5 @@
-const express = require("express");
+"use strict"
+
 const app = require("./utils/app");
 const db = require("./utils/db");
 
