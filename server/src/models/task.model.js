@@ -1,16 +1,14 @@
 const mongoose = require("mongoose");
-const nanoid = require('nanoid');
+const { v4: uuidv4 } = require('uuid');
 
 const Schema = mongoose.Schema;
-
-const generateID = nanoid.customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
 const TaskSchema = new Schema({
     task_id: { 
 		type: String, 
 		required: true, 
 		unique: true, 
-		default: () => `task_${generateID()}` },
+		default: () => `task_${uuidv4()}` },
     content: { type: String, reqired: true, maxLength: 300 },
     list: { type: Schema.Types.ObjectId, required: true, ref: 'List' },
     person: [{ type: Schema.Types.ObjectId, ref: 'Person' }],

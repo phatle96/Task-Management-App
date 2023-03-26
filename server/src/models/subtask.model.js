@@ -1,16 +1,14 @@
 const mongoose = require("mongoose");
-const nanoid = require('nanoid');
+const { v4: uuidv4 } = require('uuid');
 
 const Schema = mongoose.Schema;
-
-const generateID = nanoid.customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
 const SubtaskSchema = new Schema({
     subtask_id: { 
 		type: String, 
 		required: true, 
 		unique: true, 
-		default: () => `subtask_${generateID()}` },
+		default: () => `subtask_${uuidv4()}` },
     content: { type: String, required: true, maxLength: 300 },
     list: { type: Schema.Types.ObjectId, required: true, ref: 'List' },
     task: { type: Schema.Types.ObjectId, required: true, ref: 'Task' },

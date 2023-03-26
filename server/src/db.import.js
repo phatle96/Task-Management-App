@@ -23,7 +23,7 @@ const subtasks = [];
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false); // Prepare for Mongoose 7
 
-const mongoDB = userArgs[0]; 
+const mongoDB = userArgs[0];
 
 main().catch((err) => console.log(err));
 
@@ -41,10 +41,9 @@ async function main() {
 }
 
 
-async function listCreate(name, date_created,) {
+async function listCreate(name,) {
 	list_detail = {
 		name: name,
-		date_created: date_created
 	};
 	const list = new List(list_detail);
 	await list.save();
@@ -61,13 +60,11 @@ async function personCreate(name) {
 }
 
 
-async function taskCreate(content, date_created, updated, list, person, alert) {
+async function taskCreate(content, list, person, alert) {
 	task_detail = {
 		content: content,
-		date_created: date_created,
 		list: list,
 	};
-	if (updated != false) task_detail.updated = updated;
 	if (person != false) task_detail.person = person;
 	if (alert != false) task_detail.alert = alert;
 
@@ -77,19 +74,17 @@ async function taskCreate(content, date_created, updated, list, person, alert) {
 	console.log(`Added task: ${content}`);
 }
 
-async function subtaskCreate(content, date_created, updated, list, task, person, alert) {
+async function subtaskCreate(content, list, task, person, alert) {
 	subtask_detail = {
 		content: content,
-		date_created: date_created,
 		list: list,
 		task: task,
 	};
-	if (updated != false) subtask_detail.updated = updated;
 	if (person != false) subtask_detail.person = person;
 	if (alert != false) subtask_detail.alert = alert;
 
 	const subtask = new Subtask(subtask_detail);
-	
+
 	await subtask.save();
 	subtasks.push(subtask);
 	console.log(`Added subtask: ${content}`);
@@ -98,10 +93,10 @@ async function subtaskCreate(content, date_created, updated, list, task, person,
 async function createLists() {
 	console.log('Adding lists');
 	await Promise.all([
-		listCreate('my todo list', '2023-01-01'),
-		listCreate('doing', '2023-01-02'),
-		listCreate('another task', '2023-02-02'),
-		listCreate('empty', '2023-03-10'),
+		listCreate('my todo list'),
+		listCreate('doing'),
+		listCreate('another task'),
+		listCreate('empty'),
 	]);
 }
 
@@ -118,27 +113,27 @@ async function createPeople() {
 async function createTasks() {
 	console.log('Adding tasks');
 	await Promise.all([
-		taskCreate('Create todo app', '2023-03-01', false, lists[0], people[0], '2023-04-01'),
-		taskCreate('Deadline #1', '2023-03-08', false, lists[0], people[1], '2023-03-30'),
-		taskCreate('Deadline #2', '2023-03-20', false, lists[0], people[2], '2023-04-29'),
-		taskCreate('Learn Web Development', '2023-03-20', false, lists[1], people[0], '2023-05-01'),
-		taskCreate('Learn Another Things', '2023-03-21', false, lists[1], people[0], false),
-		taskCreate('Pay an Invoice', '2023-03-01', false, lists[2], people[0], false),
-		taskCreate('Do exercise', '2023-03-01', false, lists[2], people[0], false),
+		taskCreate('Create todo app', lists[0], people[0], '2023-04-01'),
+		taskCreate('Deadline #1', lists[0], people[1], '2023-03-30'),
+		taskCreate('Deadline #2', lists[0], people[2], '2023-04-29'),
+		taskCreate('Learn Web Development', lists[1], people[0], '2023-05-01'),
+		taskCreate('Learn Another Things', lists[1], people[0], false),
+		taskCreate('Pay an Invoice', lists[2], people[0], false),
+		taskCreate('Do exercise', lists[2], people[0], false),
 	]);
 }
 
-async function createSubtasks(){
+async function createSubtasks() {
 	console.log('Adding subtasks');
 	await Promise.all([
-		subtaskCreate('Design UI', '2023-03-01', false, lists[0], tasks[0], people[0], false),
-		subtaskCreate('Create frontend', '2023-03-01', false, lists[0], tasks[0], false, false),
-		subtaskCreate('Create backend', '2023-03-01', false, lists[0], tasks[0], false, false),
-		subtaskCreate('test & deploy', '2023-03-01', false, lists[0], tasks[0], false, false),
-		subtaskCreate('learn Nodejs', '2023-03-20', false, lists[1], tasks[3], false, false),
-		subtaskCreate('learn reactjs', '2023-03-20', false, lists[1], tasks[3], false, false),
-		subtaskCreate('learn expressjs', '2023-03-20', false, lists[1], tasks[3], false, false),
-		subtaskCreate('learn mongodb', '2023-03-20', false, lists[1], tasks[3], false, false),
-		subtaskCreate('learn authentication & authorization', '2023-03-20', false, lists[1], tasks[3], false, false)
+		subtaskCreate('Design UI', lists[0], tasks[0], people[0], false),
+		subtaskCreate('Create frontend', lists[0], tasks[0], false, false),
+		subtaskCreate('Create backend', lists[0], tasks[0], false, false),
+		subtaskCreate('test & deploy', lists[0], tasks[0], false, false),
+		subtaskCreate('learn Nodejs', lists[1], tasks[3], false, false),
+		subtaskCreate('learn reactjs', lists[1], tasks[3], false, false),
+		subtaskCreate('learn expressjs', lists[1], tasks[3], false, false),
+		subtaskCreate('learn mongodb', lists[1], tasks[3], false, false),
+		subtaskCreate('learn authentication & authorization', lists[1], tasks[3], false, false)
 	]);
 }

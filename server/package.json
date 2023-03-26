@@ -1,18 +1,21 @@
 {
-  "name": "back",
-  "version": "0.0.0",
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/server.js",
   "private": true,
   "scripts": {
-    "dev": "nodemon -r dotenv/config ./server.js dotenv_config_path=./configs/.env.dev.local",
+    "dev": "nodemon -r dotenv/config ./src/server.js dotenv_config_path=./src/configs/.env.dev.local",
     "test": "cross-env NODE_ENV=test jest --testTimeout=10000 "
+    
   },
   "dependencies": {
     "async": "^3.2.4",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-validator": "^6.15.0",
     "mongoose": "^7.0.2",
-    "nanoid": "^4.0.1",
-    "zod": "^3.21.4"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

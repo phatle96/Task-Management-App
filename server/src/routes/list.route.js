@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const {checkSchema} = require('express-validator')
 
 const validator = require('../middleware/validator');
 const list_handler = require('../controllers/list.controller');
@@ -13,25 +14,25 @@ router.get(
 //GET request for detail list
 router.get(
 	'/:id',
-	validator(list_schema.get_list_schema),
+	checkSchema(list_schema.get_list_schema), validator(),
 	list_handler.get_list);
 
 //POST request to create list
 router.post(
 	'/create',
-	validator(list_schema.create_list_schema),
+	checkSchema(list_schema.create_list_schema), validator(),
 	list_handler.create_list);
 
 //POST request to delete list
-router.post(
+router.delete(
 	'/:id/delete',
-	validator(list_schema.delete_list_schema),
+	checkSchema(list_schema.delete_list_schema), validator(),
 	list_handler.delete_list);
 
 //POST request to update list
 router.put(
 	'/:id/update',
-	validator(list_schema.update_list_schema),
+	checkSchema(list_schema.update_list_schema), validator(),
 	list_handler.update_list);
 
 module.exports = router;
