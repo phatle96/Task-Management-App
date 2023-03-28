@@ -9,7 +9,7 @@ const validator = () => (req, res, next) => {
         }
         next();
     } catch (err) {
-        return res.status(400).json({ 400: 'Bad Request' });
+        return res.status(500).json({ 500: 'Validator fail' });
     }
 };
 

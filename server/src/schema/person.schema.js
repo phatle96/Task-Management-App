@@ -1,5 +1,5 @@
 const params = {
-	list_id: {
+	person_id: {
 		in: ['params'],
 		isLength: {
 			errorMessage: "ID is invalid",
@@ -10,7 +10,8 @@ const params = {
 };
 
 const payload = {
-	list_id: {
+
+	person_id: {
 		in: ['body'],
 		optional: {
 			options: { nullable: true },
@@ -43,7 +44,8 @@ const payload = {
 	},
 };
 
-exports.get_list_schema = { ...params };
-exports.delete_list_schema = { ...params };
-exports.create_list_schema = { ...payload };
-exports.update_list_schema = { ...params, ...payload };
+
+exports.get_person_schema = { ...params };
+exports.delete_person_schema = { ...params };
+exports.create_person_schema = { ...payload };
+exports.update_person_schema = { ...params, ...payload };

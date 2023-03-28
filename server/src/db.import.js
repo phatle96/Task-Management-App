@@ -60,13 +60,15 @@ async function personCreate(name) {
 }
 
 
-async function taskCreate(content, list, person, alert) {
+async function taskCreate(content, list, person, alert, is_completed, is_deleted) {
 	task_detail = {
 		content: content,
 		list: list,
 	};
 	if (person != false) task_detail.person = person;
 	if (alert != false) task_detail.alert = alert;
+	if (is_completed != false) task_detail.is_completed = is_completed;
+	if (is_deleted != false) task_detail.is_deleted = is_deleted;
 
 	const task = new Task(task_detail);
 	await task.save();
@@ -74,7 +76,7 @@ async function taskCreate(content, list, person, alert) {
 	console.log(`Added task: ${content}`);
 }
 
-async function subtaskCreate(content, list, task, person, alert) {
+async function subtaskCreate(content, list, task, person, alert, is_completed, is_deleted) {
 	subtask_detail = {
 		content: content,
 		list: list,
@@ -82,6 +84,8 @@ async function subtaskCreate(content, list, task, person, alert) {
 	};
 	if (person != false) subtask_detail.person = person;
 	if (alert != false) subtask_detail.alert = alert;
+	if (is_completed != false) subtask_detail.is_completed = is_completed;
+	if (is_deleted != false) subtask_detail.is_deleted = is_deleted;
 
 	const subtask = new Subtask(subtask_detail);
 

@@ -19,8 +19,4 @@ This is a demo project by PhatLV - use to apply for the web developer position
 
 - Dataflow: 
     Client request
-        => router
-            => middleware
-            => controller
-                => service
-                    => database
+        => router => check schema  => validator => controller => service => database

@@ -1,21 +1,34 @@
 const express = require("express");
 const router = express.Router();
 
-const subtask_controller = require('../controllers/subtask.controller');
+const { checkSchema } = require('express-validator');
+const validator = require('../middleware/validator');
+
+const subtask_handler = require('../controllers/subtask.controller');
+const subtask_schema = require('../schema/subtask.schema');
 
 //GET request for all subtask
-router.get('/all', subtask_controller.subtasks);
+router.get('/all',
+	subtask_handler.subtasks);
 
 //GET request for detail subtask
-router.get('/:id', subtask_controller.get_subtask);
+router.get('/:subtask_id',
+	checkSchema(subtask_schema.get_subtask_schema), validator(),
+	subtask_handler.get_subtask);
 
 //POST request to create subtask
-router.post('/create', subtask_controller.create_subtask);
+router.post('/create',
+	checkSchema(subtask_schema.create_subtask_schema), validator(),
+	subtask_handler.create_subtask);
 
-//POST request to delete subtask
-router.post('/:id/delete', subtask_controller.delete_subtask);
+//PUT request to update subtask
+router.put('/:subtask_id/update',
+	checkSchema(subtask_schema.update_subtask_schema), validator(),
+	subtask_handler.update_subtask);
 
-//POST request to update subtask
-router.post('/:id/update', subtask_controller.update_subtask);
+//DELETE request to delete subtask
+router.delete('/:subtask_id/delete',
+	checkSchema(subtask_schema.delete_subtask_schema), validator(),
+	subtask_handler.delete_subtask);
 
 module.exports = router;
