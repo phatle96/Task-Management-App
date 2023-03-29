@@ -25,7 +25,7 @@ const payload = {
 			options: { nullable: true },
 		},
 		isLength: {
-			errorMeassage: "ID should not be included",
+			errorMessage: "ID should not be included",
 			options: { max: 0 },
 		},
 		escape: true,
@@ -34,7 +34,7 @@ const payload = {
 	content: {
 		in: ['body'],
 		isLength: {
-			errorMessage: "Name should be at least 1 to 150 characters long",
+			errorMessage: "Content should be at least 1 to 300 characters long",
 			options: { min: 1, max: 300, },
 		},
 		escape: true,
@@ -78,6 +78,9 @@ const payload = {
 
 	alert: {
 		in: ['body'],
+		optional: {
+			options: { nullable: true, },
+		},
 		isISO8601: {
 			errorMessage: 'Invalid date',
 		},
@@ -100,10 +103,21 @@ const payload = {
 		optional: {
 			options: { nullable: true },
 		},
-		isBoolean: {
-			errorMessage: 'Delete state should be boolean',
-			options: { loose: false },
+		isLength: {
+			errorMessage: "Delete state should not be included",
+			options: { max: 0 },
+		}
+	},
+
+	deleted_at: {
+		in: ['body'],
+		optional: {
+			options: { nullable: true },
 		},
+		isLength: {
+			errorMessage: "Delete date should not be included",
+			options: { max: 0 },
+		}
 	},
 }
 

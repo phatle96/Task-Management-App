@@ -12,6 +12,7 @@ const SubtaskSchema = new Schema({
     alert: { type: Date },
     is_completed: { type: Boolean, required: true, default: false },
     is_deleted: { type: Boolean, required: true, default: false },
+    deleted_at: { type: Date, expires: '30d' },
 },
     {
         timestamps: true

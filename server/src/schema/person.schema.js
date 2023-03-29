@@ -5,7 +5,7 @@ const params = {
 			errorMessage: "ID is invalid",
 			options: { min: 1, max: 50 }
 		},
-		escape: true
+		escape: true,
 	},
 };
 
@@ -17,7 +17,7 @@ const payload = {
 			options: { nullable: true },
 		},
 		isLength: {
-			errorMeassage: "ID should not be included",
+			errorMessage: "ID should not be included",
 			options: { max: 0 },
 		},
 		escape: true,
@@ -37,10 +37,23 @@ const payload = {
 		optional: {
 			options: { nullable: true },
 		},
-		isBoolean: {
-			errorMessage: 'Delete state should be boolean',
-			options: { loose: false },
+		isLength: {
+			errorMessage: "Delete state should not be included",
+			options: { max: 0 },
 		},
+		escape: true,
+	},
+
+	deleted_at: {
+		in: ['body'],
+		optional: {
+			options: { nullable: true },
+		},
+		isLength: {
+			errorMessage: "Delete date should not be included",
+			options: { max: 0 },
+		},
+		escape: true,
 	},
 };
 

@@ -24,7 +24,7 @@ const payload = {
             options: { nullable: true },
         },
         isLength: {
-            errorMeassage: "ID should not be included",
+            errorMessage: "ID should not be included",
             options: { max: 0 },
         },
         escape: true,
@@ -33,7 +33,7 @@ const payload = {
     content: {
         in: ['body'],
         isLength: {
-            errorMessage: "Name should be at least 1 to 150 characters long",
+            errorMessage: "Name should be at least 1 to 300 characters long",
             options: { min: 1, max: 300, },
         },
         escape: true,
@@ -68,6 +68,9 @@ const payload = {
 
     alert: {
         in: ['body'],
+        optional: {
+            options: { nullable: true },
+        },
         isISO8601: {
             errorMessage: 'Invalid date',
         },
@@ -84,10 +87,34 @@ const payload = {
         },
         escape: true
     },
-};
 
+
+    is_deleted: {
+        in: ['body'],
+        optional: {
+            options: { nullable: true },
+        },
+        isLength: {
+            errorMessage: "Delete state should not be included",
+            options: { max: 0 },
+        },
+        escape: true,
+    },
+
+    deleted_at: {
+        in: ['body'],
+        optional: {
+            options: { nullable: true },
+        },
+        isLength: {
+            errorMessage: "Delete date should not be included",
+            options: { max: 0 },
+        },
+        escape: true,
+    },
+};
 
 exports.get_task_schema = { ...params };
 exports.delete_task_schema = { ...params };
 exports.create_task_schema = { ...payload };
-exports.update_task_schema = { ...params, ...payload };
+exports.update_task_schema = { ...params, ...payload }; 

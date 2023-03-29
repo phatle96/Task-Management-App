@@ -10,27 +10,64 @@ const app = createServer();
 const mongoDB = process.env.MONGODB_URL;
 
 exports.payload = {
-	error_list: {
-		list_id: "",
-		name: "an error payload",
-	},
 	valid_list: {
-		name: "a valid payload",
+		name: 'a valid list',
+	},
+	error_list: {
+		list_id: 'error_id',
+		name: 'a error list'
 	},
 	updated_list: {
-		name: "an updated payload",
+		name: 'an updated list',
+	},
+	deleted_list: {
+		name: 'a deleted list',
+		is_deleted: true,
 	},
 	valid_task: {
-		content: "a valid task",
-		is_completed: false,
-		is_deleted: false,
+		content: 'a valid task',
+	},
+	error_task: {
+		task_id: '123',
+		content: 'an error task',
+	},
+	deleted_task: {
+		content: 'a deleted task',
+		is_deleted: true
+	},
+	updated_task: {
+		content: 'a updated task',
 	},
 	valid_subtask: {
-		content: "a valid subtask",
-		is_completed: false,
-		is_deleted: false
+		content: 'a valid subtask',
 	},
+	error_subtask: {
+		subtask_id: 'error_id',
+		content: 'an error subtask',
+	},
+	updated_subtask: {
+		content: 'an updated subtask',
+	},
+	deleted_subtask: {
+		content: 'a deleted subtask',
+		is_deleted: true,
+	},
+	valid_person: {
+		name: 'a valid person',
+	},
+	error_person: {
+		person_id: 'error_id',
+		name: 'an error person',
+	},
+	updated_person: {
+		name: 'an updated person',
+	},
+	deleted_person: {
+		name: 'a deleted person',
+		is_deleted: true,
+	}
 };
+
 
 describe('List API testing', () => {
 
@@ -116,6 +153,16 @@ describe('List API testing', () => {
 		});
 	});
 
+	describe('POST /list/create', () => {
+		test("respond with 400", async () => {
+			const payload = this.payload.error_list;
+			const res = await request(app).post('/api/list/create')
+				.send(payload)
+				.set('Accept', 'application/json');
+			expect(res.status).toBe(400);
+		});
+	});
+
 	describe('PUT /list/:id/update', () => {
 		test('response with 200', async () => {
 			const payload = this.payload.valid_list;
@@ -138,6 +185,19 @@ describe('List API testing', () => {
 	});
 
 	describe('DELETE /:list_id/delete', () => {
+		test('respond with 404', async () => {
+			// declare variable
+			const list_payload = this.payload.deleted_list;
+			const list = await List.create(list_payload);
+
+			// create delete request
+			const res = await request(app).delete(`/api/list/${list.list_id}/delete`)
+				.set('Accept', 'application/json');
+			expect(res.status).toBe(404);
+		})
+	});
+
+	describe('DELETE /:list_id/delete', () => {
 		test('respond with 200', async () => {
 			// declare variable
 			const list_payload = this.payload.valid_list;
@@ -148,15 +208,15 @@ describe('List API testing', () => {
 			const list = await List.create(list_payload);
 			const task = await Task.create({ ...task_payload, list: list });
 			const task_2 = await Task.create({ ...task_payload, list: list });
-			const subtask = await Subtask.create({ ...subtask_payload, list: list._id, task: task._id });
+			const subtask = await Subtask.create({ ...subtask_payload, list: list, task: task });
+			const subtask2 = await Subtask.create({ ...subtask_payload, list: list, task: task });
 
 			// create delete request
 			const res = await request(app).delete(`/api/list/${list.list_id}/delete`)
 				.set('Accept', 'application/json');
-				expect(res.status).toBe(200);
-				expect(res.body).toEqual(4)
+			expect(res.status).toBe(200);
+			expect(res.body).toEqual(5)
 		})
-	})
-
+	});
 
 })

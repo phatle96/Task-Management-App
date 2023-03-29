@@ -1,7 +1,4 @@
 const List = require('../models/list.model');
-const Task = require('../models/task.model');
-const Subtask = require('../models/subtask.model');
-const Person = require('../models/person.model')
 const { matchedData } = require('express-validator');
 const {
 	find_list_query,
@@ -48,7 +45,6 @@ exports.create_list = async (req, res, next) => {
 		return res.status(200).json(list);
 	} catch (err) {
 		return res.status(500).json({ 500: "Controller Error" });
-		//return res.status(500).json({error: err});
 	}
 };
 
@@ -64,13 +60,16 @@ exports.update_list = async (req, res, next) => {
 	}
 };
 
-// Delete list on POST
-// 
+// Delete list on DELETE
 exports.delete_list = async (req, res, next) => {
 	try {
 		const req_param = matchedData(req, { locations: ['params'] });
 		const list = await delete_list_query(req_param);
-		return res.status(200).json(list);
+		if (list == null || list.length == 0) {
+			return res.status(404).json({ 404: "Not found" });
+		} else {
+			return res.status(200).json(list);
+		}
 	} catch (err) {
 		return res.status(500).json({ 500: "Controller Error" });
 	}

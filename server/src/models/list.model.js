@@ -8,6 +8,7 @@ const ListSchema = new Schema({
 	list_id: { type: String, required: true, unique: true, default: () => `list_${uuidv4()}` },
 	name: { type: String, required: true, maxLength: 100 },
 	is_deleted: { type: Boolean, required: true, default: false },
+	deleted_at: { type: Date, expires: '30d' }
 },
 	{
 		timestamps: true
