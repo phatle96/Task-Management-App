@@ -6,6 +6,7 @@ const validator = require('../middleware/validator');
 
 const list_handler = require('../controllers/list.controller');
 const list_schema = require('../schema/list.schema');
+const setHeader = require('../middleware/cors.config')
 
 //GET request for all list
 router.get(

@@ -15,12 +15,21 @@ import ButtonList from './components/ButtonList/ButtonList'
 import Task from './components/Task/Task'
 import ListBreadcrumb from "./components/ListBreadcrumb/ListBreadcrumb";
 import { data } from './data/data'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
-	const [list, setList] = useState(data[0].listID);
+
+	useEffect(() => {
+		fetch(`http://localhost:8080/api/list/all`, {
+			
+		})
+		 .then((response) => console.log(response.json()));
+	   }, []);
 
 	return (
+		<div className="App">App</div>
+
+		/* 
 		<main>
 			<div className='top'>
 				<SearchBar />
@@ -37,7 +46,7 @@ function App() {
 					<EditListButton />
 				</div>
 				<div className="lists">
-					<ButtonList data={data} onClick = {()=> alert('test')}/>
+					<ButtonList data={data} onClick={() => alert('test')} />
 				</div>
 			</div>
 			<div className='list-status'>
@@ -50,7 +59,7 @@ function App() {
 			<div className='tasks'>
 				<Task data={data} index='0' />
 			</div>
-		</main>
+		</main> */
 	);
 }
 
