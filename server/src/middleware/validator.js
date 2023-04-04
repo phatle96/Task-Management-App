@@ -1,4 +1,3 @@
-const express = require('express');
 const { validationResult } = require('express-validator');
 
 const validator = () => (req, res, next) => {

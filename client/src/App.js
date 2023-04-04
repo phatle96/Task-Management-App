@@ -1,66 +1,59 @@
-import React from "react";
-import './App.css';
-import SearchBar from "./components/SearchBar/SearchBar";
-import Button from './components/Button/Button';
-import {
-	AddButton,
-	UserButton,
-	SortButton,
-	FilterButton,
-	CalendarButton,
-	EditListButton,
-	NotificationButton
-} from "./components/ButtonIcon/ButtonIcon";
-import ButtonList from './components/ButtonList/ButtonList'
-import Task from './components/Task/Task'
-import ListBreadcrumb from "./components/ListBreadcrumb/ListBreadcrumb";
-import { data } from './data/data'
-import { useState, useEffect } from "react";
+import { React, useState, useEffect } from "react";
+import axios from "axios";
+import TaskCard from "./components/TaskCard/TaskCard";
+import { Container, Grid, Stack, Box, Toolbar } from "@mui/material";
+import Appbar from "./components/Appbar/Appbar"
+import BottomAppBar from "./components/BottomAppbar/BottomAppbar";
+import Calendar from "./components/Calendar/Calendar"
+import NavBar from "./components/NavBar/NavBar";
+import TaskContainer from "./components/TaskContainer/TaskContainer";
 
-function App() {
+
+
+
+export default function App() {
+
+
+	const [data, setData] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		fetch(`http://localhost:8080/api/list/all`, {
-			
-		})
-		 .then((response) => console.log(response.json()));
-	   }, []);
+		const getData = async () => {
+			try {
+				const response = await axios.get('http://localhost:8080/api/list/all')
+				if (response.status !== 200) {
+					throw new Error(
+						`This is an HTTP error: The status is ${response.status}`
+					);
+				}
+				setData(response.data);
+				setError(null);
+			} catch (err) {
+				setError(err.message);
+				setData(null);
+			} finally {
+				setLoading(false);
+			}
+		}
+		getData()
+	}, [])
 
 	return (
-		<div className="App">App</div>
-
-		/* 
-		<main>
-			<div className='top'>
-				<SearchBar />
-				<UserButton />
-				<NotificationButton />
-			</div>
-			<div className='function_bar'>
-				<Button name='Task' />
-				<CalendarButton />
-			</div>
-			<div className='task-list'>
-				<div className='task-tool'>
-					<AddButton />
-					<EditListButton />
-				</div>
-				<div className="lists">
-					<ButtonList data={data} onClick={() => alert('test')} />
-				</div>
-			</div>
-			<div className='list-status'>
-				<ListBreadcrumb data={data} index='0' />
-			</div>
-			<div className='tool_bar'>
-				<SortButton />
-				<FilterButton />
-			</div>
-			<div className='tasks'>
-				<Task data={data} index='0' />
-			</div>
-		</main> */
+		<div className="App">
+			<Appbar />
+			<Stack direction="row" spacing={2} justifyContent="space-between">
+				<Box flex={1} padding={2} sx={{ flexGrow: "1" }}>
+					<NavBar data={data} />
+				</Box>
+				<Box flex={2} padding={2} sx={{ flexGrow: "1" }}>
+					<TaskContainer />
+				</Box>
+				<Box flex={5} padding={2} sx={{ flexGrow: "1" }}>
+					<Calendar />
+				</Box>
+			</Stack>
+			<BottomAppBar />
+		</div >
 	);
 }
-
-export default App;

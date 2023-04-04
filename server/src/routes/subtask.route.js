@@ -7,6 +7,8 @@ const validator = require('../middleware/validator');
 const subtask_handler = require('../controllers/subtask.controller');
 const subtask_schema = require('../schema/subtask.schema');
 
+const cache = require('../middleware/route.cache')
+
 //GET request for all subtask
 router.get('/all',
 	subtask_handler.subtasks);

@@ -7,6 +7,8 @@ const validator = require('../middleware/validator');
 const person_handler = require('../controllers/person.controller');
 const person_schema = require('../schema/person.schema');
 
+const cache = require('../middleware/route.cache')
+
 
 //GET request for all people
 router.get('/all',

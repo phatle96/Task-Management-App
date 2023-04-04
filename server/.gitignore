@@ -1,6 +1,6 @@
 # dependencies
 /node_modules
-/src/configs
 
 # Ignore .env files.
 .env
+.env.dev.local

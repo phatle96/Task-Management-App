@@ -7,6 +7,8 @@ const validator = require('../middleware/validator');
 const task_handler = require('../controllers/task.controller');
 const task_schema = require('../schema/task.schema');
 
+const cache = require('../middleware/route.cache')
+
 //GET request for all task
 router.get('/all', task_handler.tasks);
 
