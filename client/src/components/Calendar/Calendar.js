@@ -9,14 +9,14 @@ const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
 const MyCalendar = (props) => (
     <div className="myCustomHeight">
-        <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' } }}>
-            <Box position ="fixed">
-                <Calendar
-                    localizer={localizer}
-                    startAccessor="start"
-                    endAccessor="end"
-                />
-            </Box>
+        <Box  sx={{ display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' } }}>
+
+            <Calendar
+                localizer={localizer}
+                startAccessor="start"
+                endAccessor="end"
+            />
+
         </Box>
     </div>
 )
