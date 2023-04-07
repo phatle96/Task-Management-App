@@ -4,20 +4,20 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import AccordionAddTask from '../AccordionAddTask/AccordionAddTask';
 import TaskContainer from '../TaskContainer/TaskContainer';
-import { Badge, Stack, Typography } from '@mui/material';
-import {styled} from '@mui/material';
+import { Badge, Paper, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material';
 import StyledToggleButton from '../StyledToggleButton/StyledToggleButton';
+import MyCalendar from '../Calendar/Calendar';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
-      right: 9,
-      top: 18,
-      border: `2px solid ${theme.palette.background.paper}`,
-      padding: '0 4px',
+        right: 9,
+        top: 18,
+        border: `2px solid ${theme.palette.background.paper}`,
+        padding: '0 4px',
     },
-  }));
+}));
 
 export default function TabGroup() {
     const [value, setValue] = React.useState('1');
@@ -27,29 +27,34 @@ export default function TabGroup() {
     };
 
     return (
-        <Box sx={{ typography: 'body1' }}>
-            <Typography variant='h3' paddingBottom={1}>
-                another task
-            </Typography>
+        <Stack sx={{ typography: 'body1' }} direction="column" >
             <TabContext value={value}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example">
-                        <Tab label="Doing" value="1" />
-                        <StyledBadge badgeContent={4} color="primary" >
-                        </StyledBadge>
-                        <Tab label="Completed" value="2" />
-                    </TabList>
-                </Box>
-                <TabPanel value="1">
-
-                    <AccordionAddTask />
-                    <Stack direction="row" justifyContent="end" paddingBottom={1}>
-                        <StyledToggleButton />
+                <Paper elevation={1}>
+                    <Stack direction="row" justifyContent="space-between" sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Box >
+                            <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                <Tab label="Doing" value="1" />
+                                <StyledBadge badgeContent={4} color="primary" >
+                                </StyledBadge>
+                                <Tab label="Completed" value="2" />
+                                <Tab label="People" value="3" />
+                                <Tab label="Calendar" value="4" />
+                            </TabList>
+                        </Box>
+                        <Stack direction="row" paddingBottom={1} paddingRight={3}>
+                            <StyledToggleButton />
+                        </Stack>
                     </Stack>
-                    <TaskContainer />
-                </TabPanel>
-                <TabPanel value="2">Completed item</TabPanel>
+                    <TabPanel value="1">
+                        <TaskContainer />
+                    </TabPanel>
+                    <TabPanel value="2">Completed item</TabPanel>
+                    <TabPanel value="3">People here</TabPanel>
+                    <TabPanel value="4">
+                        <MyCalendar />
+                    </TabPanel>
+                </Paper>
             </TabContext>
-        </Box>
+        </Stack>
     );
 }

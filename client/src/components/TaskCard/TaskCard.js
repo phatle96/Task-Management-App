@@ -16,7 +16,7 @@ import {
 import { AccessAlarm, ExpandMoreIcon } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ClickAwayListener } from '@mui/material';
-import Subtask from '../Subtask/Subtask'
+import Subtask from '../AddSubtask/AddSubtask'
 
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
@@ -47,7 +47,7 @@ const TaskCard = () => {
     const [rows, setRow] = useState(1)
     return (
         <ThemeProvider theme={theme}>
-            <Card variant='outlined' sx={{ display: 'flex', justifyContent: "center" }} >
+            <Card  variant='outlined' sx={{ display: 'flex', justifyContent: "center" }} >
                 <Box >
                     <CardActions>
                         <Checkbox />

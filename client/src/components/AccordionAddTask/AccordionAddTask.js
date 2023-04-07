@@ -12,12 +12,22 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 export default function AccordionAddTask() {
     return (
         <Box position="relative" paddingBottom={1} >
-            <Accordion>
+            <Accordion defaultExpanded="true" elevation={1} >
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
-                    id="panel1a-header">
-                    <Typography>Create new task</Typography>
+                    id="panel1a-header"
+                    sx={{maxHeight:49}}>
+                    <Stack display="flex" direction="row" alignItems="center">
+                        <Typography>Create new task</Typography>
+                        <IconButton size="small"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                alert("open drawer")
+                            }}>
+                            <OpenInNewIcon />
+                        </IconButton>
+                    </Stack>
                 </AccordionSummary>
                 <AccordionDetails >
                     <Box justifyContent="center">

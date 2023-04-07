@@ -6,6 +6,7 @@ import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DataTimeSelect/DateTimeSelect";
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Subtask from "../AddSubtask/AddSubtask";
 
 
 const AddTask = () => {
@@ -28,6 +29,7 @@ const AddTask = () => {
             />
             <PeopleChipSelect />
             <DateTimeSelect />
+            <Subtask/>
             <Stack paddingTop={2} direction="row" justifyContent="flex-end" spacing={1}>
                 <Button variant="outlined" startIcon={<DeleteIcon />}>
                     Clear

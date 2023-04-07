@@ -3,15 +3,14 @@ import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import { Menu, MenuItem } from '@mui/material';
+import { Avatar, Menu, MenuItem } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 
 
@@ -71,7 +70,7 @@ export default function SearchAppBar() {
 		setAnchorEl(null);
 	};
 	return (
-		<Box sx={{ flexGrow: 1}} >
+		<Box sx={{ flexGrow: 1 }} >
 			<AppBar position="static">
 				<Toolbar>
 					<IconButton
@@ -79,9 +78,11 @@ export default function SearchAppBar() {
 						edge="start"
 						color="inherit"
 						aria-label="open drawer"
-						sx={{ mr: 2 }}
+						sx={{ mr: 2, display: { xs: 'block', sm: 'none' } }}
 					>
-						<MenuIcon />
+						<Avatar sx={{backgroundColor:"white"}}>
+							<AttachFileIcon color="primary" />
+						</Avatar>
 					</IconButton>
 					<Typography variant="button" noWrap sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
 						take notes
@@ -126,6 +127,6 @@ export default function SearchAppBar() {
 					</Menu>
 				</Toolbar>
 			</AppBar>
-		</Box>
+		</Box >
 	);
 }
