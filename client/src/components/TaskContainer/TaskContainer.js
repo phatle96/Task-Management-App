@@ -1,15 +1,15 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import TaskCard from "../TaskCard/TaskCard";
 
 
 const TaskContainer = () => {
     return (
-    <Box>
+    <Stack alignItems="stretch">
         <TaskCard/>
         <TaskCard/>
         <TaskCard/>
-    </Box>
+    </Stack>
 )
 }
 

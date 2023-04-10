@@ -5,8 +5,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const PersonDetail = () => {
     return (
-        <Box position="relative" paddingBottom={1} >
-            <Accordion elevation={1} >
+        <Box display="flex" alignContent="stretch" position="relative" paddingBottom={1} maxWidth={1}  >
+            <Accordion  >
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"

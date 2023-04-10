@@ -5,9 +5,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const TaskDetail = () => {
     return (
-        <Box position="relative" paddingBottom={1} >
-            <Accordion elevation={1} >
+        <Box position="relative" paddingBottom={1} sx={{display:"flex" , width:1}} >
+            <Accordion  display="flex">
                 <AccordionSummary
+                    display="flex"
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
@@ -16,8 +17,8 @@ const TaskDetail = () => {
                         <Typography>Task detail</Typography>
                     </Stack>
                 </AccordionSummary>
-                <AccordionDetails >
-                    <Box justifyContent="center">
+                <AccordionDetails display="flex">
+                    <Box display="flex" justifyContent="center">
                         Select Task to view detail here!
                     </Box>
                 </AccordionDetails>

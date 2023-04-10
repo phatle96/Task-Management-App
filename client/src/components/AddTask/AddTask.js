@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { useTheme } from '@mui/material/styles';
 
-import { Box, Stack, TextField, Button, IconButton } from "@mui/material";
+import { Stack, TextField, Button } from "@mui/material";
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DataTimeSelect/DateTimeSelect";
 import SaveIcon from '@mui/icons-material/Save';
@@ -15,22 +15,20 @@ const AddTask = () => {
 
 
     return (
-        <Stack direction="column" justifyContent="center" >
+        <Stack display="flex" direction="column" justifyContent="center" >
             <TextField
+                fullWidth
                 variant="outlined"
                 id="outlined-multiline-static"
-                label="Multiline"
+                label="Your task here!"
                 multiline
-                rows={4}
+                rows={3}Note here
                 defaultValue="Default Value"
-                sx={{
-                    maxWidth: '100%',
-                }}
-            />
+            />  
             <PeopleChipSelect />
             <DateTimeSelect />
-            <Subtask/>
-            <Stack paddingTop={2} direction="row" justifyContent="flex-end" spacing={1}>
+            <Subtask />
+            <Stack display="flex" paddingTop={2} direction="row" justifyContent="flex-end" spacing={1}>
                 <Button variant="outlined" startIcon={<DeleteIcon />}>
                     Clear
                 </Button>

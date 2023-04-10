@@ -5,20 +5,21 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddTask from '../AddTask/AddTask';
-import { Box, Stack, Button, IconButton } from '@mui/material';
+import { Box, Stack, IconButton } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 
 export default function AccordionAddTask() {
     return (
-        <Box position="relative" paddingBottom={1} >
-            <Accordion defaultExpanded="true" elevation={1} >
+        <Box display="flex" alignContent="stretch" paddingBottom={1} flexDirection="column" >
+            <Accordion defaultExpanded="true"  >
                 <AccordionSummary
+                    display="flex"
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    sx={{maxHeight:49}}>
-                    <Stack display="flex" direction="row" alignItems="center">
+                    sx={{ maxHeight: 49 }}>
+                    <Stack display="flex" direction="row" alignItems="center" >
                         <Typography>Create new task</Typography>
                         <IconButton size="small"
                             onClick={(e) => {
@@ -29,8 +30,8 @@ export default function AccordionAddTask() {
                         </IconButton>
                     </Stack>
                 </AccordionSummary>
-                <AccordionDetails >
-                    <Box justifyContent="center">
+                <AccordionDetails display="flex">
+                    <Box display="flex" justifyContent="center">
                         <AddTask />
                     </Box>
                 </AccordionDetails>
