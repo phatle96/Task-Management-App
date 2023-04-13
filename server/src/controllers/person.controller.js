@@ -1,6 +1,7 @@
 const Person = require('../models/person.model');
 const { matchedData } = require('express-validator');
 const {
+	find_all_people,
 	find_person_query,
 	find_and_update_person_query,
 	delete_person_query,
@@ -8,9 +9,18 @@ const {
 
 
 //View all people on GET
-exports.people = (req, res) => {
-	res.send('NOT IMPLEMENTED: view all people')
-}
+exports.people = async (req, res, next) => {
+	try {
+		const people = await find_all_people();
+		if (people.length == 0 || people == null) {
+			return res.status(404).json({ 404: "Not Found" });
+		} else {
+			return res.status(200).json(people);
+		}
+	} catch (err) {
+		return res.status(500).json(err);
+	}
+};
 
 //View detail person on GET
 exports.get_person = async (req, res, next) => {

@@ -27,8 +27,8 @@ export default function TabGroup() {
     };
 
     return (
-        <Stack position="relative" display="flex" direction="column" alignContent="stretch"
-            sx={{ typography: 'body1', display: { lg: "block", md: "block", sm: "none", xs: "none" } }} >
+        <Stack position="relative" display="flex" 
+            sx={{ typography: 'body1', display: { lg: "block", md: "block", sm: "block", xs: "block" } }} >
             <TabContext value={value}>
                 <Stack display="flex" direction="column" justifyContent="space-between" sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ display: "flex" }}>

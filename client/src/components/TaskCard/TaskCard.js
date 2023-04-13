@@ -1,126 +1,82 @@
 import * as React from 'react';
 import {
-    Box,
-    Card,
-    Typography,
-    Checkbox,
-    CardActions,
-    Stack,
-    Chip,
-    Avatar,
-    AccordionSummary,
-    Accordion,
-    AccordionDetails,
-    TextField
+	Box, Card, Typography, Checkbox, CardActions, Stack, Chip, Avatar, AccordionSummary, Accordion, AccordionDetails, TextField, CardContent, CardHeader, AvatarGroup
 } from '@mui/material';
-import { AccessAlarm, ExpandMoreIcon } from '@mui/icons-material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { AccessAlarm } from '@mui/icons-material';
 import { ClickAwayListener } from '@mui/material';
-import Subtask from '../AddSubtask/AddSubtask'
-
-import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 
-const theme = createTheme({
-    components: {
-        MuiTypography: {
-            variants: [
-                {
-                    props: {
-                        variant: "body1",
-                    },
-                    style: {
-                        fontSize: 15,
-                    },
-                },
-            ]
-        }
-    }
-})
+
+const TaskCard = ({ data }) => {
+	const [rows, setRow] = useState(1)
 
 
+	function stringToColor(string) {
+		let hash = 0;
+		let i;
+
+		/* eslint-disable no-bitwise */
+		for (i = 0; i < string.length; i += 1) {
+			hash = string.charCodeAt(i) + ((hash << 5) - hash);
+		}
+
+		let color = '#';
+
+		for (i = 0; i < 3; i += 1) {
+			const value = (hash >> (i * 8)) & 0xff;
+			color += `00${value.toString(16)}`.slice(-2);
+		}
+		/* eslint-enable no-bitwise */
+
+		return color;
+	}
+
+	function stringAvatar(name) {
+		return {
+			sx: {
+				bgcolor: stringToColor(name),
+			},
+		};
+	}
 
 
+	return (
+		<Box sx={{ width: "100%" }}>
+			<Stack direction="row">
+				<Box >
+					<CardActions>
+						<Checkbox />
+					</CardActions>
+				</Box>
+				<Box sx={{ width: "100%" }}>
+					<Stack direction="row">
+						<Box>
+							{
+								data.person.length > 1 ? (
+									<AvatarGroup total={data.person.length - 1}>
+										<Avatar alt={data.person[0].name}  {...stringAvatar(`${data.person[0].name}`)}>
+											{data.person[0].default_avatar}
+										</Avatar>
+									</AvatarGroup>
+								) : (
+									<></>
+								)
+							}
+						</Box>
 
+					</Stack>
 
-const TaskCard = () => {
-    const [rows, setRow] = useState(1)
-    return (
-        <ThemeProvider theme={theme}>
-            <Card  variant='outlined' sx={{ display: 'flex', justifyContent: "center" }} >
-                <Box >
-                    <CardActions>
-                        <Checkbox />
-                    </CardActions>
-                </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}>
-                    <ClickAwayListener onClickAway={() => { setRow(1) }}>
-                        <TextField
-                            id="outlined-multiline-static"
-                            label=""
-                            multiline
-                            rows={rows}
-                            defaultValue="Todo"
-                            onFocus={(e) => {
-                                e.stopPropagation();
-                                setRow(4)
-                            }}
-                        />
-                    </ClickAwayListener>
-                    <CardActions sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: "flex-start",
-                        justifyContent: "flex-end"
-                    }}>
-                        <Stack direction='row'
-                            spacing={0.5}>
-                            <Chip
-                                avatar={<Avatar>P</Avatar>}
-                                label="people"
-                                size="small"
-                                variant="outlined" />
-                            <Chip
-                                avatar={<Avatar>A</Avatar>}
-                                label="another people"
-                                size="small"
-                                variant="outlined" />
-                        </Stack>
-                        <Box paddingTop={0.5}
-                            sx={{
-                                display: "flex",
-                            }}>
-                            <Chip
-                                avatar={<Avatar> <AccessAlarm sx={{ width: 13.5 }} /> </Avatar>}
-                                label="2023/05/01 17:00:00"
-                                size="small"
-                                variant="outlined" />
-                        </Box>
-                        <Box>
-                            <Accordion>
-                                <AccordionSummary
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header">
-                                    <Typography>2 Subtasks</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Subtask
-                                        defaultValue="todo list" />
-                                    <Subtask
-                                        defaultValue="todo list 2" />
-                                </AccordionDetails>
-                            </Accordion>
-                        </Box>
-                    </CardActions>
-                </Box>
-            </Card>
-        </ThemeProvider >
+					<Box>
+						<Typography variant='body1'>
+							testtttttttttttttttttttttttttttttttttttesttttttttttttttttttttttttttttttttttttesttttttttttttttttttttttttttttttttttt
+						</Typography>
 
-    );
+					</Box>
+				</Box>
+			</Stack>
+		</Box>
+
+	);
 }
 
 export default TaskCard; 

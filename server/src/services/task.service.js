@@ -1,6 +1,10 @@
-const mongoose = require('mongoose');
 const Task = require('../models/task.model');
 const Subtask = require('../models/subtask.model');
+
+exports.find_all_tasks = async() =>{
+	const tasks = await Task.find({}).populate('person').exec();
+	return tasks;
+}
 
 exports.find_task_query = async (req_param) => {
 	try {
@@ -25,7 +29,7 @@ exports.create_task_query = async (req_body) => {
 exports.find_and_update_task_query = async (req_param, req_body) => {
 	const query = { ...req_param, is_deleted: false };
 	const task = req_body;
-	const options = { new: true , timestamps: true};
+	const options = { new: true, timestamps: true };
 	try {
 		const result = await Task.findOneAndUpdate(query, task, options).exec();
 		return result;
@@ -52,7 +56,7 @@ exports.delete_task_query = async (req_param) => {
 			const update_task = await Task.updateOne(task_query, modify, options).exec();
 
 			// Then return number of document updated
-			const total_updated =  update_subtask_ref.modifiedCount + update_task.modifiedCount;
+			const total_updated = update_subtask_ref.modifiedCount + update_task.modifiedCount;
 			return total_updated;
 		}
 	} catch (err) {

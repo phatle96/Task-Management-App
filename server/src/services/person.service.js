@@ -3,6 +3,11 @@ const Person = require('../models/person.model');
 const Task = require('../models/task.model');
 const Subtask = require('../models/subtask.model');
 
+exports.find_all_people = async() =>{
+	const people = await Person.find({}).exec();
+	return people;
+}
+
 exports.find_person_query = async (req_param) => {
     try {
         const query = { ...req_param, is_deleted: false };

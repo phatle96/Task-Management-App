@@ -32,6 +32,26 @@ const payload = {
 		escape: true,
 	},
 
+	avatar: {
+		in: ['body',],
+		optional: {
+			options: { nullable: true },
+		},
+		escape: true,
+	},
+
+	default_avatar: {
+		in: ['body',],
+		optional: {
+			options: { nullable: true },
+		},
+		isLength: {
+			errorMessage: "Default avatar should not be included",
+			options: { max: 0 },
+		},
+		escape: true,
+	},
+
 	is_deleted: {
 		in: ['body'],
 		optional: {

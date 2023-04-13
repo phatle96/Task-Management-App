@@ -1,6 +1,7 @@
 const Task = require('../models/task.model');
 const { matchedData } = require('express-validator');
 const {
+	find_all_tasks,
 	find_task_query,
 	find_and_update_task_query,
 	delete_task_query,
@@ -9,16 +10,14 @@ const {
 //View all task on GET
 exports.tasks = async (req, res, next) => {
 	try {
-		const tasks = await Task.find({})
-			.sort({ date_created: 1 })
-			.exec();
-		if (!tasks.length == 0) {
-			return res.status(200).json(tasks);
-		} else {
+		const tasks = await find_all_tasks();
+		if (tasks.length == 0 || tasks == null) {
 			return res.status(404).json({ 404: "Not Found" });
+		} else {
+			return res.status(200).json(tasks);
 		}
 	} catch (err) {
-		return res.status(500).json({ 500: 'Controller Error' });
+		return res.status(500).json(`err: ${err}`);
 	}
 };
 

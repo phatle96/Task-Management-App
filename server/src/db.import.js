@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 // run following command line to populate data
-// node db.import.js "mongodb://127.0.0.1:27017/dev"
+// node ./src/db.import.js "mongodb://127.0.0.1:27017/dev"
 
 console.log(
 	'This script populates some data to your database.'
@@ -118,9 +118,9 @@ async function createTasks() {
 	console.log('Adding tasks');
 	await Promise.all([
 		taskCreate('Create todo app', lists[0], people[0], '2023-04-01'),
-		taskCreate('Deadline #1', lists[0], people[1], '2023-03-30'),
-		taskCreate('Deadline #2', lists[0], people[2], '2023-04-29'),
-		taskCreate('Learn Web Development', lists[1], people[0], '2023-05-01'),
+		taskCreate('Deadline #1', lists[0], [people[1], people[2], people[3]], '2023-03-30'),
+		taskCreate('Deadline #2', lists[0], [people[2], people[3]], '2023-04-29'),
+		taskCreate('Learn Web Development', lists[1], [people[0], people[1], people[2], people[3]], '2023-05-01'),
 		taskCreate('Learn Another Things', lists[1], people[0], false),
 		taskCreate('Pay an Invoice', lists[2], people[0], false),
 		taskCreate('Do exercise', lists[2], people[0], false),
@@ -132,12 +132,12 @@ async function createSubtasks() {
 	await Promise.all([
 		subtaskCreate('Design UI', lists[0], tasks[0], people[0], false),
 		subtaskCreate('Create frontend', lists[0], tasks[0], false, false),
-		subtaskCreate('Create backend', lists[0], tasks[0], false, false),
+		subtaskCreate('Create backend', lists[0], tasks[0], [people[1], people[2], people[3]], false),
 		subtaskCreate('test & deploy', lists[0], tasks[0], false, false),
-		subtaskCreate('learn Nodejs', lists[1], tasks[3], false, false),
+		subtaskCreate('learn Nodejs', lists[1], tasks[3], [people[0], people[3]], false),
 		subtaskCreate('learn reactjs', lists[1], tasks[3], false, false),
 		subtaskCreate('learn expressjs', lists[1], tasks[3], false, false),
-		subtaskCreate('learn mongodb', lists[1], tasks[3], false, false),
+		subtaskCreate('learn mongodb', lists[1], tasks[3], [people[1], people[3]], false),
 		subtaskCreate('learn authentication & authorization', lists[1], tasks[3], false, false)
 	]);
 }

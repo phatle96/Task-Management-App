@@ -1,14 +1,35 @@
 import { Box, Avatar, List, ListItem, ListItemAvatar, ListItemText, ListItemButton, Divider, ListItemIcon } from "@mui/material";
 import WorkIcon from '@mui/icons-material/Work';
-import { React, useState } from "react";
-import axios from "axios";
-import { useLists } from "../../context/ListsContext";
+import { React, useState, useEffect } from "react";
 import AddIcon from '@mui/icons-material/Add';
-
+import axios from 'axios'
 
 const NavBar = () => {
-	const { data } = useLists();
-	console.log(data)
+
+	const [data, setData] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+	useEffect(() => {
+		const getData = async () => {
+			try {
+				const response = await axios.get('http://localhost:8080/api/list/all')
+				if (response.status !== 200) {
+					throw new Error(
+						`This is an HTTP error: The status is ${response.status}`
+					);
+				}
+				setData(response.data);
+				setError(null);
+			} catch (err) {
+				setError(err.message);
+				setData(null);
+			} finally {
+				setLoading(false);
+			}
+		}
+		getData()
+	}, [])
+
 	return (
 		<Box position="static"  >
 			<Box sx={{ maxWidth: 300 }}>
@@ -54,7 +75,7 @@ const NavBar = () => {
 				</List>
 			</Box>
 
-			<Box sx={{ maxWidth: 80 }}>
+			<Box sx={{ maxWidth: 90 }}>
 				<List
 					sx={{ display: { lg: "none", md: "block", sm: "none", xs: "none", height: 56 } }}>
 					<ListItem>

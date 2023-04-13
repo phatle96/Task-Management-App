@@ -4,14 +4,14 @@ import React from "react";
 
 const ListTitle = () => {
     return (
-        <Stack direction="row" paddingTop={2}>
+        <Stack direction="row" paddingTop={2} paddingBottom={2}>
             <Button>
                 <Avatar>
-                    D
+                    A
                 </Avatar>
             </Button>
             <Typography variant="h3">
-                Doing
+                All task
             </Typography>
             <IconButton>
                 <DriveFileRenameOutlineIcon sx={{alignSelf: "end"}} />
