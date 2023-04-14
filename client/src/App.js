@@ -14,38 +14,38 @@ export default function App() {
 	return (
 		<Box sx={{ width: '100%' }}>
 			<Stack direction="column" justifyContent="space-between">
-				<Box sx={{ backgroundColor: "info.main" }}>
+				<Box sx={{ /* backgroundColor: "info.main" */ }}>
 					<Appbar />
 				</Box>
 				<Stack direction="row" >
-					<Box sx={{ backgroundColor: "secondary.main" }} >
+					<Box sx={{ /* backgroundColor: "secondary.main" */ }} >
 						<NavBar />
 					</Box>
 					<Box sx={{ width: '100%' }}>
 						<Stack direction="column">
-							<Box sx={{ backgroundColor: "info.main" }}>
+							<Box sx={{ /* backgroundColor: "info.main" */ }}>
 								<ListTitle/>
 							</Box>
 							<Grid2 container >
 								<Grid2 xs={0} sm={0} md={5} lg={4}
-									sx={{ display: { xs: "none", sm: "none", md: "block", lg: "block" }, backgroundColor: "warning.main" }}>
+									sx={{ display: { xs: "none", sm: "none", md: "block", lg: "block" }, /* backgroundColor: "warning.main"  */}}>
 									<AccordionAddTask />
 									<TaskDetail />
 									<PersonDetail />
 								</Grid2>
 								<Grid2 xs={0} sm={0} md={7} lg={8}
-									sx={{ display: { xs: "none", sm: "none", md: "block", lg: "block" }, backgroundColor: "error.main" }}>
+									sx={{ display: { xs: "none", sm: "none", md: "block", lg: "block" }, /* backgroundColor: "error.main"  */}}>
 									<TabGroup />
 								</Grid2>
 								<Grid2 xs={12} sm={12} md={0} lg={0}
-									sx={{ display: { xs: "block", sm: "block", md: "none", lg: "none" }, backgroundColor: "primary.main" }}>
+									sx={{ display: { xs: "block", sm: "block", md: "none", lg: "none" }, /* backgroundColor: "primary.main" */ }}>
 									<TabGroup />
 								</Grid2>
 							</Grid2>
 						</Stack>
 					</Box>
 				</Stack>
-				<Box sx={{ display: { xs: "block", sm: "block", md: "none", lg: "none" }, backgroundColor: "text.disabled" }}>
+				<Box sx={{ display: { xs: "block", sm: "block", md: "none", lg: "none" }, /* backgroundColor: "text.disabled" */ }}>
 					<BottomAppBar />
 				</Box>
 			</Stack>

@@ -16,6 +16,10 @@ router.get('/:task_id',
 	checkSchema(task_schema.get_task_schema), validator(),
 	task_handler.get_task);
 
+router.get('/:task_id/subtask',
+	checkSchema(task_schema.get_task_schema), validator(),
+	task_handler.get_subtask)
+
 //POST request to create task
 router.post('/create',
 	checkSchema(task_schema.create_task_schema), validator(),

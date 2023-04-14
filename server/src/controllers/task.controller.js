@@ -3,6 +3,7 @@ const { matchedData } = require('express-validator');
 const {
 	find_all_tasks,
 	find_task_query,
+	find_subtask_query,
 	find_and_update_task_query,
 	delete_task_query,
 	create_task_query } = require('../services/task.service');
@@ -30,6 +31,21 @@ exports.get_task = async (req, res, next) => {
 			return res.status(404).json({ 404: 'Not found' });
 		} else {
 			return res.status(200).json(task);
+		}
+	} catch (err) {
+		return res.status(500).json({ 500: 'Controller Error' });
+	}
+};
+
+
+exports.get_subtask = async (req, res, next) => {
+	try {
+		const req_param = matchedData(req, { locations: ['params'] })
+		const subtasks = await find_subtask_query(req_param);
+		if (subtasks == null || subtasks.length == 0) {
+			return res.status(404).json({ 404: 'Not found' });
+		} else {
+			return res.status(200).json(subtasks);
 		}
 	} catch (err) {
 		return res.status(500).json({ 500: 'Controller Error' });

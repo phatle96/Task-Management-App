@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import TaskCard from "../TaskCard/TaskCard";
 import axios from 'axios'
+import { Box, Checkbox, Paper, Stack } from "@mui/material";
+import SubTask from "../SubTask/SubTask";
 
 const TaskContainer = () => {
     const [data, setData] = useState([]);
@@ -29,16 +31,26 @@ const TaskContainer = () => {
     }, [])
 
     return (
-        <Grid2 container>
-            <Grid2 xs={12} sm={6} md={6} lg={4} >
-                {data.map(
-                    task => (
-                        <TaskCard
-                            key={task.task_id}
-                            data = {task}/>
-                    )
-                )}
-            </Grid2>
+        <Grid2 container rowSpacing={2} columnSpacing={1} sx={{ alignItems: "center" }}>
+            {data.map(
+                task => (
+                    <Grid2 xs={12} sm={12} md={12} lg={12}
+                        key={task.task_id}>
+                        <Paper elevation={0} variant="outlined">
+                            <Stack direction="row" sx={{width:"100%"}}>
+                                <Box sx={{ display: "flex", alignItems: "center", paddingX: 2 }}>
+                                    <Checkbox />
+                                </Box>
+                                <Stack direction="column" sx={{width:"100%"}}>
+                                    <TaskCard data={task} />
+                                    <SubTask task={task} />
+                                </Stack>
+                            </Stack>
+
+                        </Paper>
+                    </Grid2>
+                )
+            )}
         </Grid2>
     )
 }
