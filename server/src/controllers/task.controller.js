@@ -25,7 +25,7 @@ exports.tasks = async (req, res, next) => {
 // View detail task on GET
 exports.get_task = async (req, res, next) => {
 	try {
-		const req_param = matchedData(req, { locations: ['params'] })
+		const req_param = req.params;
 		const task = await find_task_query(req_param);
 		if (task == null || task.length == 0) {
 			return res.status(404).json({ 404: 'Not found' });
@@ -40,7 +40,7 @@ exports.get_task = async (req, res, next) => {
 
 exports.get_subtask = async (req, res, next) => {
 	try {
-		const req_param = matchedData(req, { locations: ['params'] })
+		const req_param = req.params;
 		const subtasks = await find_subtask_query(req_param);
 		if (subtasks == null || subtasks.length == 0) {
 			return res.status(404).json({ 404: 'Not found' });
@@ -66,7 +66,7 @@ exports.create_task = async (req, res, next) => {
 //Update task on POST
 exports.update_task = async (req, res, next) => {
 	try {
-		const req_param = matchedData(req, { locations: ['params'] });
+		const req_param = req.params;
 		const req_body = matchedData(req, { locations: ['body'] });
 		const task = await find_and_update_task_query(req_param, req_body);
 		return res.status(200).json(task);
@@ -78,7 +78,7 @@ exports.update_task = async (req, res, next) => {
 // Delete task on DELETE
 exports.delete_task = async (req, res, next) => {
 	try {
-		const req_param = matchedData(req, { locations: ['params'] });
+		const req_param = req.params;
 		const task = await delete_task_query(req_param);
 		if (task == null || task.length == 0) {
 			return res.status(404).json({ 404: "Not found" });

@@ -147,7 +147,7 @@ const AddSubtask = () => {
 
             </Stack>
 
-            <Box width="90%" alignSelf="flex-end" >
+            <Box width="100%" alignSelf="flex-end" >
                 {add && (
                     <ClickAwayListener onClickAway={handleAddSubTask}>
                         <Stack direction="row" paddingTop={1}>

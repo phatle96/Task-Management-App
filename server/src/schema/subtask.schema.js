@@ -9,7 +9,7 @@ const check_array = (value) => {
 
 const params = {
 	subtask_id: {
-		in: ['params'],
+		in: ['params', 'query'],
 		isLength: {
 			errorMessage: "ID is invalid",
 			options: { min: 1, max: 50 },
@@ -23,10 +23,6 @@ const payload = {
 		in: ['body'],
 		optional: {
 			options: { nullable: true },
-		},
-		isLength: {
-			errorMessage: "ID should not be included",
-			options: { max: 0 },
 		},
 		escape: true,
 	},
@@ -87,7 +83,7 @@ const payload = {
 		escape: true
 	},
 
-	isCompleted: {
+	is_completed: {
 		in: ['body'],
 		optional: {
 			options: { nullable: true },
@@ -103,10 +99,7 @@ const payload = {
 		optional: {
 			options: { nullable: true },
 		},
-		isLength: {
-			errorMessage: "Delete state should not be included",
-			options: { max: 0 },
-		}
+		escape: true
 	},
 
 	deleted_at: {
@@ -117,7 +110,8 @@ const payload = {
 		isLength: {
 			errorMessage: "Delete date should not be included",
 			options: { max: 0 },
-		}
+		},
+		escape: true
 	},
 }
 

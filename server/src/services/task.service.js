@@ -2,7 +2,7 @@ const Task = require('../models/task.model');
 const Subtask = require('../models/subtask.model');
 
 exports.find_all_tasks = async () => {
-	const tasks = await Task.find({}).populate('person').exec();
+	const tasks = await Task.find({}).populate(['person', 'list']).exec();
 	return tasks;
 }
 

@@ -11,7 +11,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export default function AccordionAddTask() {
     return (
-        <Box display="flex" alignContent="stretch" paddingBottom={1} flexDirection="column" >
+        <Box sx={{width: "100%", paddingBottom:1}}>
             <Accordion defaultExpanded="true"  >
                 <AccordionSummary
                     display="flex"

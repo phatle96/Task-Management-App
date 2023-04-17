@@ -26,7 +26,7 @@ exports.lists = async (req, res, next) => {
 // View detail list on GET
 exports.get_list = async (req, res, next) => {
 	try {
-		const req_param = matchedData(req, { locations: ['params'] });
+		const req_param = req.params;
 		const list = await find_list_query(req_param);
 		if (list == null || list.length == 0) {
 			return res.status(404).json({ 404: 'Not found' });
@@ -41,7 +41,7 @@ exports.get_list = async (req, res, next) => {
 //
 exports.get_list_task = async (req, res, next) => {
 	try {
-		const req_param = matchedData(req, { locations: ['params'] });
+		const req_param = req.params;
 		const tasks = await find_list_task_query(req_param);
 		if (tasks == null || tasks.length == 0) {
 			return res.status(404).json({ 404: "Not Found" });
@@ -56,7 +56,7 @@ exports.get_list_task = async (req, res, next) => {
 //
 exports.get_list_subtask = async (req, res, next) => {
 	try {
-		const req_param = matchedData(req, { locations: ['params'] });
+		const req_param = req.params;
 		const subtasks = await find_list_subtask_query(req_param);
 		if (subtasks == null || subtasks.length == 0) {
 			return res.status(404).json({ 404: "Not Found" });
@@ -82,7 +82,7 @@ exports.create_list = async (req, res, next) => {
 //Update list on POST
 exports.update_list = async (req, res, next) => {
 	try {
-		const req_param = matchedData(req, { locations: ['params'] });
+		const req_param = req.params;
 		const req_body = matchedData(req, { locations: ['body'] });
 		const list = await find_and_update_list_query(req_param, req_body);
 		return res.status(200).json(list);
@@ -94,7 +94,7 @@ exports.update_list = async (req, res, next) => {
 // Delete list on DELETE
 exports.delete_list = async (req, res, next) => {
 	try {
-		const req_param = matchedData(req, { locations: ['params'] });
+		const req_param = req.params;
 		const list = await delete_list_query(req_param);
 		if (list == null || list.length == 0) {
 			return res.status(404).json({ 404: "Not found" });

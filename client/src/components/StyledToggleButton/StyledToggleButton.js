@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
 
 
 export default function StyledToggleButton() {
@@ -12,7 +12,7 @@ export default function StyledToggleButton() {
   };
 
   return (
-    <Container display="flex">
+    <Box>
       <ToggleButtonGroup
         value={view}
         exclusive
@@ -33,6 +33,6 @@ export default function StyledToggleButton() {
           edit
         </ToggleButton>
       </ToggleButtonGroup>
-    </Container>
+    </Box>
   );
 }

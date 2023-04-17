@@ -77,7 +77,7 @@ const payload = {
         escape: true
     },
 
-    isCompleted: {
+    is_completed: {
         in: ['body'],
         optional: {
             options: { nullable: true },
