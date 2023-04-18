@@ -1,214 +1,185 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import {
-    Box,
-    Button,
-    Checkbox,
-    Divider,
-    FormControlLabel,
-    IconButton,
-    Paper,
-    Stack,
-    TextField,
+	Button, ClickAwayListener, FormControl, IconButton, Input, InputAdornment, InputLabel, List, ListItem, ListItemIcon, Stack, TextField, Tooltip,
 } from "@mui/material";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
-import ClickAwayListener from '@mui/base/ClickAwayListener';
-import Typography from '@mui/material/Typography';
-import EditIcon from '@mui/icons-material/Edit';
-import { Delete, Edit } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { nanoid } from 'nanoid';
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
+import { nanoid } from 'nanoid'
+
+const AddSubtask = ({ list, task }) => {
+
+	const [subtasks, setSubtasks] = useState([]);
+	const [content, setContent] = useState('');
+	const [error, setError] = useState({ state: false, helperText: "" });
+	const [putPayload, setPut] = useState([]);
+	const [handleAdd, setHandleAdd] = useState(false);
+	const [edit, setEdit] = useState("")
+
+	const handleAddSubtask = () => {
+		setHandleAdd(true);
+		setError({ state: false, helperText: "" })
+	};
+
+	const handleCancelAdd = () => {
+		setHandleAdd(false);
+		setError({ state: false, helperText: "" })
+	};
+
+	const handleSaveAdd = () => {
+		if (content.length > 0 && content.length < 300) {
+			setHandleAdd(false);
+			setSubtasks([...subtasks, { temp_id: nanoid(5), content: content }]);
+			setError({ state: false, helperText: "" });
+			setContent("");
+		} else {
+			setError({ state: true, helperText: "length should be 1 to 299 characters" })
+		}
+	}
+
+	const handleEdit = (event, id) => {
+		const editing = subtasks.map((subtask) => {
+			if (subtask.temp_id === id) {
+				if (event.length > 0 && event.length < 300) {
+					return (
+						{ ...subtask, content: event, error: false }
+					)
+				} else {
+					return (
+						{ ...subtask, content: event, error: true }
+					)
+				}
+			} else {
+				return { ...subtask }
+			}
+		})
+		setSubtasks(editing);
+	}
+
+	const handleFocus = (id) => {
+		const editing = subtasks.map((subtask) => {
+			if (subtask.temp_id === id) {
+				return (
+					{ ...subtask, isEdit: true }
+				)
+			} else {
+				return { ...subtask, isEdit: false }
+			}
+		})
+		setSubtasks(editing);
+	}
+
+	const handleClose = (id) => {
+		const editing = subtasks.map((subtask) => {
+			if (subtask.temp_id === id) {
+				return (
+					{ ...subtask, isEdit: false }
+				)
+			} else {
+				return { ...subtask }
+			}
+		})
+		setSubtasks(editing);
+	}
 
 
-const AddSubtask = () => {
-    const [add, setAdd] = React.useState(false)
-    const [subtasks, setSubtask] = React.useState([])
-    const [content, setContent] = React.useState('')
-    const [editing, setEditing] = React.useState(false)
-    const [id, setId] = React.useState('')
-    const [editSubtask, setEditsubtask] = React.useState([])
-    const [edited, setEdited] = React.useState([])
-
-    const handleAddSubtaskButton = () => {
-        if (add) {
-            setAdd(false)
-            setSubtask([
-                {
-                    id: nanoid(3),
-                    content: content
-                },
-                ...subtasks,
-            ])
-        } else {
-            setAdd(true)
-            setContent("")
-        }
-    }
-
-    const handleAddSubTask = () => {
-        setAdd(false)
-        setSubtask([
-            {
-                id: nanoid(3),
-                content: content
-            },
-            ...subtasks,
-        ])
-    }
+	const handleDelete = (id) => {
+		const deleted = subtasks.map((subtask) => {
+			if (subtask.temp_id === id) {
+				return (
+					{ ...subtask, isDeleted: true }
+				)
+			} else {
+				return { ...subtask }
+			}
+		})
+		setSubtasks(deleted);
+	}
 
 
+	const EditButton = ({ isEdit, id }) => {
+		return (
+			<>
+				{
+					isEdit && (
+						<Stack direction="row">
+							<Tooltip title="delete">
+								<IconButton onClick={() => { handleDelete(id) }} size="small" aria-label="cancel edit">
+									<CloseIcon fontSize='inherit' />
+								</IconButton>
+							</Tooltip>
+							<Tooltip title="save">
+								<IconButton onClick={() => { handleClose(id) }} size="small" aria-label="save edit" >
+									<DoneIcon fontSize='inherit' />
+								</IconButton>
+							</Tooltip>
+						</Stack>
+					)
+				}
+			</>
+		)
+	}
 
-    const handleEditButton = () => {
-        setEditing(true);
-        setEdited(subtasks)
-        setEditsubtask([]);
-    }
+	return (
+		<Stack direction="column">
+			<Stack direction="row" >
+				<Button
+					onClick={handleAddSubtask}
+					startIcon={<FormatListBulletedIcon />}>
+					Add subtask
+				</Button>
+			</Stack>
+			{
+				handleAdd &&
+				(
+					<Stack direction="row" sx={{ alignItems: "center" }}>
+						<ClickAwayListener onClickAway={handleSaveAdd}>
+							<TextField
+								sx={{ width: "100%", paddingRight: 0.5 }}
+								variant="standard"
+								autoFocus
+								id="standard-basic"
+								label="Subtask"
+								error={error.state}
+								helperText={error.helperText}
+								value={content}
+								onChange={(event) => { setContent(event.target.value) }} />
 
-    const handleCancelEdit = () => {
-        setEditing(false);
-        setEdited(subtasks)
-    }
-
-    const handleEditDone = () => {
-        setEditing(false);
-        setSubtask(edited);
-    }
-
-    const handleEditClearAll = () => { setEdited([]) }
-
-    const handleAddTextField = (e) => { setContent(e.target.value) }
-
-    const handleCloseAdd = () => setAdd(false)
-
-    const handleEditSubtaskClickAway = () => {
-        setEdited(edited.map(subtask => {
-            if (subtask.id === id) {
-                return { ...subtask, content: content };
-            } else {
-                return subtask;
-            }
-        }))
-    }
-
-    const handleEditFieldText = (e) => {
-        setContent(e.target.value);
-    }
-
-    const handleEditClearOne = (id) => {
-        return (
-            setEdited(edited.filter(subtask => subtask.id !== id)))
-    }
-
-
-    return (
-        <Stack direction="column" >
-            <Stack direction="row" justifyContent="space-between" paddingBottom={1}>
-                {!editing ?
-                    (<Box >
-                        <Button size='small' disabled={editing} startIcon={<FormatListBulletedIcon />}
-                            onClick={handleAddSubtaskButton}>
-                            Add Subtask
-                        </Button>
-                    </Box>) :
-                    (
-                        <Button size="small"
-                            onClick={handleEditClearAll}>
-                            Clear all subtask
-                        </Button>
-                    )
-                }
-                <Divider orientation="vertical" flexItem />
-                {(subtasks.length !== 0 && editing === false) && (
-                    <Box >
-                        <Button size='small' endIcon={<EditIcon />}
-                            onClick={handleEditButton}>
-                            Edit
-                        </Button>
-                    </Box>
-                )}
-                
-                {
-                    editing && (
-                        <Stack direction="row" display="flex">
-                            <Button aria-label="cancel" size="small" color='primary' paddingRight={2}
-                                onClick={handleCancelEdit}>
-                                Cancel
-                            </Button>
-                            
-                            <Button aria-label="Done" size="small" color='primary'
-                                onClick={handleEditDone}>
-                                    Done
-                            </Button>
-                        </Stack>
-                    )
-                }
-
-            </Stack>
-
-            <Box width="100%" alignSelf="flex-end" >
-                {add && (
-                    <ClickAwayListener onClickAway={handleAddSubTask}>
-                        <Stack direction="row" paddingTop={1}>
-                            <FormControlLabel control={<Checkbox />} />
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="Subtask"
-                                variant="outlined"
-                                autoFocus
-                                onChange={handleAddTextField} />
-                            <IconButton aria-label="close" size="small"
-                                onClick={handleCloseAdd}>
-                                <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                            <IconButton aria-label="done" size="small"
-                                onClick={handleAddSubTask}>
-                                <DoneIcon fontSize="inherit" />
-                            </IconButton>
-
-                        </Stack>
-                    </ClickAwayListener>
-                )}
-                {!editing ?
-                    (subtasks.map((subtask) => (
-                        <Stack direction="row" alignItems="center" paddingTop={1} key={subtask.id}>
-                            <FormControlLabel control={<Checkbox />} />
-                            <Box height="100%" alignItems="center">
-                                <Typography variant="body2" >
-                                    {subtask.content}
-                                </Typography>
-                            </Box>
-                        </Stack>
-                    ))) : (
-
-                        edited.map((subtask) => (
-
-                            <Stack direction="row" alignItems="center" paddingTop={1} key={subtask.id}>
-                                <FormControlLabel control={<Checkbox />} />
-                                <ClickAwayListener
-                                    mouseEvent="onMouseDown"
-                                    touchEvent="onTouchStart"
-                                    onClickAway={handleEditSubtaskClickAway}  >
-                                    <TextField
-                                        fullWidth
-                                        size="small"
-                                        variant="outlined"
-                                        defaultValue={subtask.content}
-                                        onChange={handleEditFieldText}
-                                        onSelect={() => setId(subtask.id)} />
-                                </ClickAwayListener>
-                                <IconButton aria-label="close" size="small" onClick={() => handleEditClearOne(subtask.id)}>
-                                    <CloseIcon fontSize="inherit" />
-                                </IconButton>
-                            </Stack>
-
-                        )))
-                }
-            </Box >
-        </Stack >
-    )
+						</ClickAwayListener>
+						<IconButton onClick={handleCancelAdd} aria-label="cancel" size="small">
+							<CloseIcon fontSize='inherit' />
+						</IconButton>
+						<IconButton onClick={handleSaveAdd} aria-label="save" size="small">
+							<DoneIcon fontSize='inherit' />
+						</IconButton>
+					</Stack>
+				)
+			}
+			<List>
+				{
+					subtasks.map((subtask) => {
+						return (
+							<ListItem key={subtask.temp_id} sx={{ height: 35, paddingY: 2.5 }}>
+									<ListItemIcon sx={{ minWidth: 35 }}>
+										<SubdirectoryArrowRightIcon fontSize='inherit' />
+									</ListItemIcon>
+									<TextField
+										sx={{ width: "100%" }}
+										variant="standard"
+										value={subtask.content}
+										error={subtask.error}
+										helperText={subtask.helperText}
+										onFocus={() => { handleFocus(subtask.temp_id) }}
+										onChange={(event) => { handleEdit(event.target.value, subtask.temp_id); }} />
+									<EditButton isEdit={subtask.isEdit} id={subtask.temp_id} />
+							</ListItem>
+						)
+					})
+				}
+			</List>
+		</Stack>
+	)
 }
 
 export default AddSubtask;

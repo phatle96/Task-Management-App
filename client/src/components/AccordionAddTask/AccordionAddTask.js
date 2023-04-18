@@ -11,7 +11,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export default function AccordionAddTask() {
     return (
-        <Box sx={{width: "100%", paddingBottom:1}}>
+        <Box sx={{width: "100%", paddingBottom:1, paddingX:2}}>
             <Accordion defaultExpanded="true"  >
                 <AccordionSummary
                     display="flex"
@@ -31,7 +31,7 @@ export default function AccordionAddTask() {
                     </Stack>
                 </AccordionSummary>
                 <AccordionDetails display="flex">
-                    <Box display="flex" justifyContent="center">
+                    <Box >
                         <AddTask />
                     </Box>
                 </AccordionDetails>

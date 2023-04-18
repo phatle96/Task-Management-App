@@ -1,30 +1,28 @@
 import { React, useState } from "react";
 import { useTheme } from '@mui/material/styles';
 
-import { Stack, TextField, Button } from "@mui/material";
+import { Stack, TextField, Button, Box } from "@mui/material";
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DataTimeSelect/DateTimeSelect";
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddSubtask from "../AddSubtask/AddSubtask";
-
+import ListFolder from "../ListFolder/ListFolder";
 
 const AddTask = () => {
 
-    const [people, setPeople] = useState("")
-
-
     return (
-        <Stack display="flex" direction="column" justifyContent="center" >
+        <Stack display="flex" direction="column" justifyContent="center" spacing={1.5} >
+            <ListFolder/>
             <TextField
                 fullWidth
                 variant="outlined"
                 id="outlined-multiline-static"
                 label="Your task here!"
                 multiline
-                rows={3}Note here
-                defaultValue="Default Value"
-            />  
+                rows={3}
+                defaultValue=""
+            />
             <PeopleChipSelect />
             <DateTimeSelect />
             <AddSubtask />

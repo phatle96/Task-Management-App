@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import TaskCard from "../TaskCard/TaskCard";
-import axios from 'axios'
-import { Avatar, Box, Button, Checkbox, Chip, IconButton, Paper, Stack, Tooltip } from "@mui/material";
+import axios from 'axios';
+import {Box, Checkbox, Chip, Paper, Stack } from "@mui/material";
 import SubTask from "../SubTask/SubTask";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import EditIcon from '@mui/icons-material/Edit';
 
 const TaskContainer = ({ isCompleted }) => {
 
@@ -35,7 +34,7 @@ const TaskContainer = ({ isCompleted }) => {
 			}
 		}
 		getData();
-	}, [])
+	}, []);
 
 
 	useEffect(() => {
@@ -53,7 +52,7 @@ const TaskContainer = ({ isCompleted }) => {
 			}
 		}
 		putData();
-	}, [updated, id])
+	}, [updated, id]);
 
 
 	const handleChecked = (key) => {

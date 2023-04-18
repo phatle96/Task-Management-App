@@ -1,89 +1,83 @@
-import { React, useState } from "react";
-import { useTheme } from '@mui/material/styles';
-
-import { Box, OutlinedInput, InputLabel, MenuItem, Select, Chip, FormControl } from "@mui/material";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: "auto",
-        },
-    },
-};
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import Chip from '@mui/material/Chip';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import PersonChip from '../PersonChip/PersonChip';
+import { Avatar } from '@mui/material';
 
 
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
+export default function PeopleChipSelect() {
 
-function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
 
-const PeopleChipSelect = () => {
-    const theme = useTheme();
-    const [personName, setPersonName] = useState([]);
+    const [data, setData] = useState([]);
+    const [error, setError] = useState(null);
 
-    const handleChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setPersonName(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    };
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/person/all');
+                if (response.status !== 200) {
+                    throw new Error(
+                        `This is an HTTP error: The status is ${response.status}`
+                    );
+                }
+                setData(response.data);
+                setError(null);
+            } catch (err) {
+                setError(err.message);
+                setData(null);
+            }
+        }
+        getData();
+    }, [])
+
+    function stringToColor(string) {
+        let hash = 0;
+        let i;
+
+        /* eslint-disable no-bitwise */
+        for (i = 0; i < string.length; i += 1) {
+            hash = string.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        let color = '#';
+
+        for (i = 0; i < 3; i += 1) {
+            const value = (hash >> (i * 8)) & 0xff;
+            color += `00${value.toString(16)}`.slice(-2);
+        }
+        /* eslint-enable no-bitwise */
+
+        return color;
+    }
 
     return (
-
-        <FormControl sx={{ marginTop: 1, width: "auto", maxWidth: "100%" }}>
-            <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
-            <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
+        <Stack spacing={3} sx={{ width: "100%" }}>
+            <Autocomplete
                 multiple
-                value={personName}
-                onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => (
-                            <Chip key={value} label={value} />
-                        ))}
-                    </Box>
+                id="tags-standard"
+                options={data}
+                getOptionLabel={(option) => option.name}
+                defaultValue={[]}
+                renderTags={(tagValue, getTagProps) =>
+                    tagValue.map((option, index) => (
+                        <Chip
+                            avatar={<Avatar sx={{ bgcolor: stringToColor(`${option.name}`)}}>{option.default_avatar}</Avatar>}
+                            label={option.name}
+                            {...getTagProps({ index })}
+                        />
+                    ))
+                }
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label="Assign task"
+                        placeholder="People"
+                    />
                 )}
-                MenuProps={MenuProps}
-            >
-                {names.map((name) => (
-                    <MenuItem
-                        key={name}
-                        value={name}
-                        style={getStyles(name, personName, theme)}
-                    >
-                        {name}
-                    </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
-
+            />
+        </Stack>
     );
 }
-
-export default PeopleChipSelect;
