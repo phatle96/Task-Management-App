@@ -1,100 +1,107 @@
-import { Box, Avatar, List, ListItem, ListItemAvatar, ListItemText, ListItemButton, Divider, ListItemIcon } from "@mui/material";
-import WorkIcon from '@mui/icons-material/Work';
-import { React, useState, useEffect } from "react";
+import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon } from "@mui/material";
+import { DataContext } from "../../context/DataContext";
+import { useContext, useState, useEffect } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import axios from 'axios'
+import DensitySmallIcon from '@mui/icons-material/DensitySmall';
+import WorkIcon from '@mui/icons-material/Work';
+
+
 
 const NavBar = () => {
+	const { lists, setLists, filter, setFilter } = useContext(DataContext);
 
-	const [data, setData] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-	useEffect(() => {
-		const getData = async () => {
-			try {
-				const response = await axios.get('http://localhost:8080/api/list/all')
-				if (response.status !== 200) {
-					throw new Error(
-						`This is an HTTP error: The status is ${response.status}`
-					);
-				}
-				setData(response.data);
-				setError(null);
-			} catch (err) {
-				setError(err.message);
-				setData(null);
-			} finally {
-				setLoading(false);
-			}
-		}
-		getData()
-	}, [])
+	const handleFilter = (list) => {
+		setFilter({
+			list_id: list.list_id,
+			list_name: list.name
+		});
+	}
+
+	const handleResetFilter = () => {
+		setFilter({
+			list_id: '',
+			list_name: ''
+		})
+	}
 
 	return (
-		<Box position="static"  >
+		<Box position="static">
 			<Box sx={{ maxWidth: 300 }}>
 				<List
-					sx={{ display: { lg: "block", md: "none", sm: "none", xs: "none", height: 56 } }}>
-
+					sx={{ display: { lg: "block", md: "block", sm: "none", xs: "none", height: 56 }, }}>
 					<ListItem>
 						<ListItemButton sx={{ height: 60 }}>
-							<ListItemIcon>
-								<AddIcon />
+							<ListItemIcon sx={{ justifyContent: 'center' }}>
+								<Avatar>
+									<AddIcon />
+								</Avatar>
 							</ListItemIcon>
 							<ListItemText
 								primary="Create new list"
 								primaryTypographyProps={{
 									letterSpacing: 0.5,
-									noWrap: 1
+									noWrap: true
+								}}
+								sx={{
+									display: { lg: "block", md: "none", sm: "none", xs: "none" },
+									paddingLeft: 0.5
 								}} />
 
 						</ListItemButton>
 					</ListItem>
 					<Divider />
-					{data.map(list => (
-						<ListItem key={list.list_id}>
-							<ListItemButton sx={{ py: 0, minHeight: 30 }} component="a" href={`#${list.list_id}`}>
-								<ListItemAvatar >
+					<ListItem >
+						<ListItemButton
+							onClick={handleResetFilter}
+							selected={filter.list_id === ''}
+							sx={{ borderRadius: '10px' }}>
+							<ListItemIcon sx={{ justifyContent: 'center' }}>
+								<Avatar>
+									<DensitySmallIcon />
+								</Avatar>
+							</ListItemIcon>
+							<ListItemText
+								primary='View All tasks'
+								primaryTypographyProps={{
+									fontWeight: 'medium',
+									variant: 'body2',
+									letterSpacing: 0.5,
+									noWrap: true
+								}}
+								sx={{
+									display: { lg: "block", md: "none", sm: "none", xs: "none" },
+									paddingLeft: 0.5
+								}}
+							//secondary={list.createdAt}
+							/>
+						</ListItemButton>
+					</ListItem>
+					{lists.map(list => (
+						<ListItem key={list.list_id} sx={{ paddingY: 0.25 }}>
+							<ListItemButton
+								sx={{ minHeight: 30, borderRadius: '10px' }}
+								component="a"
+								href={`#${list.list_id}`}
+								onClick={() => handleFilter(list)}
+								selected={filter.list_id === list.list_id}>
+								<ListItemIcon sx={{ justifyContent: 'center' }}>
 									<Avatar >
 										<WorkIcon />
 									</Avatar>
-								</ListItemAvatar>
+								</ListItemIcon>
 								<ListItemText
 									primary={list.name}
 									primaryTypographyProps={{
 										fontWeight: 'medium',
 										variant: 'body2',
-										letterSpacing: 0.5,
-										noWrap: 1
+										noWrap: true
+									}}
+									sx={{
+										display: { lg: "block", md: "none", sm: "none", xs: "none" },
+										paddingLeft: 0.5
 									}}
 								//secondary={list.createdAt}
 								/>
-							</ListItemButton>
-						</ListItem>
-					))}
-				</List>
-			</Box>
-
-			<Box sx={{ maxWidth: 90 }}>
-				<List
-					sx={{ display: { lg: "none", md: "block", sm: "none", xs: "none", height: 56 } }}>
-					<ListItem>
-						<ListItemButton sx={{ height: 60 }}>
-							<ListItemIcon>
-								<AddIcon />
-							</ListItemIcon>
-						</ListItemButton>
-					</ListItem>
-					<Divider />
-
-					{data.map(list => (
-						<ListItem key={list.list_id}>
-							<ListItemButton sx={{ py: 0, minHeight: 30 }} component="a" href={`#${list.list_id}`}>
-								<ListItemAvatar >
-									<Avatar >
-										<WorkIcon />
-									</Avatar>
-								</ListItemAvatar>
 							</ListItemButton>
 						</ListItem>
 					))}

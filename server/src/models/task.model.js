@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const TaskSchema = new Schema({
     task_id: { type: String, required: true, unique: true, default: () => `task_${uuidv4()}` },
     content: { type: String, required: true, maxLength: 300 },
-    list: { type: Schema.Types.ObjectId, required: true, ref: 'List' },
+    list: { type: Schema.Types.ObjectId, ref: 'List' },
     person: [{ type: Schema.Types.ObjectId, ref: 'Person' }],
     alert: { type: Date },
     is_completed: { type: Boolean, required: true, default: false },

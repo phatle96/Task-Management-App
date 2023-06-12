@@ -11,8 +11,8 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export default function AccordionAddTask() {
     return (
-        <Box sx={{width: "100%", paddingBottom:1, paddingX:2}}>
-            <Accordion defaultExpanded="true"  >
+        <Box sx={{ width: "100%", paddingBottom: 1, paddingX: 2 }}>
+            <Accordion defaultExpanded={true}  >
                 <AccordionSummary
                     display="flex"
                     expandIcon={<ExpandMoreIcon />}

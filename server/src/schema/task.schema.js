@@ -45,6 +45,9 @@ const payload = {
             errorMessage: "List is invalid",
             options: { min: 1, max: 50 },
         },
+        optional: {
+            options: { nullable: true },
+        },
         escape: true,
     },
 

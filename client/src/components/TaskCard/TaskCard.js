@@ -1,14 +1,10 @@
 import * as React from 'react';
-import {
-	Box, Typography, Stack, Avatar, AvatarGroup, Tooltip, Chip
-} from '@mui/material';
+import { Box, Typography, Stack, Avatar, AvatarGroup, Tooltip, Chip } from '@mui/material';
 
-import { useState } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 
 const TaskCard = ({ data }) => {
-	const [rows, setRow] = useState(1)
 
 	function stringToColor(string) {
 		let hash = 0;
@@ -83,7 +79,7 @@ const TaskCard = ({ data }) => {
 							data.person.length >= 1 && (
 								<AvatarGroup max={5} sx={{ '& .MuiAvatar-root': { width: 23, height: 23, fontSize: 15 }, justifyContent: "flex-end" }}>
 									{data.person.map(person => (
-										<Tooltip title={person.name}>
+										<Tooltip title={person.name} key={person.person_id}>
 											<Avatar alt={person.name}
 												sx={{ bgcolor: stringToColor(`${person.name}`), width: 23, height: 23 }}>
 												{person.default_avatar}

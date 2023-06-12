@@ -1,59 +1,34 @@
 import { Accordion, AccordionDetails, Box, Checkbox, Stack, Typography } from "@mui/material";
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { styled } from '@mui/material/styles';
+import { DataContext } from "../../context/DataContext";
 
 
 const SubTask = ({ task }) => {
 
-    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [id, setID] = useState()
-    const [updated, setUpdate] = useState({});
-    const [payload, setPayload] = useState({})
+    const { subtasks: data, setSubtasks } = useContext(DataContext);
 
-    useEffect(() => {
-        const getData = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/api/subtask/all');
-                if (response.status !== 200) {
-                    throw new Error(
-                        `This is an HTTP error: The status is ${response.status}`
-                    );
-                }
-                const data = response.data.filter(subtask => subtask.task.task_id === task.task_id)
-                setData(data);
-                setError(null);
-            } catch (err) {
-                setError(err.message);
-                setData(null);
+    const putData = async (subtask_payload, id) => {
+        try {
+            const response = await axios.put(`http://localhost:8080/api/subtask/${id}/update`, subtask_payload);
+            if (response.status !== 200) {
+                throw new Error(
+                    `This is an HTTP error: The status is ${response.status}`
+                );
             }
+            console.log(response.data);
+            setError(null);
+        } catch (err) {
+            setError(err.message);
         }
-        getData();
-    }, [])
-
-    useEffect(() => {
-        const putData = async () => {
-            try {
-                const response = await axios.put(`http://localhost:8080/api/subtask/${id}/update`, payload);
-                if (response.status !== 200) {
-                    throw new Error(
-                        `This is an HTTP error: The status is ${response.status}`
-                    );
-                }
-                console.log(response.data);
-                setError(null);
-            } catch (err) {
-                setError(err.message);
-            }
-        }
-        putData();
-    }, [updated, id])
+    }
 
     const AccordionSummary = styled((props) => (
         <MuiAccordionSummary
@@ -75,24 +50,24 @@ const SubTask = ({ task }) => {
     }
 
     const handleChecked = (key) => {
-        setData(
-            data.map(subtask => {
-                if (subtask.subtask_id === key) {
-                    const payload = {
-                        content: subtask.content,
-                        list: subtask.list,
-                        task: subtask.task._id,
-                        is_completed: !subtask.is_completed
+        setSubtasks(
+            data.map(
+                subtask => {
+                    if (subtask.subtask_id === key) {
+                        const subtask_payload = {
+                            content: subtask.content,
+                            list: subtask.list,
+                            task: subtask.task._id,
+                            is_completed: !subtask.is_completed
+                        }
+                        const update = { ...subtask, is_completed: !subtask.is_completed }
+                        putData(subtask_payload, subtask.subtask_id)
+                        return update;
+                    } else {
+                        return subtask;
                     }
-                    setPayload(payload)
-                    const update = { ...subtask, is_completed: !subtask.is_completed }
-                    setUpdate(update);
-                    setID(subtask.subtask_id);
-                    return update;
-                } else {
-                    return subtask;
                 }
-            })
+            )
         )
     }
 
@@ -100,8 +75,8 @@ const SubTask = ({ task }) => {
         if (data === null || data.length === 0) {
             return (<> </>)
         } else {
-            const completed = get_completed(data)
-            const total = data.length
+            const completed = get_completed(data);
+            const total = data.length;
             return (
                 <Accordion elevation={0}>
                     <AccordionSummary
@@ -142,8 +117,9 @@ const SubTask = ({ task }) => {
     }
 
     return (
-        <Box sx={{ width: "100%", marginLeft: "auto" }}>
-            {subtasks(data)}
+        <Box sx={{ width: "100%", marginLeft: "auto" }}
+            onClick={(e) => { e.stopPropagation() }}>
+            {subtasks(data.filter(subtask => subtask.task.task_id === task.task_id))}
         </Box>
     )
 }

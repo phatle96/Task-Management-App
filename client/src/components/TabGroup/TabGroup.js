@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useContext } from 'react';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -9,6 +8,8 @@ import { Badge, Stack } from '@mui/material';
 import { styled } from '@mui/material';
 import StyledToggleButton from '../StyledToggleButton/StyledToggleButton';
 import MyCalendar from '../Calendar/Calendar';
+import { DataContext } from '../../context/DataContext';
+import PeopleContainer from '../PeopleContainer/PeopleContainer';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -20,11 +21,19 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export default function TabGroup() {
+
+    const { filterResults } = useContext(DataContext);
     const [value, setValue] = useState('1');
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const count_completed = (is_completed) => {
+        return filterResults.filter(task => task.is_completed === is_completed).length
+    };
+
 
 
     return (
@@ -34,15 +43,22 @@ export default function TabGroup() {
                 <Stack display="flex" direction="column" justifyContent="space-between" sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ display: "flex" }}>
                         <Tab label="Doing" value="1" />
-                        <StyledBadge badgeContent="0" color="primary" >
-                        </StyledBadge>
-
+                        {
+                            value === '1' &&
+                            <StyledBadge badgeContent={count_completed(false)} color="primary" >
+                            </StyledBadge>
+                        }
                         <Tab label="Completed" value="2" />
+                        {
+                            value === '2' &&
+                            (<StyledBadge badgeContent={count_completed(true)} color="primary" >
+                            </StyledBadge>)
+                        }
                         <Tab label="People" value="3" />
                         <Tab label="Calendar" value="4" />
                     </TabList>
                 </Stack >
-                <Stack direction="row" sx={{ justifyContent: "end", paddingRight: 3, paddingTop: 1 }} >
+                <Stack direction="row" sx={{ paddingLeft: 3, paddingTop: 3 }} >
                     <StyledToggleButton />
                 </Stack>
                 <TabPanel value="1" >
@@ -51,7 +67,9 @@ export default function TabGroup() {
                 <TabPanel value="2">
                     <TaskContainer isCompleted={true} />
                 </TabPanel>
-                <TabPanel value="3">People here</TabPanel>
+                <TabPanel value="3">
+                    <PeopleContainer />
+                </TabPanel>
                 <TabPanel value="4">
                     <MyCalendar />
                 </TabPanel>

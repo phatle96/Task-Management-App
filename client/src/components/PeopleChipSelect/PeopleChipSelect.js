@@ -4,15 +4,15 @@ import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-import PersonChip from '../PersonChip/PersonChip';
 import { Avatar } from '@mui/material';
 
 
-export default function PeopleChipSelect() {
+export default function PeopleChipSelect({ setPeople }) {
 
 
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
+    const [value, setValue] = useState([]);
 
     useEffect(() => {
         const getData = async () => {
@@ -60,11 +60,15 @@ export default function PeopleChipSelect() {
                 id="tags-standard"
                 options={data}
                 getOptionLabel={(option) => option.name}
-                defaultValue={[]}
+                value={value}
+                onChange={(event, newValue) => {
+                    setValue(newValue);
+                    setPeople(newValue)
+                }}
                 renderTags={(tagValue, getTagProps) =>
                     tagValue.map((option, index) => (
                         <Chip
-                            avatar={<Avatar sx={{ bgcolor: stringToColor(`${option.name}`)}}>{option.default_avatar}</Avatar>}
+                            avatar={<Avatar sx={{ bgcolor: stringToColor(`${option.name}`) }}>{option.default_avatar}</Avatar>}
                             label={option.name}
                             {...getTagProps({ index })}
                         />

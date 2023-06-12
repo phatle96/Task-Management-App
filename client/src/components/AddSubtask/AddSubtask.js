@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
-	Button, ClickAwayListener, FormControl, IconButton, Input, InputAdornment, InputLabel, List, ListItem, ListItemIcon, Stack, TextField, Tooltip,
+	Button, ClickAwayListener,  IconButton, List, ListItem, ListItemIcon, Stack, TextField, Tooltip,
 } from "@mui/material";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import DoneIcon from '@mui/icons-material/Done';
@@ -8,14 +8,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import { nanoid } from 'nanoid'
 
-const AddSubtask = ({ list, task }) => {
+const AddSubtask = ({ setSt }) => {
 
 	const [subtasks, setSubtasks] = useState([]);
 	const [content, setContent] = useState('');
 	const [error, setError] = useState({ state: false, helperText: "" });
 	const [putPayload, setPut] = useState([]);
 	const [handleAdd, setHandleAdd] = useState(false);
-	const [edit, setEdit] = useState("")
+	const [edit, setEdit] = useState(false);
+
 
 	const handleAddSubtask = () => {
 		setHandleAdd(true);
@@ -24,6 +25,7 @@ const AddSubtask = ({ list, task }) => {
 
 	const handleCancelAdd = () => {
 		setHandleAdd(false);
+		setContent("")
 		setError({ state: false, helperText: "" })
 	};
 
@@ -31,9 +33,20 @@ const AddSubtask = ({ list, task }) => {
 		if (content.length > 0 && content.length < 300) {
 			setHandleAdd(false);
 			setSubtasks([...subtasks, { temp_id: nanoid(5), content: content }]);
+			setSt([...subtasks, { temp_id: nanoid(5), content: content }]);
 			setError({ state: false, helperText: "" });
 			setContent("");
 		} else {
+			setError({ state: true, helperText: "length should be 1 to 299 characters" })
+		}
+	}
+
+	const handleEditAdd = (event) => {
+		if (event.length > 0 && event.length < 300) {
+			setContent(event)
+			setError({ state: false, helperText: "" });
+		} else {
+			setContent(event)
 			setError({ state: true, helperText: "length should be 1 to 299 characters" })
 		}
 	}
@@ -55,6 +68,7 @@ const AddSubtask = ({ list, task }) => {
 			}
 		})
 		setSubtasks(editing);
+		setSt(editing);
 	}
 
 	const handleFocus = (id) => {
@@ -67,7 +81,9 @@ const AddSubtask = ({ list, task }) => {
 				return { ...subtask, isEdit: false }
 			}
 		})
+		setEdit(true)
 		setSubtasks(editing);
+		setSt(editing)
 	}
 
 	const handleClose = (id) => {
@@ -81,6 +97,7 @@ const AddSubtask = ({ list, task }) => {
 			}
 		})
 		setSubtasks(editing);
+		setSt(editing)
 	}
 
 
@@ -95,6 +112,27 @@ const AddSubtask = ({ list, task }) => {
 			}
 		})
 		setSubtasks(deleted);
+		setSt(deleted)
+	}
+
+	const handleUndoDelete = (id) => {
+		const undeleted = subtasks.map((subtask) => {
+			if (subtask.temp_id === id) {
+				return (
+					{ ...subtask, isDeleted: false }
+				)
+			} else {
+				return { ...subtask }
+			}
+		})
+		setSubtasks(undeleted);
+		setSt(undeleted)
+	}
+
+	const handleConfirmDelete = (id) => {
+		const confirmDelete = subtasks.filter(subtask => subtask.temp_id !== id);
+		setSubtasks(confirmDelete);
+		setSt(confirmDelete);
 	}
 
 
@@ -121,6 +159,7 @@ const AddSubtask = ({ list, task }) => {
 		)
 	}
 
+
 	return (
 		<Stack direction="column">
 			<Stack direction="row" >
@@ -144,7 +183,7 @@ const AddSubtask = ({ list, task }) => {
 								error={error.state}
 								helperText={error.helperText}
 								value={content}
-								onChange={(event) => { setContent(event.target.value) }} />
+								onChange={(event) => { handleEditAdd(event.target.value) }} />
 
 						</ClickAwayListener>
 						<IconButton onClick={handleCancelAdd} aria-label="cancel" size="small">
@@ -156,23 +195,51 @@ const AddSubtask = ({ list, task }) => {
 					</Stack>
 				)
 			}
-			<List>
+			<List sx={{ display: "flex", flexDirection: "column-reverse" }}>
 				{
 					subtasks.map((subtask) => {
 						return (
 							<ListItem key={subtask.temp_id} sx={{ height: 35, paddingY: 2.5 }}>
-									<ListItemIcon sx={{ minWidth: 35 }}>
-										<SubdirectoryArrowRightIcon fontSize='inherit' />
-									</ListItemIcon>
-									<TextField
-										sx={{ width: "100%" }}
-										variant="standard"
-										value={subtask.content}
-										error={subtask.error}
-										helperText={subtask.helperText}
-										onFocus={() => { handleFocus(subtask.temp_id) }}
-										onChange={(event) => { handleEdit(event.target.value, subtask.temp_id); }} />
-									<EditButton isEdit={subtask.isEdit} id={subtask.temp_id} />
+								{!subtask.isDeleted ? (
+									<>
+										<ListItemIcon sx={{ minWidth: 35 }}>
+											<SubdirectoryArrowRightIcon fontSize='inherit' />
+										</ListItemIcon>
+										<TextField
+											sx={{ width: "100%" }}
+											variant="standard"
+											value={subtask.content}
+											error={subtask.error}
+											helperText={subtask.helperText}
+											onFocus={() => { handleFocus(subtask.temp_id) }}
+											onChange={(event) => { handleEdit(event.target.value, subtask.temp_id); }} />
+										<EditButton isEdit={subtask.isEdit} id={subtask.temp_id} />
+									</>
+								) : (
+									<>
+										<ListItemIcon sx={{ minWidth: 35 }}>
+											<SubdirectoryArrowRightIcon fontSize='inherit' />
+										</ListItemIcon>
+										<Stack direction="row" spacing={0.5}
+											sx={{ width: "100%", justifyContent: "center" }}>
+											<Button
+												variant='outlined'
+												size='small'
+												color='primary'
+												onClick={() => handleUndoDelete(subtask.temp_id)}>
+												Undo
+											</Button>
+											<Button
+												variant='outlined'
+												size='small'
+												color='error'
+												onClick={() => handleConfirmDelete(subtask.temp_id)}>
+												Delete
+											</Button>
+										</Stack>
+									</>
+								)
+								}
 							</ListItem>
 						)
 					})

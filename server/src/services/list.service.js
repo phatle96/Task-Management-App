@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
 const List = require('../models/list.model');
 const Task = require('../models/task.model');
 const Subtask = require('../models/subtask.model');
 
 exports.find_all_list = async() =>{
-	const lists = await List.find({}).exec();
+	const fields = null
+	const lists = await List.find({}, fields).exec();
 	return lists;
 }
 
