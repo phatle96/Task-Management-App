@@ -82,6 +82,7 @@ export function DataContextProvider({ children }) {
 			}
 		});
 	}, [tasks, filter])
+	
 
 	//Send data
 

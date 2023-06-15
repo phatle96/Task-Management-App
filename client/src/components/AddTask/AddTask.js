@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Stack, TextField, Button } from "@mui/material";
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DataTimeSelect/DateTimeSelect";
@@ -6,21 +6,21 @@ import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddSubtask from "../AddSubtask/AddSubtask";
 import ListFolder from "../ListFolder/ListFolder";
-import axios from "axios";
 import { DataContext } from "../../context/DataContext";
+import AxiosPost from "../../hooks/AxiosPost";
 
 const AddTask = () => {
 
     const [task, setTask] = useState({})
     const [list, setList] = useState(null)
-    const [people, setPeople] = useState([])
+    const [selectPeople, setSelectPeople] = useState([])
     const [alert, setAlert] = useState('')
     const [st, setSt] = useState([])
     const [error, setError] = useState(null)
+    const [isSubmit, setIsSubmit] = useState(false)
+    const [payload, setPayload] = useState({})
 
-
-
-
+    const { tasks, setTasks } = useContext(DataContext)
 
     const handleOnchange = (event) => {
         if (event.length > 0 && event.length < 300) {
@@ -30,35 +30,30 @@ const AddTask = () => {
         }
     }
 
-    const handleSave = () => {
-        console.log("list: ", list);
+    const handleSave = (e) => {
+        console.log("list: ", list._id);
         console.log("task:", task.content);
-        console.log("people: ", people);
-        console.log("alert:", alert);
+        console.log("people: ", selectPeople)
+        console.log("alert:", alert.format());
         console.log("subtasks:", st)
 
-
-        const postTask = async () => {
-            const task_payload = {
-                list: list,
+        const pl = {
+            payload: {
+                list: list._id,
                 content: task.content,
+                person: selectPeople,
                 alert: alert.format(),
-            }
-            try {
-                const response = await axios.post(`http://localhost:8080/api/task/create`, task_payload)
-                if (response.status !== 200) {
-                    throw new Error(
-                        `This is an HTTP error: The status is ${response.status}`
-                    );
-                }
-                console.log(response)
-                setError(null);
-            } catch (err) {
-                setError(err.message);
+                subtasks: st
             }
         }
 
-        postTask()
+        setPayload(pl)
+
+        setIsSubmit(true)
+
+        //postAPI('task', payload)
+
+        //setTasks({ ...tasks, payload })
 
     }
 
@@ -76,7 +71,7 @@ const AddTask = () => {
                 helperText={task.helperText}
                 onChange={(e) => { handleOnchange(e.target.value) }}
             />
-            <PeopleChipSelect setPeople={setPeople} />
+            <PeopleChipSelect setSelectPeople={setSelectPeople} />
             <DateTimeSelect setAlert={setAlert} />
             <AddSubtask setSt={setSt} />
             <Stack display="flex" paddingTop={2} direction="row" justifyContent="flex-end" spacing={1}>
@@ -84,11 +79,20 @@ const AddTask = () => {
                     Clear
                 </Button>
                 <Button
-                    onClick={handleSave}
+                    onClick={(e) => { handleSave(e) }}
                     variant="contained" endIcon={<SaveIcon />}>
                     Save
                 </Button>
             </Stack>
+            {
+                isSubmit && (
+                    <AxiosPost
+                        type={'task'}
+                        payload={payload}
+                        setIsSubmit={setIsSubmit} />
+                )
+
+            }
         </Stack>
     )
 }

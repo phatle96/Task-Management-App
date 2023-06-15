@@ -1,46 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
-const useAxiosPut = (dataUrl, content) => {
-    const [data, setData] = useState([]);
-    const [fetchError, setFetchError] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+const useAxiosPut = () => {
+	const [data, setData] = useState([]);
+	const [putError, setPutError] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        let isMounted = true;
-        const controller = new AbortController();
+	const putAPICall = async (payload) => {
+		try {
+			setIsLoading(true);
 
-        const fetchData = async (url) => {
-            setIsLoading(true);
-            try {
-                const response = await axios.put(url, { 
-                    signal: controller.signal
-                });
-                if (isMounted) {
-                    setData(response.data);
-                    setFetchError(null);
-                }
-            } catch (err) {
-                if (isMounted) {
-                    setFetchError(err.message);
-                    setData([]);
-                }
-            } finally {
-                isMounted && setIsLoading(false);
-            }
-        }
+			const type = payload.id.match('[a-z]*');
+			const response = await axios.put(`http://localhost:8080/api/${type}/${payload.id}/update`, payload.payload);
 
-        fetchData(dataUrl);
+			setData(response.data);
+			setPutError(null);
 
-        const cleanUp = () => {
-            isMounted = false;
-            controller.abort()
-        }
+			setIsLoading(false)
 
-        return cleanUp;
-    }, [dataUrl]);
+		} catch (err) {
+			setIsLoading(false)
+			setPutError(err.message);
+			setData([]);
+		}
+	}
 
-    return { data, fetchError, isLoading };
+	return { putAPICall, data, putError, isLoading };
 }
+
 
 export default useAxiosPut;

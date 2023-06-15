@@ -20,7 +20,6 @@ const TaskContainer = ({ isCompleted }) => {
 		putSubtask, setPutSubtask,
 		filterResults } = useContext(DataContext);
 
-
 	const putData = async (task_payload, id) => {
 		try {
 			const response = await axios.put(`http://localhost:8080/api/task/${id}/update`, task_payload);
@@ -59,12 +58,12 @@ const TaskContainer = ({ isCompleted }) => {
 	const handleOpenCard = (task) => {
 		setOpen(true);
 		setPutTask({
-			id: "",
+			id: task.task_id,
 			payload: {
-				list_id: "",
-				content: "",
-				people: [],
-				alert: ""
+				list_id: task.list._id,
+				content: task.content,
+				people: task.person,
+				alert: task.alert
 			}
 		});
 		setPutSubtask({
@@ -116,7 +115,7 @@ const TaskContainer = ({ isCompleted }) => {
 							task.is_completed === isCompleted &&
 							(<Grid2 xs={12} sm={12} md={12} lg={12}
 								key={task.task_id}>
-								<Paper variant="outlined" sx={{ paddingBottom: 1 }}>
+								<Paper variant="outlined" sx={{ paddingBottom: 1 }} >
 									<Stack direction="row" sx={{ width: "100%" }}>
 										<Stack direction="column">
 											<Box sx={{ display: "flex", alignItems: "baseline", paddingTop: 7 }}>
@@ -129,7 +128,7 @@ const TaskContainer = ({ isCompleted }) => {
 												handleOpenCard(task);
 											}} >
 											<TaskCard data={task} />
-											<SubTask task={task} />
+											{/* <SubTask task={task} /> */}
 											<Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: 1, paddingTop: 2 }}>
 												<Chip icon={<FolderOpenIcon />} label={task.list.name} size="small" />
 											</Box>

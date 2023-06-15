@@ -26,7 +26,7 @@ export default function TabGroup() {
     const [value, setValue] = useState('1');
 
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (e,newValue) => {
         setValue(newValue);
     };
 
@@ -34,7 +34,18 @@ export default function TabGroup() {
         return filterResults.filter(task => task.is_completed === is_completed).length
     };
 
+    const renderTabPanel = () => { //lowerCase naming convertation
+        let obb = {
+            ['1']: <TaskContainer isCompleted={false} />,
+            ['2']: <TaskContainer isCompleted={true} />,
+            ['3']: <PeopleContainer />,
+            ['4']: <MyCalendar />,
+        }
 
+        return <TabPanel value={value}>
+            {obb[value]}
+        </TabPanel>
+    }
 
     return (
         <Stack position="relative" display="flex"
@@ -56,12 +67,20 @@ export default function TabGroup() {
                         }
                         <Tab label="People" value="3" />
                         <Tab label="Calendar" value="4" />
+                        {/* 
+                        {a?.map((x, i) => {
+                            return <>
+                            <Tab label={x.label} onClick={_ => handleChange(x.value)} value={x.value} key={x.value} />
+                            {x.value == '1' &&  <StyledBadge badgeContent={count_completed(false)} color="primary" />}
+                            {x.value == '2' &&  <StyledBadge badgeContent={count_completed(true)} color="primary" />}
+                            </>
+                        })} */}
                     </TabList>
                 </Stack >
                 <Stack direction="row" sx={{ paddingLeft: 3, paddingTop: 3 }} >
                     <StyledToggleButton />
                 </Stack>
-                <TabPanel value="1" >
+                {/* <TabPanel value="1" >
                     <TaskContainer isCompleted={false} />
                 </TabPanel>
                 <TabPanel value="2">
@@ -72,8 +91,16 @@ export default function TabGroup() {
                 </TabPanel>
                 <TabPanel value="4">
                     <MyCalendar />
-                </TabPanel>
+                </TabPanel> */}
+                {renderTabPanel()}
             </TabContext>
         </Stack>
     );
 }
+
+const a =[
+    {label: "Doing", value: '1'},
+    {label: "Complete", value: '2'},
+    {label: "People", value: '3'},
+    {label: "Calendar", value: '4'},
+]

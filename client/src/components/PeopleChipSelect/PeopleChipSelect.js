@@ -1,37 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Avatar } from '@mui/material';
+import { DataContext } from '../../context/DataContext';
 
 
-export default function PeopleChipSelect({ setPeople }) {
+export default function PeopleChipSelect({ setSelectPeople }) {
 
-
-    const [data, setData] = useState([]);
-    const [error, setError] = useState(null);
     const [value, setValue] = useState([]);
 
-    useEffect(() => {
-        const getData = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/api/person/all');
-                if (response.status !== 200) {
-                    throw new Error(
-                        `This is an HTTP error: The status is ${response.status}`
-                    );
-                }
-                setData(response.data);
-                setError(null);
-            } catch (err) {
-                setError(err.message);
-                setData(null);
-            }
-        }
-        getData();
-    }, [])
+    const { people } = useContext(DataContext)
+
 
     function stringToColor(string) {
         let hash = 0;
@@ -58,12 +40,13 @@ export default function PeopleChipSelect({ setPeople }) {
             <Autocomplete
                 multiple
                 id="tags-standard"
-                options={data}
+                options={people}
                 getOptionLabel={(option) => option.name}
                 value={value}
                 onChange={(event, newValue) => {
+                    console.log(newValue)
                     setValue(newValue);
-                    setPeople(newValue)
+                    setSelectPeople(newValue)
                 }}
                 renderTags={(tagValue, getTagProps) =>
                     tagValue.map((option, index) => (
