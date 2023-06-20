@@ -4,7 +4,7 @@ import { useState, useContext } from "react";
 import ButtonNext from '@mui/material-next/Button';
 import AddTask from "../AddTask/AddTask";
 import { DataContext } from "../../context/DataContext";
-
+import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
 
 
 const ListTitle = () => {
@@ -52,6 +52,7 @@ const ListTitle = () => {
             <Stack direction="row" sx={{ paddingLeft: 2 }}>
                 <Typography variant="h4" noWrap={1} sx={{ paddingRight: 5, width: '100%', maxWidth: 800 }}>
                     {list_name()}
+                    <SynchronizeLoading />
                 </Typography>
             </Stack>
             <Stack direction="row" >

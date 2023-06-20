@@ -7,6 +7,7 @@ import SubTask from "../SubTask/SubTask";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { DataContext } from "../../context/DataContext";
 import AddTask from "../AddTask/AddTask";
+import useAxiosPut from "../../services/useAxiosPut";
 
 const TaskContainer = ({ isCompleted }) => {
 
@@ -19,6 +20,8 @@ const TaskContainer = ({ isCompleted }) => {
 		putTask, setPutTask,
 		putSubtask, setPutSubtask,
 		filterResults } = useContext(DataContext);
+
+	const { axiosPut } = useAxiosPut();
 
 	const putData = async (task_payload, id) => {
 		try {
@@ -128,7 +131,7 @@ const TaskContainer = ({ isCompleted }) => {
 												handleOpenCard(task);
 											}} >
 											<TaskCard data={task} />
-											{/* <SubTask task={task} /> */}
+											<SubTask task={task} />
 											<Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: 1, paddingTop: 2 }}>
 												<Chip icon={<FolderOpenIcon />} label={task.list.name} size="small" />
 											</Box>

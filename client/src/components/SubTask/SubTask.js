@@ -7,7 +7,7 @@ import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { styled } from '@mui/material/styles';
 import { DataContext } from "../../context/DataContext";
-import useAxiosPut from "../../hooks/useAxiosPut";
+import useAxiosPut from "../../services/useAxiosPut";
 
 
 const SubTask = ({ task }) => {
@@ -15,7 +15,7 @@ const SubTask = ({ task }) => {
     const [error, setError] = useState(null);
     const { subtasks: data, setSubtasks } = useContext(DataContext);
 
-    const { putAPICall, data: responseData, putError, isLoading } = useAxiosPut();
+    const { axiosPut } = useAxiosPut();
 
     const AccordionSummary = styled((props) => (
         <MuiAccordionSummary
@@ -52,7 +52,7 @@ const SubTask = ({ task }) => {
                             }
                         };
 
-                        putAPICall(subtask_payload);
+                        axiosPut(subtask_payload);
 
                         return { ...subtask, is_completed: !subtask.is_completed };
                     } else {

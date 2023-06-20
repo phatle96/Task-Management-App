@@ -1,5 +1,5 @@
-import { useContext, useState, useEffect, createContext } from "react";
-import useAxiosFetch from "../hooks/useAxiosFetch";
+import { useState, useEffect, createContext } from "react";
+import useAxiosFetch from "../services/useAxiosFetch";
 
 export const DataContext = createContext({});
 
@@ -22,6 +22,11 @@ export function DataContextProvider({ children }) {
 
 	const [selectList, setSelectList] = useState("")
 
+	//Refetch data
+	const [reFetchLists, setReFetchLists] = useState(false);
+	const [reFetchTasks, setReFetchTasks] = useState(false);
+	const [reFetchPerson, setReFetchPerson] = useState(false);
+
 	//Task
 	const [postTask, setPostTask] = useState({ payload: {} });
 	const [putTask, setPutTask] = useState({ id: "", payload: {} });
@@ -37,32 +42,27 @@ export function DataContextProvider({ children }) {
 	const [putPerson, setPutPerson] = useState({ id: "", payload: {} });
 	const [deletePerson, setDeletePerson] = useState({ id: "" });
 
-	//error
-	const [fetchError, setFetchError] = useState([]);
-	const [postError, setPostError] = useState([]);
-	const [putError, setPutError] = useState([]);
-	const [deleteError, setDeleteError] = useState([]);
 
 	// fetch hook
 	const {
 		data: listsData,
 		fetchError: listsError,
-		isLoading: listsLoading } = useAxiosFetch('http://localhost:8080/api/list/all');
+		isLoading: listsLoading } = useAxiosFetch('http://localhost:8080/api/list/all', reFetchLists);
 
 	const {
 		data: tasksData,
 		fetchError: tasksError,
-		isLoading: tasksLoading } = useAxiosFetch('http://localhost:8080/api/task/all');
+		isLoading: tasksLoading } = useAxiosFetch('http://localhost:8080/api/task/all', reFetchTasks);
 
 	const {
 		data: subtasksData,
 		fetchError: subtasksError,
-		isLoading: subtasksLoading } = useAxiosFetch('http://localhost:8080/api/subtask/all');
+		isLoading: subtasksLoading } = useAxiosFetch('http://localhost:8080/api/subtask/all', reFetchTasks);
 
 	const {
 		data: peopleData,
 		fetchError: peopleError,
-		isLoading: peopleLoading } = useAxiosFetch('http://localhost:8080/api/person/all');
+		isLoading: peopleLoading } = useAxiosFetch('http://localhost:8080/api/person/all', reFetchPerson);
 
 	//Fetch data
 	useEffect(() => {
@@ -82,7 +82,7 @@ export function DataContextProvider({ children }) {
 			}
 		});
 	}, [tasks, filter])
-	
+
 
 	//Send data
 
@@ -93,6 +93,9 @@ export function DataContextProvider({ children }) {
 			tasks, setTasks,
 			subtasks, setSubtasks,
 			people, setPeople,
+
+			listsError, tasksError, subtasksError, peopleError,
+			listsLoading, tasksLoading, subtasksLoading, peopleLoading,
 
 			filter, setFilter,
 			filterResults,
@@ -114,6 +117,11 @@ export function DataContextProvider({ children }) {
 			deletePerson, setDeletePerson,
 
 			selectList, setSelectList,
+
+			reFetchLists, setReFetchLists,
+			reFetchTasks, setReFetchTasks,
+			reFetchPerson, setReFetchPerson
+
 		}}>
 			{children}
 		</DataContext.Provider>

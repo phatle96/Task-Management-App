@@ -7,6 +7,7 @@ import TabGroup from "./components/TabGroup/TabGroup";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import ListTitle from "./components/ListTitle/ListTitle";
 import { DataContextProvider } from "./context/DataContext";
+import { BrowserRouter as Router, Switch, Route, redirect } from "react-router-dom"
 
 export default function App() {
 	return (

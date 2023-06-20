@@ -81,7 +81,6 @@ const NavBar = () => {
 							<ListItemButton
 								sx={{ minHeight: 30, borderRadius: '10px' }}
 								component="a"
-								href={`#${list.list_id}`}
 								onClick={() => handleFilter(list)}
 								selected={filter.list_id === list.list_id}>
 								<ListItemIcon sx={{ justifyContent: 'center' }}>

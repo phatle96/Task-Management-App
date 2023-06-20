@@ -26,7 +26,7 @@ export default function TabGroup() {
     const [value, setValue] = useState('1');
 
 
-    const handleChange = (e,newValue) => {
+    const handleChange = (e, newValue) => {
         setValue(newValue);
     };
 
@@ -34,17 +34,16 @@ export default function TabGroup() {
         return filterResults.filter(task => task.is_completed === is_completed).length
     };
 
-    const renderTabPanel = () => { //lowerCase naming convertation
+    const renderTabPanel = () => {
         let obb = {
-            ['1']: <TaskContainer isCompleted={false} />,
-            ['2']: <TaskContainer isCompleted={true} />,
-            ['3']: <PeopleContainer />,
-            ['4']: <MyCalendar />,
+            '1': <TaskContainer isCompleted={false} />,
+            '2': <TaskContainer isCompleted={true} />,
+            '3': <PeopleContainer />,
+            '4': <MyCalendar />,
         }
-
-        return <TabPanel value={value}>
-            {obb[value]}
-        </TabPanel>
+        return (
+            obb[value]
+        )
     }
 
     return (
@@ -52,55 +51,32 @@ export default function TabGroup() {
             sx={{ typography: 'body1', display: { lg: "block", md: "block", sm: "block", xs: "block" } }} >
             <TabContext value={value}>
                 <Stack display="flex" direction="column" justifyContent="space-between" sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ display: "flex" }}>
-                        <Tab label="Doing" value="1" />
-                        {
-                            value === '1' &&
-                            <StyledBadge badgeContent={count_completed(false)} color="primary" >
-                            </StyledBadge>
-                        }
-                        <Tab label="Completed" value="2" />
-                        {
-                            value === '2' &&
-                            (<StyledBadge badgeContent={count_completed(true)} color="primary" >
-                            </StyledBadge>)
-                        }
-                        <Tab label="People" value="3" />
-                        <Tab label="Calendar" value="4" />
-                        {/* 
-                        {a?.map((x, i) => {
-                            return <>
-                            <Tab label={x.label} onClick={_ => handleChange(x.value)} value={x.value} key={x.value} />
-                            {x.value == '1' &&  <StyledBadge badgeContent={count_completed(false)} color="primary" />}
-                            {x.value == '2' &&  <StyledBadge badgeContent={count_completed(true)} color="primary" />}
-                            </>
-                        })} */}
+                    <TabList aria-label="tab-list" sx={{ display: "flex" }}>
+                        {a?.map((x) => {
+                            return (
+                                <>
+                                    <Tab selected={x.value === value} onChange={handleChange} label={x.label} value={x.value} key={x.value} />
+                                    {x.value === '1' && value === x.value && <StyledBadge badgeContent={count_completed(false)} color="primary" />}
+                                    {x.value === '2' && value === x.value && <StyledBadge badgeContent={count_completed(true)} color="primary" />}
+                                </>
+                            )
+                        })}
                     </TabList>
                 </Stack >
                 <Stack direction="row" sx={{ paddingLeft: 3, paddingTop: 3 }} >
                     <StyledToggleButton />
                 </Stack>
-                {/* <TabPanel value="1" >
-                    <TaskContainer isCompleted={false} />
+                <TabPanel value={value}>
+                    {renderTabPanel()}
                 </TabPanel>
-                <TabPanel value="2">
-                    <TaskContainer isCompleted={true} />
-                </TabPanel>
-                <TabPanel value="3">
-                    <PeopleContainer />
-                </TabPanel>
-                <TabPanel value="4">
-                    <MyCalendar />
-                </TabPanel> */}
-                {renderTabPanel()}
             </TabContext>
         </Stack>
     );
 }
 
-const a =[
-    {label: "Doing", value: '1'},
-    {label: "Complete", value: '2'},
-    {label: "People", value: '3'},
-    {label: "Calendar", value: '4'},
+const a = [
+    { label: "Doing", value: '1' },
+    { label: "Complete", value: '2' },
+    { label: "People", value: '3' },
+    { label: "Calendar", value: '4' },
 ]
