@@ -4,6 +4,7 @@
   "description": "This is a demo project by PhatLV - use to apply for the web developer position",
   "main": "index.js",
   "scripts": {
+    "start": "npm run dev",
     "server": "npm run dev --prefix server",
     "client": "npm run dev --prefix client",
     "storybook": "npm run storybook --prefix client",

@@ -4,6 +4,7 @@ import { useContext, useState, useEffect } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import DensitySmallIcon from '@mui/icons-material/DensitySmall';
 import WorkIcon from '@mui/icons-material/Work';
+import { Link } from 'react-router-dom';
 
 
 
@@ -46,11 +47,10 @@ const NavBar = () => {
 									display: { lg: "block", md: "none", sm: "none", xs: "none" },
 									paddingLeft: 0.5
 								}} />
-
 						</ListItemButton>
 					</ListItem>
 					<Divider />
-					<ListItem >
+					<ListItem component={Link} to="/">
 						<ListItemButton
 							onClick={handleResetFilter}
 							selected={filter.list_id === ''}
@@ -66,7 +66,8 @@ const NavBar = () => {
 									fontWeight: 'medium',
 									variant: 'body2',
 									letterSpacing: 0.5,
-									noWrap: true
+									noWrap: true,
+									color: 'text.primary'
 								}}
 								sx={{
 									display: { lg: "block", md: "none", sm: "none", xs: "none" },
@@ -77,7 +78,7 @@ const NavBar = () => {
 						</ListItemButton>
 					</ListItem>
 					{lists.map(list => (
-						<ListItem key={list.list_id} sx={{ paddingY: 0.25 }}>
+						<ListItem component={Link} to={list.name} key={list.list_id} sx={{ paddingY: 0.25 }}>
 							<ListItemButton
 								sx={{ minHeight: 30, borderRadius: '10px' }}
 								component="a"
@@ -93,7 +94,8 @@ const NavBar = () => {
 									primaryTypographyProps={{
 										fontWeight: 'medium',
 										variant: 'body2',
-										noWrap: true
+										noWrap: true,
+										color: 'text.primary'
 									}}
 									sx={{
 										display: { lg: "block", md: "none", sm: "none", xs: "none" },

@@ -7,43 +7,41 @@ import TabGroup from "./components/TabGroup/TabGroup";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import ListTitle from "./components/ListTitle/ListTitle";
 import { DataContextProvider } from "./context/DataContext";
-import { BrowserRouter as Router, Switch, Route, redirect } from "react-router-dom"
+import { BrowserRouter as Router, Switch, Route, Redirect, } from 'react-router-dom'
 
 export default function App() {
 	return (
 		<DataContextProvider>
-			<Box sx={{ width: '100%', height: '100%' }}>
-				<Stack direction="column" justifyContent="space-between">
-					<Box sx={{ /* backgroundColor: "info.main" */ }}>
-						<Appbar />
-					</Box>
-					<Stack direction="row" >
-						<Box sx={{ /* backgroundColor: "secondary.main" */ }} >
-							<NavBar />
+			<Router>
+				<Box sx={{ width: '100%', height: '100%' }}>
+					<Stack direction="column" justifyContent="space-between">
+						<Box sx={{ /* backgroundColor: "info.main" */ }}>
+							<Appbar />
 						</Box>
-						<Box sx={{ width: '100%' }}>
-							<Stack direction="column">
-								<Box sx={{ /* backgroundColor: "info.main" */ }}>
-									<ListTitle />
-								</Box>
-								<Grid2 container >
-									<Grid2 xs={0} sm={0} md={12} lg={12}
-										sx={{ display: { xs: "none", sm: "none", md: "block", lg: "block" }, /* backgroundColor: "error.main"  */ }}>
-										<TabGroup />
+						<Stack direction="row" >
+							<Box sx={{ /* backgroundColor: "secondary.main" */ }} >
+								<NavBar />
+							</Box>
+							<Box sx={{ width: '100%' }}>
+								<Stack direction="column">
+									<Box sx={{ /* backgroundColor: "info.main" */ }}>
+										<ListTitle />
+									</Box>
+									<Grid2 container >
+										<Grid2 xs={12} sm={12} md={12} lg={12}
+											sx={{ display: { xs: "block", sm: "block", md: "block", lg: "block" }, /* backgroundColor: "error.main"  */ }}>
+											<TabGroup />
+										</Grid2>
 									</Grid2>
-									<Grid2 xs={12} sm={12} md={0} lg={0}
-										sx={{ display: { xs: "block", sm: "block", md: "none", lg: "none" }, /* backgroundColor: "primary.main" */ }}>
-										<TabGroup />
-									</Grid2>
-								</Grid2>
-							</Stack>
+								</Stack>
+							</Box>
+						</Stack>
+						<Box sx={{ display: { xs: "block", sm: "block", md: "none", lg: "none" }, /* backgroundColor: "text.disabled" */ }}>
+							<BottomAppBar />
 						</Box>
 					</Stack>
-					<Box sx={{ display: { xs: "block", sm: "block", md: "none", lg: "none" }, /* backgroundColor: "text.disabled" */ }}>
-						<BottomAppBar />
-					</Box>
-				</Stack>
-			</Box>
+				</Box>
+			</Router>
 		</DataContextProvider>
 	);
 }

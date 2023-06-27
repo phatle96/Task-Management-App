@@ -7,21 +7,31 @@ import SubTask from "../SubTask/SubTask";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { DataContext } from "../../context/DataContext";
 import AddTask from "../AddTask/AddTask";
-import useAxiosPut from "../../services/useAxiosPut";
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchTasks, selectAllTasks, tasksFilterSelector } from "../../features/tasks/tasksSlice";
 
 const TaskContainer = ({ isCompleted }) => {
 
 	const [error, setError] = useState(null);
-	const [hover, setHover] = useState(false)
 	const [open, setOpen] = useState(false);
 
+	const dispatch = useDispatch();
+	const status = useSelector((state) => state.tasks.status);
+	const tasks = useSelector(selectAllTasks);
+	// const tasksFilter = useSelector(tasksFilterSelector(tasks, 'list_59613088-d06c-499f-a9c1-531bda8de239'))
+
+	useEffect(() => {
+		if (status === 'idle') {
+			dispatch(fetchTasks())
+		}
+	}, [status, dispatch])
+
 	const {
-		tasks, setTasks,
+		setTasks,
 		putTask, setPutTask,
 		putSubtask, setPutSubtask,
-		filterResults } = useContext(DataContext);
+	} = useContext(DataContext);
 
-	const { axiosPut } = useAxiosPut();
 
 	const putData = async (task_payload, id) => {
 		try {
@@ -37,7 +47,6 @@ const TaskContainer = ({ isCompleted }) => {
 			setError(err.message);
 		}
 	}
-
 
 	const handleChecked = (key) => {
 		setTasks(
@@ -112,7 +121,7 @@ const TaskContainer = ({ isCompleted }) => {
 	return (
 		<Grid2 container rowSpacing={2} columnSpacing={1} sx={{ alignItems: "center" }}>
 			{
-				filterResults.map(
+				tasks.map(
 					task => {
 						return (
 							task.is_completed === isCompleted &&

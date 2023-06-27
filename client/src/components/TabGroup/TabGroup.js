@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -10,6 +10,8 @@ import StyledToggleButton from '../StyledToggleButton/StyledToggleButton';
 import MyCalendar from '../Calendar/Calendar';
 import { DataContext } from '../../context/DataContext';
 import PeopleContainer from '../PeopleContainer/PeopleContainer';
+
+
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -52,12 +54,12 @@ export default function TabGroup() {
             <TabContext value={value}>
                 <Stack display="flex" direction="column" justifyContent="space-between" sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList aria-label="tab-list" sx={{ display: "flex" }}>
-                        {a?.map((x) => {
+                        {tabs?.map((tab) => {
                             return (
                                 <>
-                                    <Tab selected={x.value === value} onChange={handleChange} label={x.label} value={x.value} key={x.value} />
-                                    {x.value === '1' && value === x.value && <StyledBadge badgeContent={count_completed(false)} color="primary" />}
-                                    {x.value === '2' && value === x.value && <StyledBadge badgeContent={count_completed(true)} color="primary" />}
+                                    <Tab selected={tab.value === value} onChange={handleChange} label={tab.label} value={tab.value} key={tab.value} />
+                                    {tab.value === '1' && value === tab.value && <StyledBadge badgeContent={count_completed(false)} color="primary" />}
+                                    {tab.value === '2' && value === tab.value && <StyledBadge badgeContent={count_completed(true)} color="primary" />}
                                 </>
                             )
                         })}
@@ -74,9 +76,10 @@ export default function TabGroup() {
     );
 }
 
-const a = [
+const tabs = [
     { label: "Doing", value: '1' },
     { label: "Complete", value: '2' },
     { label: "People", value: '3' },
     { label: "Calendar", value: '4' },
 ]
+

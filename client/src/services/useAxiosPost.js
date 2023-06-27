@@ -1,10 +1,6 @@
 import axios from 'axios';
-import { DataContext } from '../context/DataContext';
-import { useContext } from 'react';
 
 const useAxiosPost = () => {
-
-	const { reFetchTasks, setReFetchTasks } = useContext(DataContext);
 
 	const axiosPost = async (type, payload) => {
 		try {
