@@ -1,5 +1,6 @@
-import { createAsyncThunk, createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from '@reduxjs/toolkit';
 import { axiosPost, axiosDelete, axiosPut, axiosFetch } from '../../utils/api';
+import { selectFilters } from '../filters/filtersSlice';
 
 export const fetchTasks = createAsyncThunk(
     'tasks/fetchTasks',
@@ -38,20 +39,10 @@ const tasksAdapter = createEntityAdapter({
     selectId: (e) => e.task_id,
 })
 
-const selectTasks = state => state.tasks
+const selectTasks = (state) => state.tasks
 
 const tasksSelectors = tasksAdapter.getSelectors(selectTasks)
 
-export const tasksFilterSelector = createSelector(
-    [
-        // Usual first input - extract value from `state`
-        state => state.tasks,
-        // Take the second arg, `list_id`, and forward to the output selector
-        (state, list_id) => list_id
-    ],
-    // Output selector gets (`tasks, list_id)` as args
-    (tasks, list_id) => {return tasks.filter(task => task.list_id === list_id)}
-)
 
 export const {
     selectAll: selectAllTasks,
@@ -59,6 +50,32 @@ export const {
     selectById: selectTaskById,
 } = tasksSelectors
 
+export const selectTasksByList = createSelector(
+    [selectAllTasks, selectFilters],
+    (tasks, filters) => {
+        if (filters.list === '') {
+            return tasks
+        } else {
+            return tasks.filter((task) => task.list.list_id === filters.list);
+        };
+    }
+)
+
+export const selectTasksByStatus = createSelector(
+    [selectTasksByList, selectFilters],
+    (tasks, filters) => {
+        switch (filters.completed) {
+            case true: {
+                return tasks.filter((task) => task.is_completed === true);
+            }
+            case false: {
+                return tasks.filter((task) => task.is_completed === false)
+            }
+            default:
+                return;
+        }
+    }
+)
 
 
 const tasksSlice = createSlice({
@@ -107,8 +124,10 @@ const tasksSlice = createSlice({
             state.status = 'failed';
             state.error = action.payload;
         },
-
-        [updateTask.fulfilled]: tasksAdapter.updateOne,
+        [updateTask.fulfilled]: (state, action) => {
+            const taskId = action.payload.task_id;
+            state.entities[taskId] = action.payload;
+        },
         [updateTask.rejected]: (state, action) => {
             state.status = 'failed';
             state.error = action.payload;

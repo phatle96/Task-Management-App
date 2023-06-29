@@ -1,17 +1,17 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import TaskContainer from '../TaskContainer/TaskContainer';
-import { Badge, Stack } from '@mui/material';
+import { Badge, Stack, dialogClasses } from '@mui/material';
 import { styled } from '@mui/material';
 import StyledToggleButton from '../StyledToggleButton/StyledToggleButton';
 import MyCalendar from '../Calendar/Calendar';
-import { DataContext } from '../../context/DataContext';
 import PeopleContainer from '../PeopleContainer/PeopleContainer';
-
-
+import { selectTasksByStatus } from '../../features/tasks/tasksSlice';
+import { tasksCompletedFilterChanged, selectFilters } from '../../features/filters/filtersSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -24,27 +24,41 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 export default function TabGroup() {
 
-    const { filterResults } = useContext(DataContext);
     const [value, setValue] = useState('1');
-
+    const dispatch = useDispatch();
+    const tasks = useSelector(selectTasksByStatus)
+    const totalTasks = tasks.length
+    const filters = useSelector(selectFilters);
 
     const handleChange = (e, newValue) => {
         setValue(newValue);
-    };
+        console.log('tab value', newValue)
+        switch (newValue) {
+            case '1': {
+                dispatch(tasksCompletedFilterChanged({ completed: false }))
+                console.log(filters)
+                break
+            }
 
-    const count_completed = (is_completed) => {
-        return filterResults.filter(task => task.is_completed === is_completed).length
+            case '2': {
+                dispatch(tasksCompletedFilterChanged({ completed: true }))
+                console.log(filters)
+                break
+            }
+            default:
+                return;
+        };
     };
 
     const renderTabPanel = () => {
-        let obb = {
-            '1': <TaskContainer isCompleted={false} />,
-            '2': <TaskContainer isCompleted={true} />,
+        let tabPanel = {
+            '1': <TaskContainer />,
+            '2': <TaskContainer />,
             '3': <PeopleContainer />,
             '4': <MyCalendar />,
         }
         return (
-            obb[value]
+            tabPanel[value]
         )
     }
 
@@ -58,8 +72,7 @@ export default function TabGroup() {
                             return (
                                 <>
                                     <Tab selected={tab.value === value} onChange={handleChange} label={tab.label} value={tab.value} key={tab.value} />
-                                    {tab.value === '1' && value === tab.value && <StyledBadge badgeContent={count_completed(false)} color="primary" />}
-                                    {tab.value === '2' && value === tab.value && <StyledBadge badgeContent={count_completed(true)} color="primary" />}
+                                    {(tab.value === '1' || tab.value === '2') && value === tab.value && <StyledBadge badgeContent={totalTasks} color="primary" />}
                                 </>
                             )
                         })}
@@ -76,10 +89,11 @@ export default function TabGroup() {
     );
 }
 
+
+
 const tabs = [
     { label: "Doing", value: '1' },
     { label: "Complete", value: '2' },
     { label: "People", value: '3' },
     { label: "Calendar", value: '4' },
 ]
-

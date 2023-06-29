@@ -32,7 +32,7 @@ exports.find_and_update_task_query = async (req_param, req_body) => {
 	const query = { ...req_param, is_deleted: false };
 	const task = req_body;
 	const options = { new: true, timestamps: true };
-	const result = await Task.findOneAndUpdate(query, task, options).exec();
+	const result = await Task.findOneAndUpdate(query, task, options).populate(['person', 'list']).exec();
 	return result;
 };
 

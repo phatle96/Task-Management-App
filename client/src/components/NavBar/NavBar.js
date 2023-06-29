@@ -1,28 +1,34 @@
 import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon } from "@mui/material";
-import { DataContext } from "../../context/DataContext";
-import { useContext, useState, useEffect } from "react";
+import { useEffect } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import DensitySmallIcon from '@mui/icons-material/DensitySmall';
 import WorkIcon from '@mui/icons-material/Work';
 import { Link } from 'react-router-dom';
 
+import { useSelector, useDispatch } from 'react-redux'
+import { selectAllLists, fetchLists, } from "../../features/lists/listsSlice";
+import { listFilterChanged, selectFilters, } from "../../features/filters/filtersSlice";
 
 
 const NavBar = () => {
-	const { lists, setLists, filter, setFilter } = useContext(DataContext);
+
+	const dispatch = useDispatch();
+	const status = useSelector((state) => state.lists.status);
+	const lists = useSelector(selectAllLists);
+	const filters = useSelector(selectFilters);
+
+	useEffect(() => {
+		if (status === 'idle') {
+			dispatch(fetchLists())
+		}
+	}, [status, dispatch])
 
 	const handleFilter = (list) => {
-		setFilter({
-			list_id: list.list_id,
-			list_name: list.name
-		});
+		dispatch(listFilterChanged({ list: list.list_id }))
 	}
 
 	const handleResetFilter = () => {
-		setFilter({
-			list_id: '',
-			list_name: ''
-		})
+		dispatch(listFilterChanged({ list: '' }))
 	}
 
 	return (
@@ -53,7 +59,7 @@ const NavBar = () => {
 					<ListItem component={Link} to="/">
 						<ListItemButton
 							onClick={handleResetFilter}
-							selected={filter.list_id === ''}
+							selected={filters.list === '' }
 							sx={{ borderRadius: '10px' }}>
 							<ListItemIcon sx={{ justifyContent: 'center' }}>
 								<Avatar>
@@ -83,7 +89,8 @@ const NavBar = () => {
 								sx={{ minHeight: 30, borderRadius: '10px' }}
 								component="a"
 								onClick={() => handleFilter(list)}
-								selected={filter.list_id === list.list_id}>
+								selected={filters.list === list.list_id}
+							>
 								<ListItemIcon sx={{ justifyContent: 'center' }}>
 									<Avatar >
 										<WorkIcon />
