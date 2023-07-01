@@ -10,7 +10,7 @@ const {
 //View all subtask on GET
 exports.subtasks = async (req, res, next) => {
 	try {
-		const subtasks = await Subtask.find({}).populate('task').exec();
+		const subtasks = await Subtask.find({}).populate(['task', 'person', 'list']).exec();
 		if (!subtasks.length == 0) {
 			return res.status(200).json(subtasks);
 		} else {

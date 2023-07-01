@@ -16,7 +16,7 @@ exports.find_and_update_subtask_query = async (req_param, req_body) => {
 	const query = { ...req_param, is_deleted: false };
 	const subtask = req_body;
 	const options = { new: true, timestamps: true, };
-	const result = await Subtask.findOneAndUpdate(query, subtask, options).exec();
+	const result = await Subtask.findOneAndUpdate(query, subtask, options).populate(['list', 'task', 'person']).exec();
 	return result;
 };
 

@@ -1,18 +1,17 @@
-import { DataContext } from "../../context/DataContext";
-import { useContext } from "react";
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useSelector } from "react-redux";
 
 const SynchronizeLoading = () => {
-    const {
-        listsLoading,
-        tasksLoading,
-        subtasksLoading,
-        peopleLoading } = useContext(DataContext)
+    const subtasksStatus = useSelector((state) => state.subtasks.status)
+    const tasksStatus = useSelector((state) => state.tasks.status)
+    const listsStatus = useSelector((state) => state.lists.status)
 
     return (
         <>
             {
-                (listsLoading || tasksLoading || subtasksLoading || peopleLoading) &&
+                (subtasksStatus === 'loading' ||
+                    tasksStatus === 'loading' ||
+                    listsStatus === 'loading') &&
                 <LoadingButton loading variant="text">
                     loading
                 </LoadingButton>

@@ -1,19 +1,20 @@
-import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import { useState, } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import { Avatar, Box, Chip, Typography } from '@mui/material';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { DataContext } from '../../context/DataContext';
+import { selectAllLists } from '../../features/lists/listsSlice';
+import { useSelector } from 'react-redux';
 
 const ListFolder = ({ setList }) => {
 
 	const [error, setError] = useState(null);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [select, setSelect] = useState("");
-	
-	const { lists } = useContext(DataContext);
+
+	const lists = useSelector(selectAllLists)
+
 
 	const open = Boolean(anchorEl);
 

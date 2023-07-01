@@ -1,21 +1,17 @@
 import { Accordion, AccordionDetails, Box, Checkbox, Stack, Typography } from "@mui/material";
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
-import { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { styled } from '@mui/material/styles';
-import { DataContext } from "../../context/DataContext";
-import useAxiosPut from "../../services/useAxiosPut";
+import { useSelector, useDispatch } from "react-redux";
+import { selectSubtasksByTaskId, updateSubtask } from "../../features/subtasks/subtasksSlice";
 
 
 const SubTask = ({ task }) => {
 
-    const [error, setError] = useState(null);
-    const { subtasks: data, setSubtasks } = useContext(DataContext);
-
-    const { axiosPut } = useAxiosPut();
+    const dispatch = useDispatch();
+    const data = useSelector((state) => selectSubtasksByTaskId(state, task.task_id));
 
     const AccordionSummary = styled((props) => (
         <MuiAccordionSummary
@@ -36,31 +32,17 @@ const SubTask = ({ task }) => {
         return data.filter(subtask => subtask.is_completed === true).length
     }
 
-    const handleChecked = (key) => {
-        setSubtasks(
-            data.map(
-                subtask => {
-                    if (subtask.subtask_id === key) {
-
-                        const subtask_payload = {
-                            id: subtask.subtask_id,
-                            payload: {
-                                content: subtask.content,
-                                list: subtask.list,
-                                task: subtask.task._id,
-                                is_completed: !subtask.is_completed
-                            }
-                        };
-
-                        axiosPut(subtask_payload);
-
-                        return { ...subtask, is_completed: !subtask.is_completed };
-                    } else {
-                        return subtask;
-                    }
-                }
-            )
-        );
+    const handleChecked = (subtask) => {
+        const payload = {
+            id: subtask.subtask_id,
+            payload: {
+                content: subtask.content,
+                list: subtask.list._id,
+                task: subtask.task._id,
+                is_completed: !subtask.is_completed
+            }
+        };
+        dispatch(updateSubtask(payload));
     }
 
     const subtasks = (data) => {
@@ -89,7 +71,7 @@ const SubTask = ({ task }) => {
                                     inputProps={{ 'aria-label': `${subtask.subtask_id}` }}
                                     icon={<RadioButtonUncheckedIcon />}
                                     checkedIcon={<RadioButtonCheckedIcon />}
-                                    onChange={() => handleChecked(subtask.subtask_id)}
+                                    onChange={() => handleChecked(subtask)}
                                     checked={subtask.is_completed ? true : false}
                                 />
                                 {subtask.is_completed ?
@@ -115,7 +97,7 @@ const SubTask = ({ task }) => {
     return (
         <Box sx={{ width: "100%", marginLeft: "auto" }}
             onClick={(e) => { e.stopPropagation() }}>
-            {subtasks(data.filter(subtask => subtask.task.task_id === task.task_id))}
+            {subtasks(data)}
         </Box>
     )
 }

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Stack, TextField, Button } from "@mui/material";
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DataTimeSelect/DateTimeSelect";
@@ -6,8 +6,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddSubtask from "../AddSubtask/AddSubtask";
 import ListFolder from "../ListFolder/ListFolder";
-import { DataContext } from "../../context/DataContext";
-import useAxiosPost from "../../services/useAxiosPost";
 
 const AddTask = () => {
 

@@ -1,24 +1,30 @@
 import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Modal, Stack, Typography } from "@mui/material"
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import { useState, useContext } from "react";
+import { useState,  } from "react";
 import ButtonNext from '@mui/material-next/Button';
 import AddTask from "../AddTask/AddTask";
-import { DataContext } from "../../context/DataContext";
 import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
+
+import { useSelector } from "react-redux";
+import { selectListById } from "../../features/lists/listsSlice";
+
 
 
 const ListTitle = () => {
-    const { filter } = useContext(DataContext);
+
+    const listId = useSelector((state) => state.filters.list)
+
+    const list = useSelector((state) => selectListById(state, listId))
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     const list_name = () => {
-        if (filter.list_name === '') {
+        if (listId === '') {
             return 'All Tasks';
         } else {
-            return filter.list_name;
+            return list.name;
         }
     }
 

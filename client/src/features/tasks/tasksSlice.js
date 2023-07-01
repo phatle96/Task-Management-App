@@ -127,6 +127,7 @@ const tasksSlice = createSlice({
         [updateTask.fulfilled]: (state, action) => {
             const taskId = action.payload.task_id;
             state.entities[taskId] = action.payload;
+            state.status = 'succeeded';
         },
         [updateTask.rejected]: (state, action) => {
             state.status = 'failed';

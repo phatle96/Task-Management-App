@@ -1,19 +1,18 @@
-import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import { useState} from 'react';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Avatar } from '@mui/material';
-import { DataContext } from '../../context/DataContext';
+import { useSelector } from 'react-redux';
+import { selectAllPeople } from '../../features/people/peopleSlice';
 
 
 export default function PeopleChipSelect({ setSelectPeople }) {
 
     const [value, setValue] = useState([]);
 
-    const { people } = useContext(DataContext)
-
+    const people = useSelector(selectAllPeople)
 
     function stringToColor(string) {
         let hash = 0;
