@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -8,9 +8,7 @@ import { useSelector } from 'react-redux';
 import { selectAllPeople } from '../../features/people/peopleSlice';
 
 
-export default function PeopleChipSelect({ setSelectPeople }) {
-
-    const [value, setValue] = useState([]);
+export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
 
     const people = useSelector(selectAllPeople)
 
@@ -41,10 +39,11 @@ export default function PeopleChipSelect({ setSelectPeople }) {
                 id="tags-standard"
                 options={people}
                 getOptionLabel={(option) => option.name}
-                value={value}
+                isOptionEqualToValue={(option, value) => option.person_id === value.person_id}
+                value={selectPeople}
                 onChange={(event, newValue) => {
                     console.log(newValue)
-                    setValue(newValue);
+                    // setValue(newValue);
                     setSelectPeople(newValue)
                 }}
                 renderTags={(tagValue, getTagProps) =>

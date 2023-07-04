@@ -4,6 +4,7 @@ import tasksReducer from '../features/tasks/tasksSlice';
 import subtasksReducer from '../features/subtasks/subtasksSlice';
 import peopleReducer from '../features/people/peopleSlice';
 import filtersReducer from '../features/filters/filtersSlice'
+import tempsReducer from '../features/temps/tempsSlice';
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     subtasks: subtasksReducer,
     people: peopleReducer,
     filters: filtersReducer,
+    temps: tempsReducer,
   }
 })

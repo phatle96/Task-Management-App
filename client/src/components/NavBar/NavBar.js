@@ -28,7 +28,7 @@ const NavBar = () => {
 	}
 
 	const handleResetFilter = () => {
-		dispatch(listFilterChanged({ list: '' }))
+		dispatch(listFilterChanged({ list: null }))
 	}
 
 	return (
@@ -59,7 +59,7 @@ const NavBar = () => {
 					<ListItem component={Link} to="/">
 						<ListItemButton
 							onClick={handleResetFilter}
-							selected={filters.list === '' }
+							selected={filters.list === null}
 							sx={{ borderRadius: '10px' }}>
 							<ListItemIcon sx={{ justifyContent: 'center' }}>
 								<Avatar>

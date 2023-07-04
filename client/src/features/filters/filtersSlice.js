@@ -1,7 +1,7 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-    list: '',
+export const initialState = {
+    list: null,
     people: [],
     completed: false,
     overdue: false,

@@ -1,17 +1,21 @@
-import { useState, useEffect } from "react";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import TaskCard from "../TaskCard/TaskCard";
-import { Box, Checkbox, Chip, Paper, Stack, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { Box, Checkbox, Chip, Paper, Stack } from "@mui/material";
 import SubTask from "../SubTask/SubTask";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import AddTask from "../AddTask/AddTask";
+import TaskDialog from "../TaskDialog/TaskDialog";
+
+import { useState, useEffect } from "react";
+
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, selectTasksByStatus, updateTask } from "../../features/tasks/tasksSlice";
 import { fetchSubtasks } from "../../features/subtasks/subtasksSlice";
 import { fetchPeople } from "../../features/people/peopleSlice";
+
 import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer"
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { editTask, selectTemps } from "../../features/temps/tempsSlice";
 
 const TaskContainer = () => {
 
@@ -21,8 +25,8 @@ const TaskContainer = () => {
 	const tasksStatus = useSelector((state) => state.tasks.status);
 	const subtasksStatus = useSelector((state) => state.subtasks.status);
 	const peopleStatus = useSelector((state) => state.people.status);
+	const temps = useSelector(selectTemps);
 	const tasks = useSelector(selectTasksByStatus);
-	const totalTasks = tasks.length
 
 	// fetch tasks
 	useEffect(() => {
@@ -59,36 +63,8 @@ const TaskContainer = () => {
 
 	const handleOpenCard = (task) => {
 		setOpen(true);
-
-	}
-
-	const handleCloseCard = () => {
-		setOpen(false)
-	}
-
-	const TaskDialog = () => {
-		return (
-			<Dialog
-				open={open}
-				onClose={handleCloseCard}
-				scroll='paper'
-				aria-labelledby="edit-note-title"
-				maxWidth="sm"
-				fullWidth={1}
-			>
-				<DialogTitle id="edit">
-					Task
-				</DialogTitle>
-				<DialogContent dividers={1}>
-					<AddTask />
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={handleCloseCard}>
-						Close
-					</Button>
-				</DialogActions>
-			</Dialog>
-		)
+		dispatch(editTask(task))
+		console.log(temps.task.edit)
 	}
 
 	const TasksList = () => {
@@ -162,7 +138,7 @@ const TaskContainer = () => {
 			<Grid2 container xs={12} sm={12} md={12} lg={12}>
 				<TasksList />
 			</Grid2>
-			<TaskDialog />
+			<TaskDialog data={temps.task.edit} open={open} setOpen={setOpen} />
 		</>
 	)
 }

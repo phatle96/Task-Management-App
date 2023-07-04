@@ -7,11 +7,10 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { selectAllLists } from '../../features/lists/listsSlice';
 import { useSelector } from 'react-redux';
 
-const ListFolder = ({ setList }) => {
+const ListFolder = ({ list, setList }) => {
 
-	const [error, setError] = useState(null);
+
 	const [anchorEl, setAnchorEl] = useState(null);
-	const [select, setSelect] = useState("");
 
 	const lists = useSelector(selectAllLists)
 
@@ -22,10 +21,13 @@ const ListFolder = ({ setList }) => {
 		setAnchorEl(event.currentTarget);
 	};
 
-	const handleClose = (list) => {
-		setAnchorEl(null);
-		setSelect(list.name);
-		setList(list);
+	const handleClose = (select) => {
+		if (select === undefined) {
+			setAnchorEl(null);
+		} else {
+			setAnchorEl(null);
+			setList(select);
+		}
 	};
 
 
@@ -35,7 +37,7 @@ const ListFolder = ({ setList }) => {
 				icon={<FolderOpenIcon />}
 				label={
 					<Typography variant='caption' sx={{ display: "flex", alignItems: "center" }}>
-						{select} <UnfoldMoreIcon fontSize='inherit' />
+						{list === null || list === undefined ? '' : list.name} <UnfoldMoreIcon fontSize='inherit' />
 					</Typography>
 				}
 				size="small"
@@ -52,10 +54,10 @@ const ListFolder = ({ setList }) => {
 				onClose={() => { handleClose() }}
 				MenuListProps={{ 'aria-labelledby': 'basic-button', }}>
 				{
-					lists.map(list => {
+					lists.map(select => {
 						return (
-							<MenuItem key={list.list_id} onClick={() => { handleClose(list) }}>
-								{list.name}
+							<MenuItem key={select.list_id} onClick={() => { handleClose(select) }}>
+								{select.name}
 							</MenuItem>
 						)
 					})

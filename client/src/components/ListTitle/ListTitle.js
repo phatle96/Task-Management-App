@@ -1,9 +1,8 @@
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Modal, Stack, Typography } from "@mui/material"
+import { Avatar, Button, Icon, Stack, Typography } from "@mui/material"
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import { useState,  } from "react";
-import ButtonNext from '@mui/material-next/Button';
-import AddTask from "../AddTask/AddTask";
+import { useState, } from "react";
 import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
+import TaskDialog from "../TaskDialog/TaskDialog";
 
 import { useSelector } from "react-redux";
 import { selectListById } from "../../features/lists/listsSlice";
@@ -18,39 +17,13 @@ const ListTitle = () => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
 
     const list_name = () => {
-        if (listId === '') {
+        if (listId === null) {
             return 'All Tasks';
         } else {
             return list.name;
         }
-    }
-
-    const AddTaskDialog = () => {
-        return (
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                scroll='paper'
-                aria-labelledby="add-note-title"
-                maxWidth="sm"
-                fullWidth={1}
-            >
-                <DialogTitle id="add-note">
-                    Take a note
-                </DialogTitle>
-                <DialogContent dividers={1}>
-                    <AddTask />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        )
     }
 
     return (
@@ -77,7 +50,7 @@ const ListTitle = () => {
                     </Icon>
                     Take a note...
                 </Button>
-                <AddTaskDialog />
+                <TaskDialog open={open} setOpen={setOpen} />
             </Stack>
         </Stack>
     )

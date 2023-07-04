@@ -4,12 +4,12 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import TaskContainer from '../TaskContainer/TaskContainer';
-import { Badge, Stack, dialogClasses } from '@mui/material';
+import { Badge, Stack } from '@mui/material';
 import { styled } from '@mui/material';
 import StyledToggleButton from '../StyledToggleButton/StyledToggleButton';
 import MyCalendar from '../Calendar/Calendar';
 import PeopleContainer from '../PeopleContainer/PeopleContainer';
-import { selectTasksByStatus } from '../../features/tasks/tasksSlice';
+import { selectTasksByStatus, selectTasksByStatusLength } from '../../features/tasks/tasksSlice';
 import { tasksCompletedFilterChanged, selectFilters } from '../../features/filters/filtersSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -27,7 +27,7 @@ export default function TabGroup() {
     const [value, setValue] = useState('1');
     const dispatch = useDispatch();
     const tasks = useSelector(selectTasksByStatus)
-    const totalTasks = tasks.length
+    const totalTasks = useSelector(selectTasksByStatusLength)
     const filters = useSelector(selectFilters);
 
     const handleChange = (e, newValue) => {

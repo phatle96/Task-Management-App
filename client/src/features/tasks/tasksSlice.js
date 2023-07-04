@@ -53,7 +53,7 @@ export const {
 export const selectTasksByList = createSelector(
     [selectAllTasks, selectFilters],
     (tasks, filters) => {
-        if (filters.list === '') {
+        if (filters.list === null) {
             return tasks
         } else {
             return tasks.filter((task) => task.list.list_id === filters.list);
@@ -74,6 +74,13 @@ export const selectTasksByStatus = createSelector(
             default:
                 return;
         }
+    }
+)
+
+export const selectTasksByStatusLength = createSelector(
+    [selectTasksByStatus],
+    (tasks) => {
+        return tasks.length
     }
 )
 

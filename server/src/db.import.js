@@ -60,13 +60,15 @@ async function personCreate(name) {
 }
 
 
-async function taskCreate(content, list, person, alert, is_completed, is_deleted) {
+async function taskCreate(content, list, person, alert, start_date, end_date, is_completed, is_deleted) {
 	task_detail = {
 		content: content,
 		list: list,
 	};
 	if (person != false) task_detail.person = person;
 	if (alert != false) task_detail.alert = alert;
+	if (start_date != false) task_detail.start_date = start_date;
+	if (end_date != false) task_detail.end_date = end_date;
 	if (is_completed != false) task_detail.is_completed = is_completed;
 	if (is_deleted != false) task_detail.is_deleted = is_deleted;
 

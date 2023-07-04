@@ -9,6 +9,8 @@ const TaskSchema = new Schema({
     list: { type: Schema.Types.ObjectId, ref: 'List' },
     person: [{ type: Schema.Types.ObjectId, ref: 'Person' }],
     alert: { type: Date },
+    start_date: {type: Date},
+    end_date: {type: Date},
     is_completed: { type: Boolean, required: true, default: false },
     is_deleted: { type: Boolean, required: true, default: false },
     deleted_at: { type: Date, expires: '30d' },

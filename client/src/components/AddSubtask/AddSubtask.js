@@ -1,21 +1,20 @@
 import { useState } from 'react';
 import {
-	Button, ClickAwayListener,  IconButton, List, ListItem, ListItemIcon, Stack, TextField, Tooltip,
+	Button, ClickAwayListener, IconButton, List, ListItem, ListItemIcon, Stack, TextField, Tooltip,
 } from "@mui/material";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import UndoIcon from '@mui/icons-material/Undo';
+import DeleteIcon from '@mui/icons-material/Delete';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import { nanoid } from 'nanoid'
 
-const AddSubtask = ({ setSt }) => {
+const AddSubtask = ({ subtasks, setSubtasks }) => {
 
-	const [subtasks, setSubtasks] = useState([]);
 	const [content, setContent] = useState('');
 	const [error, setError] = useState({ state: false, helperText: "" });
-	const [putPayload, setPut] = useState([]);
 	const [handleAdd, setHandleAdd] = useState(false);
-	const [edit, setEdit] = useState(false);
 
 
 	const handleAddSubtask = () => {
@@ -33,7 +32,6 @@ const AddSubtask = ({ setSt }) => {
 		if (content.length > 0 && content.length < 300) {
 			setHandleAdd(false);
 			setSubtasks([...subtasks, { temp_id: nanoid(5), content: content }]);
-			setSt([...subtasks, { temp_id: nanoid(5), content: content }]);
 			setError({ state: false, helperText: "" });
 			setContent("");
 		} else {
@@ -68,7 +66,6 @@ const AddSubtask = ({ setSt }) => {
 			}
 		})
 		setSubtasks(editing);
-		setSt(editing);
 	}
 
 	const handleFocus = (id) => {
@@ -81,9 +78,7 @@ const AddSubtask = ({ setSt }) => {
 				return { ...subtask, isEdit: false }
 			}
 		})
-		setEdit(true)
 		setSubtasks(editing);
-		setSt(editing)
 	}
 
 	const handleClose = (id) => {
@@ -97,7 +92,6 @@ const AddSubtask = ({ setSt }) => {
 			}
 		})
 		setSubtasks(editing);
-		setSt(editing)
 	}
 
 
@@ -112,11 +106,10 @@ const AddSubtask = ({ setSt }) => {
 			}
 		})
 		setSubtasks(deleted);
-		setSt(deleted)
 	}
 
 	const handleUndoDelete = (id) => {
-		const undeleted = subtasks.map((subtask) => {
+		const undoDelete = subtasks.map((subtask) => {
 			if (subtask.temp_id === id) {
 				return (
 					{ ...subtask, isDeleted: false }
@@ -125,121 +118,114 @@ const AddSubtask = ({ setSt }) => {
 				return { ...subtask }
 			}
 		})
-		setSubtasks(undeleted);
-		setSt(undeleted)
+		setSubtasks(undoDelete);
 	}
 
 	const handleConfirmDelete = (id) => {
 		const confirmDelete = subtasks.filter(subtask => subtask.temp_id !== id);
 		setSubtasks(confirmDelete);
-		setSt(confirmDelete);
 	}
 
+	const IconButtonStyled = ({ title, onClick, style }) => {
+		return (
+			<Tooltip title={title}>
+				<IconButton onMouseDown={onClick} aria-label={title} size="small">
+					{style === 'close' && <CloseIcon fontSize='inherit' />}
+					{style === 'done' && <DoneIcon fontSize='inherit' />}
+					{style === 'undo' && <UndoIcon fontSize='inherit' />}
+					{style === 'delete' && <DeleteIcon fontSize='inherit' />}
+				</IconButton>
+			</Tooltip>
+		)
+	}
 
-	const EditButton = ({ isEdit, id }) => {
+	const AddButton = () => {
 		return (
 			<>
+				<Stack direction="row" >
+					<Button
+						onClick={handleAddSubtask}
+						startIcon={<FormatListBulletedIcon />}>
+						Add subtask
+					</Button>
+				</Stack>
 				{
-					isEdit && (
-						<Stack direction="row">
-							<Tooltip title="delete">
-								<IconButton onClick={() => { handleDelete(id) }} size="small" aria-label="cancel edit">
-									<CloseIcon fontSize='inherit' />
-								</IconButton>
-							</Tooltip>
-							<Tooltip title="save">
-								<IconButton onClick={() => { handleClose(id) }} size="small" aria-label="save edit" >
-									<DoneIcon fontSize='inherit' />
-								</IconButton>
-							</Tooltip>
+					handleAdd &&
+					(
+						<Stack direction="row" sx={{ alignItems: "center" }}>
+							<ClickAwayListener onClickAway={handleSaveAdd}>
+								<TextField
+									sx={{ width: "100%", paddingRight: 0.5 }}
+									variant="standard"
+									autoFocus
+									id="standard-basic"
+									label="Subtask"
+									error={error.state}
+									helperText={error.helperText}
+									value={content}
+									onChange={(event) => { handleEditAdd(event.target.value) }} />
+
+							</ClickAwayListener>
+							<IconButtonStyled title='Cancel' onClick={handleCancelAdd} style='close' />
+							<IconButtonStyled title='Save' onClick={handleSaveAdd} style='done' />
+
 						</Stack>
 					)
 				}
+
 			</>
 		)
 	}
 
 
+	const EditButton = ({ isDeleted, isEdit, id }) => {
+		return (
+			<Stack direction="row">
+				{
+					(isEdit && !isDeleted) && (
+						<>
+							<IconButtonStyled title='Delete' onClick={() => { handleDelete(id) }} style='close' />
+							<IconButtonStyled title='Save' onClick={() => { handleClose(id) }} style='done' />
+						</>
+					)
+				}
+				{
+					(isDeleted && isEdit) && (
+						<>
+							<IconButtonStyled title='Undo' onClick={() => { handleUndoDelete(id) }} style='undo' />
+							<IconButtonStyled title='Delete' onClick={() => { handleConfirmDelete(id) }} style='delete' />
+						</>
+					)
+				}
+			</Stack>
+		)
+	}
+
+
+
+
 	return (
 		<Stack direction="column">
-			<Stack direction="row" >
-				<Button
-					onClick={handleAddSubtask}
-					startIcon={<FormatListBulletedIcon />}>
-					Add subtask
-				</Button>
-			</Stack>
-			{
-				handleAdd &&
-				(
-					<Stack direction="row" sx={{ alignItems: "center" }}>
-						<ClickAwayListener onClickAway={handleSaveAdd}>
-							<TextField
-								sx={{ width: "100%", paddingRight: 0.5 }}
-								variant="standard"
-								autoFocus
-								id="standard-basic"
-								label="Subtask"
-								error={error.state}
-								helperText={error.helperText}
-								value={content}
-								onChange={(event) => { handleEditAdd(event.target.value) }} />
-
-						</ClickAwayListener>
-						<IconButton onClick={handleCancelAdd} aria-label="cancel" size="small">
-							<CloseIcon fontSize='inherit' />
-						</IconButton>
-						<IconButton onClick={handleSaveAdd} aria-label="save" size="small">
-							<DoneIcon fontSize='inherit' />
-						</IconButton>
-					</Stack>
-				)
-			}
+			<AddButton />
 			<List sx={{ display: "flex", flexDirection: "column-reverse" }}>
 				{
 					subtasks.map((subtask) => {
 						return (
 							<ListItem key={subtask.temp_id} sx={{ height: 35, paddingY: 2.5 }}>
-								{!subtask.isDeleted ? (
-									<>
-										<ListItemIcon sx={{ minWidth: 35 }}>
-											<SubdirectoryArrowRightIcon fontSize='inherit' />
-										</ListItemIcon>
-										<TextField
-											sx={{ width: "100%" }}
-											variant="standard"
-											value={subtask.content}
-											error={subtask.error}
-											helperText={subtask.helperText}
-											onFocus={() => { handleFocus(subtask.temp_id) }}
-											onChange={(event) => { handleEdit(event.target.value, subtask.temp_id); }} />
-										<EditButton isEdit={subtask.isEdit} id={subtask.temp_id} />
-									</>
-								) : (
-									<>
-										<ListItemIcon sx={{ minWidth: 35 }}>
-											<SubdirectoryArrowRightIcon fontSize='inherit' />
-										</ListItemIcon>
-										<Stack direction="row" spacing={0.5}
-											sx={{ width: "100%", justifyContent: "center" }}>
-											<Button
-												variant='outlined'
-												size='small'
-												color='primary'
-												onClick={() => handleUndoDelete(subtask.temp_id)}>
-												Undo
-											</Button>
-											<Button
-												variant='outlined'
-												size='small'
-												color='error'
-												onClick={() => handleConfirmDelete(subtask.temp_id)}>
-												Delete
-											</Button>
-										</Stack>
-									</>
-								)
-								}
+								<ListItemIcon sx={{ minWidth: 35 }}>
+									<SubdirectoryArrowRightIcon fontSize='inherit' />
+								</ListItemIcon>
+								<TextField
+									sx={!subtask.isDeleted ? { width: "100%" } : { width: "100%", textDecoration: "line-through" }}
+									variant="standard"
+									disabled={subtask.isDeleted}
+									value={subtask.content}
+									error={subtask.error}
+									helperText={subtask.helperText}
+									onFocus={() => { handleFocus(subtask.temp_id) }}
+									onBlur={() => { handleClose(subtask.temp_id) }}
+									onChange={(event) => { handleEdit(event.target.value, subtask.temp_id); }} />
+								<EditButton isEdit={subtask.isEdit} isDeleted={subtask.isDeleted} id={subtask.temp_id} />
 							</ListItem>
 						)
 					})

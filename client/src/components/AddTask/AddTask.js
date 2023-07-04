@@ -1,80 +1,88 @@
 import { useState } from "react";
-import { Stack, TextField, Button } from "@mui/material";
+import { Stack, TextField, } from "@mui/material";
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DataTimeSelect/DateTimeSelect";
-import SaveIcon from '@mui/icons-material/Save';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddSubtask from "../AddSubtask/AddSubtask";
 import ListFolder from "../ListFolder/ListFolder";
+import { selectFilters } from "../../features/filters/filtersSlice";
+import { useSelector } from "react-redux";
+import { selectListById } from "../../features/lists/listsSlice";
 
-const AddTask = () => {
+const AddTask = ({ task }) => {
 
-    const [taskContent, setTaskContent] = useState({})
-    const [list, setList] = useState(null)
-    const [selectPeople, setSelectPeople] = useState([])
+    const filters = useSelector(selectFilters);
+
+    const selectInitList = useSelector((state) => selectListById(state, task ? task.list_id : filters.list));
+
+    const initList = () => {
+        if (selectInitList === undefined) {
+            return null
+        } else {
+            return selectInitList
+        }
+    }
+
+    const initContent = () => {
+        if (task) {
+            return task.content
+        } else {
+            return ''
+        }
+    }
+
+    const initPeople = () => {
+        if (task) {
+            console.log(task.person)
+            return task.person
+        } else {
+            return []
+        }
+    }
+
+    const initSubtasks = () => {
+        if (task) {
+
+        } else {
+
+        }
+    }
+
+
+    const [taskContent, setTaskContent] = useState(initContent)
+    const [error, setError] = useState(false)
+    const [list, setList] = useState(initList)
+    const [selectPeople, setSelectPeople] = useState(initPeople)
     const [alert, setAlert] = useState('')
-    const [st, setSt] = useState([])
-    const [error, setError] = useState(null)
-    const [payload, setPayload] = useState({})
-
+    const [subtasks, setSubtasks] = useState([])
 
     const handleOnchange = (event) => {
         if (event.length > 0 && event.length < 300) {
-            setTaskContent({ content: event, error: false, helperText: "" })
+            setTaskContent(event);
+            setError(false);
         } else {
-            setTaskContent({ content: event, error: true, helperText: "length should be 1 to 300 characters" })
+            setTaskContent(event);
+            setError(true);
         }
     }
 
-    const handleSave = (e) => {
-        console.log("list: ", list._id);
-        console.log("task:", taskContent.content);
-        console.log("people: ", selectPeople)
-        console.log("alert:", alert.format());
-        console.log("subtasks:", st)
-
-        const pl = {
-            payload: {
-                list: list._id,
-                content: taskContent.content,
-                person: selectPeople,
-                alert: alert.format(),
-                subtasks: st
-            }
-        }
-
-        setPayload(pl)
-
-
-    }
 
     return (
         <Stack display="flex" direction="column" justifyContent="center" spacing={1.5} >
-            <ListFolder setList={setList} />
+            <ListFolder setList={setList} list={list} />
             <TextField
                 variant="outlined"
                 id="outlined-multiline-static"
                 label="Your task here!"
                 multiline
                 rows={3}
-                value={taskContent.content}
-                error={taskContent.error}
-                helperText={taskContent.helperText}
+                value={taskContent}
+                error={error}
+                helperText={error ? "length should be 1 to 300 characters" : null}
                 onChange={(e) => { handleOnchange(e.target.value) }}
             />
-            <PeopleChipSelect setSelectPeople={setSelectPeople} />
+            <PeopleChipSelect selectPeople={selectPeople} setSelectPeople={setSelectPeople} />
             <DateTimeSelect setAlert={setAlert} />
-            <AddSubtask setSt={setSt} />
-            <Stack display="flex" paddingTop={2} direction="row" justifyContent="flex-end" spacing={1}>
-                <Button variant="outlined" startIcon={<DeleteIcon />}>
-                    Clear
-                </Button>
-                <Button
-                    onClick={(e) => { handleSave(e) }}
-                    variant="contained" endIcon={<SaveIcon />}>
-                    Save
-                </Button>
-            </Stack>
+            <AddSubtask subtasks={subtasks} setSubtasks={setSubtasks} />
         </Stack>
     )
 }

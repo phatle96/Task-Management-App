@@ -80,6 +80,28 @@ const payload = {
         escape: true
     },
 
+    start_date: {
+        in: ['body'],
+        optional: {
+            options: { nullable: true },
+        },
+        isISO8601: {
+            errorMessage: 'Invalid date',
+        },
+        escape: true
+    },
+
+    end_date: {
+        in: ['body'],
+        optional: {
+            options: { nullable: true },
+        },
+        isISO8601: {
+            errorMessage: 'Invalid date',
+        },
+        escape: true
+    },
+
     is_completed: {
         in: ['body'],
         optional: {
