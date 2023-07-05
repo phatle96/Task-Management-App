@@ -2,12 +2,9 @@ import axios from "axios";
 
 export const axiosFetch = async (url) => {
     let response
-    const controller = new AbortController();
 
     try {
-        response = await axios.get(url, {
-            signal: controller.signal
-        });
+        response = await axios.get(url);
 
         if (response.status === 200) {
             return response.data
@@ -20,11 +17,11 @@ export const axiosFetch = async (url) => {
     }
 }
 
-export const axiosPost = async (type, payload) => {
+export const axiosPost = async (payload) => {
     let response
     try {
 
-        response = await axios.post(`http://localhost:8080/api/${type}/create`, payload.payload);
+        response = await axios.post(`http://localhost:8080/api/${payload.type}/create`, payload.payload);
 
         if (response.status === 200) {
             return response.data

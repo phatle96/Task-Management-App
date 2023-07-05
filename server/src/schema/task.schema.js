@@ -34,17 +34,13 @@ const payload = {
         in: ['body'],
         isLength: {
             errorMessage: "Name should be at least 1 to 300 characters long",
-            options: { min: 1, max: 300, },
+            options: { max: 300 },
         },
         escape: true,
     },
 
     list: {
         in: ['body'],
-        isLength: {
-            errorMessage: "List is invalid",
-            options: { min: 1, max: 50 },
-        },
         optional: {
             options: { nullable: true },
         },
@@ -119,9 +115,8 @@ const payload = {
         optional: {
             options: { nullable: true },
         },
-        isLength: {
-            errorMessage: "Delete state should not be included",
-            options: { max: 0 },
+        isBoolean: {
+            errorMessage: 'Invalid boolean'
         },
         escape: true,
     },

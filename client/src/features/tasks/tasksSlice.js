@@ -12,8 +12,8 @@ export const fetchTasks = createAsyncThunk(
 
 export const createTask = createAsyncThunk(
     'tasks/createTask',
-    async (type, payload) => {
-        const response = await axiosPost(type, payload);
+    async (payload) => {
+        const response = await axiosPost(payload);
         return response;
     }
 );
@@ -29,7 +29,7 @@ export const updateTask = createAsyncThunk(
 export const deleteTask = createAsyncThunk(
     'tasks/deleteTask',
     async (payload) => {
-        const response = await axiosDelete(payload);
+        const response = await axiosPut(payload);
         return response;
     }
 );
@@ -39,7 +39,7 @@ const tasksAdapter = createEntityAdapter({
     selectId: (e) => e.task_id,
 })
 
-const selectTasks = (state) => state.tasks
+export const selectTasks = (state) => state.tasks
 
 const tasksSelectors = tasksAdapter.getSelectors(selectTasks)
 
@@ -56,7 +56,7 @@ export const selectTasksByList = createSelector(
         if (filters.list === null) {
             return tasks
         } else {
-            return tasks.filter((task) => task.list.list_id === filters.list);
+            return tasks.filter((task) => task.list && task.list.list_id === filters.list);
         };
     }
 )
@@ -90,17 +90,16 @@ const tasksSlice = createSlice({
     initialState: tasksAdapter.getInitialState({
         status: 'idle',
         error: null,
+        create: {
+            response: null,
+            status: 'idle'
+        }
     }),
     reducers: {
-        taskList: (state, action) => {
-
-        },
-        taskFilter: (state, action) => {
-
-        },
-        taskSort: (state, action) => {
-
-        },
+        initTask: (state) => {
+            state.create.status = 'idle';
+            state.create.response = null
+        }
     },
     extraReducers: {
         [fetchTasks.pending]: (state, action) => {
@@ -119,31 +118,44 @@ const tasksSlice = createSlice({
                 state.error = action.payload;
             }
         },
-
-        [createTask.fulfilled]: tasksAdapter.addOne,
-        [createTask.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+        [createTask.pending]: (state, action) => {
+            state.create.status = 'loading';
+            state.create.error = null;
         },
 
-        [deleteTask.fulfilled]: tasksAdapter.removeOne,
+        [createTask.fulfilled]: (state, action) => {
+            if (state.create.status === 'loading') {
+                tasksAdapter.addOne(state, action.payload)
+                state.create.response = action.payload;
+                state.create.status = 'succeeded'
+            }
+        },
+        [createTask.rejected]: (state, action) => {
+            if (state.create.status === 'loading') {
+                state.create.error = action.payload;
+                state.create.status = 'failed'
+            }
+        },
+
+        [deleteTask.fulfilled]: (state, action) => {
+            tasksAdapter.removeOne(state, action.payload.task_id)
+        },
         [deleteTask.rejected]: (state, action) => {
-            state.status = 'failed';
             state.error = action.payload;
         },
         [updateTask.fulfilled]: (state, action) => {
             const taskId = action.payload.task_id;
             state.entities[taskId] = action.payload;
-            state.status = 'succeeded';
+            state.updateStatus = 'succeeded';
         },
         [updateTask.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+            state.updateStatus = 'failed';
+            state.updateError = action.payload;
         },
 
     }
 })
 
-export const { taskFilter, taskSort, taskRemoved } = tasksSlice.actions
+export const { initTask } = tasksSlice.actions
 
 export default tasksSlice.reducer

@@ -15,17 +15,16 @@ import { fetchPeople } from "../../features/people/peopleSlice";
 import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer"
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { editTask, selectTemps } from "../../features/temps/tempsSlice";
 
 const TaskContainer = () => {
 
 	const [open, setOpen] = useState(false);
+	const [editTask, setEditTask] = useState();
 
 	const dispatch = useDispatch();
 	const tasksStatus = useSelector((state) => state.tasks.status);
 	const subtasksStatus = useSelector((state) => state.subtasks.status);
 	const peopleStatus = useSelector((state) => state.people.status);
-	const temps = useSelector(selectTemps);
 	const tasks = useSelector(selectTasksByStatus);
 
 	// fetch tasks
@@ -63,8 +62,7 @@ const TaskContainer = () => {
 
 	const handleOpenCard = (task) => {
 		setOpen(true);
-		dispatch(editTask(task))
-		console.log(temps.task.edit)
+		setEditTask(task)
 	}
 
 	const TasksList = () => {
@@ -87,7 +85,7 @@ const TaskContainer = () => {
 									<TaskCard data={task} />
 									<SubTask task={task} />
 									<Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: 1, paddingTop: 2 }}>
-										<Chip icon={<FolderOpenIcon />} label={task.list.name} size="small" />
+										{task.list && <Chip icon={<FolderOpenIcon />} label={task.list.name} size="small" />}
 									</Box>
 								</Stack>
 							</Stack>
@@ -138,7 +136,7 @@ const TaskContainer = () => {
 			<Grid2 container xs={12} sm={12} md={12} lg={12}>
 				<TasksList />
 			</Grid2>
-			<TaskDialog data={temps.task.edit} open={open} setOpen={setOpen} />
+			<TaskDialog data={editTask} open={open} setOpen={setOpen} />
 		</>
 	)
 }

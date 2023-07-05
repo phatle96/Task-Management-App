@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -42,8 +41,6 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
                 isOptionEqualToValue={(option, value) => option.person_id === value.person_id}
                 value={selectPeople}
                 onChange={(event, newValue) => {
-                    console.log(newValue)
-                    // setValue(newValue);
                     setSelectPeople(newValue)
                 }}
                 renderTags={(tagValue, getTagProps) =>

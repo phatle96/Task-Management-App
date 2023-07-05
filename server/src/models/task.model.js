@@ -5,12 +5,12 @@ const Schema = mongoose.Schema;
 
 const TaskSchema = new Schema({
     task_id: { type: String, required: true, unique: true, default: () => `task_${uuidv4()}` },
-    content: { type: String, required: true, maxLength: 300 },
-    list: { type: Schema.Types.ObjectId, ref: 'List' },
+    content: { type: String, required: true, maxLength: 300, default: "" },
+    list: { type: Schema.Types.ObjectId, ref: 'List', default: null },
     person: [{ type: Schema.Types.ObjectId, ref: 'Person' }],
-    alert: { type: Date },
-    start_date: {type: Date},
-    end_date: {type: Date},
+    alert: { type: Date, default: null },
+    start_date: { type: Date, default: null },
+    end_date: { type: Date, default: null },
     is_completed: { type: Boolean, required: true, default: false },
     is_deleted: { type: Boolean, required: true, default: false },
     deleted_at: { type: Date, expires: '30d' },

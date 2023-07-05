@@ -59,7 +59,7 @@ exports.create_task = async (req, res, next) => {
 		const task = await create_task_query(req_body);
 		return res.status(200).json(task);
 	} catch (err) {
-		return res.status(500).json({ 500: "Controller Error" });
+		return res.status(500).json({ 500: err });
 	}
 };
 

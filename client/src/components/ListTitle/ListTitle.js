@@ -1,8 +1,9 @@
 import { Avatar, Button, Icon, Stack, Typography } from "@mui/material"
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import { useState, } from "react";
 import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
 import TaskDialog from "../TaskDialog/TaskDialog";
+
+import { useState, } from "react";
 
 import { useSelector } from "react-redux";
 import { selectListById } from "../../features/lists/listsSlice";
@@ -12,11 +13,16 @@ import { selectListById } from "../../features/lists/listsSlice";
 const ListTitle = () => {
 
     const listId = useSelector((state) => state.filters.list)
-
     const list = useSelector((state) => selectListById(state, listId))
 
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {
+        setOpen(true)
+    };
+
+    const subtasksStatus = useSelector((state) => state.subtasks.status)
+    const tasksStatus = useSelector((state) => state.tasks.status)
+    const listsStatus = useSelector((state) => state.lists.status)
 
     const list_name = () => {
         if (listId === null) {
@@ -31,7 +37,10 @@ const ListTitle = () => {
             <Stack direction="row" sx={{ paddingLeft: 2 }}>
                 <Typography variant="h4" noWrap={1} sx={{ paddingRight: 5, width: '100%', maxWidth: 800 }}>
                     {list_name()}
-                    <SynchronizeLoading />
+                    <SynchronizeLoading state={
+                        (subtasksStatus === 'loading' ||
+                            tasksStatus === 'loading' ||
+                            listsStatus === 'loading')} />
                 </Typography>
             </Stack>
             <Stack direction="row" >
