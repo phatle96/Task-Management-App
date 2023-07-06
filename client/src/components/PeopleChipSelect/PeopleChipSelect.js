@@ -32,7 +32,7 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
     }
 
     return (
-        <Stack spacing={3} sx={{ width: "100%" }}>
+        <Stack spacing={3} sx={{ width: "100%" }} >
             <Autocomplete
                 multiple
                 id="tags-standard"
@@ -40,9 +40,8 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.person_id === value.person_id}
                 value={selectPeople}
-                onChange={(event, newValue) => {
-                    setSelectPeople(newValue)
-                }}
+                onChange={(event, newValue) => { setSelectPeople(newValue) }}
+                onFocus={(event) => console.log(event.target.id)}
                 renderTags={(tagValue, getTagProps) =>
                     tagValue.map((option, index) => (
                         <Chip

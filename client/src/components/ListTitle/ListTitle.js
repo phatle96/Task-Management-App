@@ -5,18 +5,22 @@ import TaskDialog from "../TaskDialog/TaskDialog";
 
 import { useState, } from "react";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectListById } from "../../features/lists/listsSlice";
+import { initTask } from "../../features/tasks/tasksSlice";
 
 
 
 const ListTitle = () => {
 
+    const dispatch = useDispatch()
     const listId = useSelector((state) => state.filters.list)
     const list = useSelector((state) => selectListById(state, listId))
 
     const [open, setOpen] = useState(false);
+    
     const handleOpen = () => {
+        dispatch(initTask())
         setOpen(true)
     };
 

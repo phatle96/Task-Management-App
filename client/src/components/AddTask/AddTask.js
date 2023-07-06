@@ -1,6 +1,7 @@
 import { Stack, TextField, } from "@mui/material";
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DataTimeSelect/DateTimeSelect";
+
 import AddSubtask from "../AddSubtask/AddSubtask";
 import ListFolder from "../ListFolder/ListFolder";
 
@@ -9,13 +10,12 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectFilters } from "../../features/filters/filtersSlice";
 import { selectListById } from "../../features/lists/listsSlice";
-import { createTask, } from "../../features/tasks/tasksSlice";
+import { createTask, updateTask, setFocus, selectFocus } from "../../features/tasks/tasksSlice";
 
-const AddTask = ({ task, focus, setFocus }) => {
+const AddTask = ({ task }) => {
 
     const dispatch = useDispatch();
     const filters = useSelector(selectFilters);
-
     const selectInitList = useSelector((state) => selectListById(state, task ? (task.list ? task.list.list_id : null) : filters.list));
 
     const initList = () => {
@@ -57,7 +57,59 @@ const AddTask = ({ task, focus, setFocus }) => {
     const [selectPeople, setSelectPeople] = useState(initPeople)
     const [alert, setAlert] = useState('')
     const [subtasks, setSubtasks] = useState([])
-    const [create, setCreate] = useState()
+
+    const selectFocusState = useSelector(selectFocus)
+
+    const handleFocus = (event) => {
+        const id = event.target.id;
+        console.log('focus id: ', id)
+        dispatch(setFocus(true, id))
+    }
+
+    const handleBlur = (event) => {
+        const id = event.target.id;
+        console.log('blur id: ', id);
+        dispatch(setFocus(false, id));
+        if (!task) {
+            switch (id) {
+                case 'task-content': {
+                    console.log('aaaa')
+                    if (taskContent.length) {
+                        const payload = {
+                            type: 'task',
+                            payload: {
+                                list: (list ? list._id : null),
+                                content: taskContent,
+                                person: selectPeople
+                            }
+                        }
+                        dispatch(createTask(payload))
+                    }
+                    break
+                }
+                case null: {
+                    break
+                }
+            }
+        } else if (task) {
+            switch (id) {
+                case 'task-content': {
+                    if (taskContent.length) {
+                        const payload = {
+                            id: task.task_id,
+                            payload: {
+                                content: taskContent,
+                            }
+                        }
+                        dispatch(updateTask(payload))
+                    }
+                }
+                case null: {
+                    break
+                }
+            }
+        };
+    }
 
     const handleOnchange = (event) => {
         if (event.length < 300) {
@@ -67,31 +119,6 @@ const AddTask = ({ task, focus, setFocus }) => {
             setTaskContent(event);
             setError(true);
         }
-    }
-
-    const handleFocus = () => {
-        setFocus(true)
-    }
-
-    const handleBlur = (event) => {
-        const id = event.currentTarget.id
-        setFocus(false)
-        if (!task) {
-            switch (id) {
-                case 'task-content': {
-                    const payload = {
-                        type: 'task',
-                        payload: {
-                            list: list._id,
-                            content: taskContent,
-                            person: selectPeople
-                        }
-                    }
-                    dispatch(createTask(payload))
-                }
-            }
-        }
-
     }
 
 
@@ -108,7 +135,7 @@ const AddTask = ({ task, focus, setFocus }) => {
                 error={error}
                 helperText={error ? "length should be less than 300 characters" : null}
                 onChange={(e) => { handleOnchange(e.target.value) }}
-                onFocus={() => { handleFocus() }}
+                onFocus={(event) => { handleFocus(event) }}
                 onBlur={(event) => { handleBlur(event) }}
             />
             <PeopleChipSelect selectPeople={selectPeople} setSelectPeople={setSelectPeople} />

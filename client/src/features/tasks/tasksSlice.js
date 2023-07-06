@@ -1,5 +1,5 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from '@reduxjs/toolkit';
-import { axiosPost, axiosDelete, axiosPut, axiosFetch } from '../../utils/api';
+import { axiosPost, axiosPut, axiosFetch } from '../../utils/api';
 import { selectFilters } from '../filters/filtersSlice';
 
 export const fetchTasks = createAsyncThunk(
@@ -35,11 +35,23 @@ export const deleteTask = createAsyncThunk(
 );
 
 const tasksAdapter = createEntityAdapter({
-    sortComparer: (a, b) => a.createdAt.localeCompare(b.createdAt),
+    sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
     selectId: (e) => e.task_id,
 })
 
 export const selectTasks = (state) => state.tasks
+
+export const selectFocus = (state) => state.tasks.focus
+
+
+
+export const selectCreatedResponse = (state) => state.tasks.create.response
+
+export const selectFetchTaskStatus = (state) => state.tasks.status
+export const selectCreateTaskStatus = (state) => state.tasks.create.status
+export const selectUpdateTaskStatus = (state) => state.tasks.update.status
+export const selectDeleteTaskStatus = (state) => state.tasks.delete.status
+
 
 const tasksSelectors = tasksAdapter.getSelectors(selectTasks)
 
@@ -84,24 +96,51 @@ export const selectTasksByStatusLength = createSelector(
     }
 )
 
-
 const tasksSlice = createSlice({
     name: 'tasks',
     initialState: tasksAdapter.getInitialState({
         status: 'idle',
         error: null,
+        focus: {
+            status: false,
+            id: null
+        },
         create: {
+            status: 'idle',
             response: null,
-            status: 'idle'
+            error: null
+        },
+        update: {
+            status: 'idle',
+            response: null,
+            error: null
+        },
+        delete: {
+            status: 'idle',
+            response: null,
+            error: null
         }
     }),
     reducers: {
         initTask: (state) => {
             state.create.status = 'idle';
             state.create.response = null
+        },
+        setFocus: {
+            reducer: (state, action) => {
+                const { status, id } = action.payload;
+                state.focus.status = status;
+                state.focus.id = id;
+            },
+            prepare: (status, id) => {
+                return {
+                    payload: { status, id }
+                }
+            }
         }
     },
     extraReducers: {
+        // Fetch state
         [fetchTasks.pending]: (state, action) => {
             state.status = 'loading';
             state.error = null;
@@ -118,11 +157,12 @@ const tasksSlice = createSlice({
                 state.error = action.payload;
             }
         },
+        // Create state
         [createTask.pending]: (state, action) => {
             state.create.status = 'loading';
+            state.create.response = null
             state.create.error = null;
         },
-
         [createTask.fulfilled]: (state, action) => {
             if (state.create.status === 'loading') {
                 tasksAdapter.addOne(state, action.payload)
@@ -136,26 +176,50 @@ const tasksSlice = createSlice({
                 state.create.status = 'failed'
             }
         },
-
+        // Delete state
+        [deleteTask.pending]: (state, action) => {
+            state.delete.status = 'loading';
+            state.delete.error = null;
+            state.delete.response = null
+        },
         [deleteTask.fulfilled]: (state, action) => {
-            tasksAdapter.removeOne(state, action.payload.task_id)
+            if (state.delete.status === 'loading') {
+                tasksAdapter.removeOne(state, action.payload.task_id)
+                state.delete.response = action.payload
+                state.delete.status = 'succeeded'
+            }
         },
         [deleteTask.rejected]: (state, action) => {
-            state.error = action.payload;
+            if (state.delete.status === 'loading') {
+                state.delete.error = action.payload;
+                state.delete.status = 'failed'
+            }
+        },
+        // Update state
+        [updateTask.pending]: (state, action) => {
+            state.update.status = 'loading';
+            state.update.error = null;
+            state.update.response = null
         },
         [updateTask.fulfilled]: (state, action) => {
-            const taskId = action.payload.task_id;
-            state.entities[taskId] = action.payload;
-            state.updateStatus = 'succeeded';
+            if (state.update.status === 'loading') {
+                const taskId = action.payload.task_id;
+                state.entities[taskId] = action.payload;
+                state.update.response = action.payload;
+                state.update.status = 'succeeded';
+            }
         },
         [updateTask.rejected]: (state, action) => {
-            state.updateStatus = 'failed';
-            state.updateError = action.payload;
+            if (state.update.status === 'loading') {
+                state.update.response = action.payload;
+                state.update.status = 'failed';
+            }
         },
 
     }
 })
 
-export const { initTask } = tasksSlice.actions
+
+export const { initTask, setFocus } = tasksSlice.actions
 
 export default tasksSlice.reducer

@@ -1,20 +1,18 @@
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import TaskCard from "../TaskCard/TaskCard";
 import { Box, Checkbox, Chip, Paper, Stack } from "@mui/material";
-import SubTask from "../SubTask/SubTask";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+
+import TaskCard from "../TaskCard/TaskCard";
+import SubTask from "../SubTask/SubTask";
 import TaskDialog from "../TaskDialog/TaskDialog";
 
 import { useState, useEffect } from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchTasks, selectTasksByStatus, updateTask } from "../../features/tasks/tasksSlice";
+import { fetchTasks, initTask, selectTasksByStatus, updateTask } from "../../features/tasks/tasksSlice";
 import { fetchSubtasks } from "../../features/subtasks/subtasksSlice";
 import { fetchPeople } from "../../features/people/peopleSlice";
 
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer"
-import InfiniteScroll from 'react-infinite-scroll-component';
 
 const TaskContainer = () => {
 
@@ -52,8 +50,6 @@ const TaskContainer = () => {
 		const payload = {
 			id: task.task_id,
 			payload: {
-				content: task.content,
-				list_id: task.list.list_id,
 				is_completed: !task.is_completed
 			}
 		};
@@ -80,6 +76,7 @@ const TaskContainer = () => {
 								<Stack direction="column"
 									sx={{ width: "100%" }}
 									onClick={() => {
+										dispatch(initTask())
 										handleOpenCard(task);
 									}} >
 									<TaskCard data={task} />
@@ -93,41 +90,6 @@ const TaskContainer = () => {
 					)
 				}
 			)
-		)
-	}
-
-	const GridContainer = ({ children }) => {
-		return (
-			<Grid2 container>
-				{children}
-			</Grid2>
-		);
-	};
-
-	const taskRow = ({ index, style }) => {
-		return (
-			<Grid2 xs={12} sm={12} md={12} lg={12} item style={style} key={index} >
-				<Paper display="flex" variant="outlined" sx={{ paddingBottom: 2, width: 'inherit', marginBottom: 1 }} >
-					<Stack direction="row" sx={{ width: "100%" }}>
-						<Stack direction="column">
-							<Box sx={{ display: "flex", alignItems: "baseline", paddingTop: 7 }}>
-								<Checkbox onChange={() => handleChecked(tasks[index])} checked={tasks[index].is_completed} />
-							</Box>
-						</Stack>
-						<Stack direction="column"
-							sx={{ width: "100%" }}
-							onClick={() => {
-								handleOpenCard(tasks[index]);
-							}} >
-							<TaskCard data={tasks[index]} />
-							<SubTask task={tasks[index]} />
-							<Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: 1, paddingTop: 2 }}>
-								<Chip icon={<FolderOpenIcon />} label={tasks[index].list.name} size="small" />
-							</Box>
-						</Stack>
-					</Stack>
-				</Paper>
-			</Grid2>
 		)
 	}
 
