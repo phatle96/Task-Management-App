@@ -8,8 +8,7 @@ import { Badge, Stack } from '@mui/material';
 import { styled } from '@mui/material';
 import StyledToggleButton from '../StyledToggleButton/StyledToggleButton';
 import MyCalendar from '../Calendar/Calendar';
-import PeopleContainer from '../PeopleContainer/PeopleContainer';
-import { selectTasksByStatus, selectTasksByStatusLength } from '../../features/tasks/tasksSlice';
+import { selectTasksByStatusLength } from '../../features/tasks/tasksSlice';
 import { tasksCompletedFilterChanged, selectFilters } from '../../features/filters/filtersSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -26,7 +25,6 @@ export default function TabGroup() {
 
     const [value, setValue] = useState('1');
     const dispatch = useDispatch();
-    const tasks = useSelector(selectTasksByStatus)
     const totalTasks = useSelector(selectTasksByStatusLength)
     const filters = useSelector(selectFilters);
 
@@ -54,8 +52,7 @@ export default function TabGroup() {
         let tabPanel = {
             '1': <TaskContainer />,
             '2': <TaskContainer />,
-            '3': <PeopleContainer />,
-            '4': <MyCalendar />,
+            '3': <MyCalendar />,
         }
         return (
             tabPanel[value]
@@ -72,7 +69,8 @@ export default function TabGroup() {
                             return (
                                 <>
                                     <Tab selected={tab.value === value} onChange={handleChange} label={tab.label} value={tab.value} key={tab.value} />
-                                    {(tab.value === '1' || tab.value === '2') && value === tab.value && <StyledBadge badgeContent={totalTasks} color="primary" />}
+                                    {(tab.value === '1' || tab.value === '2') && value === tab.value &&
+                                        <StyledBadge badgeContent={totalTasks} color="primary" />}
                                 </>
                             )
                         })}
@@ -94,6 +92,5 @@ export default function TabGroup() {
 const tabs = [
     { label: "Doing", value: '1' },
     { label: "Complete", value: '2' },
-    { label: "People", value: '3' },
-    { label: "Calendar", value: '4' },
+    { label: "Calendar", value: '3' },
 ]

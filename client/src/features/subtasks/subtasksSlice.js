@@ -1,5 +1,5 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from '@reduxjs/toolkit';
-import { axiosPost, axiosDelete, axiosPut, axiosFetch } from '../../utils/api';
+import { axiosPost, axiosPut, axiosFetch } from '../../utils/api';
 import { selectFilters } from '../filters/filtersSlice';
 
 export const fetchSubtasks = createAsyncThunk(
@@ -12,8 +12,8 @@ export const fetchSubtasks = createAsyncThunk(
 
 export const createSubtask = createAsyncThunk(
     'subtasks/createSubtask',
-    async (type, payload) => {
-        const response = await axiosPost(type, payload);
+    async (payload) => {
+        const response = await axiosPost(payload);
         return response;
     }
 );
@@ -29,13 +29,13 @@ export const updateSubtask = createAsyncThunk(
 export const deleteSubtask = createAsyncThunk(
     'subtasks/deleteSubtask',
     async (payload) => {
-        const response = await axiosDelete(payload);
+        const response = await axiosPut(payload);
         return response;
     }
 );
 
 const subtasksAdapter = createEntityAdapter({
-    sortComparer: (a, b) => a.createdAt.localeCompare(b.createdAt),
+    sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
     selectId: (e) => e.subtask_id,
 })
 

@@ -3,13 +3,18 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Avatar } from '@mui/material';
+
+import { useState } from 'react';
+
 import { useSelector } from 'react-redux';
 import { selectAllPeople } from '../../features/people/peopleSlice';
+
 
 
 export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
 
     const people = useSelector(selectAllPeople)
+    const [inputChange, setInputChange] = useState('')
 
     function stringToColor(string) {
         let hash = 0;
@@ -40,8 +45,14 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.person_id === value.person_id}
                 value={selectPeople}
-                onChange={(event, newValue) => { setSelectPeople(newValue) }}
-                onFocus={(event) => console.log(event.target.id)}
+                filterSelectedOptions
+                autoHighlight
+                autoSelect={inputChange}
+                onInputChange={(event, value) => { setInputChange(value) }}
+                onChange={(event, newValue) => {
+                    console.log(event.target.id)
+                    setSelectPeople(newValue)
+                }}
                 renderTags={(tagValue, getTagProps) =>
                     tagValue.map((option, index) => (
                         <Chip

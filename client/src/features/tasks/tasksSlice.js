@@ -41,18 +41,6 @@ const tasksAdapter = createEntityAdapter({
 
 export const selectTasks = (state) => state.tasks
 
-export const selectFocus = (state) => state.tasks.focus
-
-
-
-export const selectCreatedResponse = (state) => state.tasks.create.response
-
-export const selectFetchTaskStatus = (state) => state.tasks.status
-export const selectCreateTaskStatus = (state) => state.tasks.create.status
-export const selectUpdateTaskStatus = (state) => state.tasks.update.status
-export const selectDeleteTaskStatus = (state) => state.tasks.delete.status
-
-
 const tasksSelectors = tasksAdapter.getSelectors(selectTasks)
 
 
@@ -101,10 +89,6 @@ const tasksSlice = createSlice({
     initialState: tasksAdapter.getInitialState({
         status: 'idle',
         error: null,
-        focus: {
-            status: false,
-            id: null
-        },
         create: {
             status: 'idle',
             response: null,
@@ -126,18 +110,6 @@ const tasksSlice = createSlice({
             state.create.status = 'idle';
             state.create.response = null
         },
-        setFocus: {
-            reducer: (state, action) => {
-                const { status, id } = action.payload;
-                state.focus.status = status;
-                state.focus.id = id;
-            },
-            prepare: (status, id) => {
-                return {
-                    payload: { status, id }
-                }
-            }
-        }
     },
     extraReducers: {
         // Fetch state
@@ -219,7 +191,13 @@ const tasksSlice = createSlice({
     }
 })
 
+export const selectFetchTaskStatus = (state) => state.tasks.status
+export const selectCreateTaskStatus = (state) => state.tasks.create.status
+export const selectUpdateTaskStatus = (state) => state.tasks.update.status
+export const selectDeleteTaskStatus = (state) => state.tasks.delete.status
 
-export const { initTask, setFocus } = tasksSlice.actions
+export const {
+    initTask,
+} = tasksSlice.actions
 
 export default tasksSlice.reducer

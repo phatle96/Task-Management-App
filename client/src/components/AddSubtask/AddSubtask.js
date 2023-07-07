@@ -10,42 +10,55 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import { nanoid } from 'nanoid'
 
-const AddSubtask = ({ subtasks, setSubtasks }) => {
+import { useDispatch, useSelector } from 'react-redux';
+
+import { selectTaskFieldError } from "../../features/fields/fieldsSlice";
+import { selectSubtasksByTaskId } from '../../features/subtasks/subtasksSlice';
+
+const AddSubtask = ({ taskContent, setFocus, setSubtasks, task }) => {
 
 	const [content, setContent] = useState('');
-	const [error, setError] = useState({ state: false, helperText: "" });
+	const [error, setError] = useState(false);
 	const [handleAdd, setHandleAdd] = useState(false);
 
+	const dispatch = useDispatch();
+	const taskFieldError = useSelector(selectTaskFieldError)
+	const subtasks = useSelector((state) => selectSubtasksByTaskId(state, (task ? task.task_id : null)));
 
 	const handleAddSubtask = () => {
-		setHandleAdd(true);
-		setError({ state: false, helperText: "" })
+		if (!taskFieldError && taskContent) {
+			setHandleAdd(true);
+			setError(false)
+		} else {
+			setFocus(true)
+		}
+
 	};
 
 	const handleCancelAdd = () => {
 		setHandleAdd(false);
 		setContent("")
-		setError({ state: false, helperText: "" })
+		setError(false)
 	};
 
 	const handleSaveAdd = () => {
 		if (content.length > 0 && content.length < 300) {
 			setHandleAdd(false);
 			setSubtasks([...subtasks, { temp_id: nanoid(5), content: content }]);
-			setError({ state: false, helperText: "" });
+			setError(false);
 			setContent("");
 		} else {
-			setError({ state: true, helperText: "length should be 1 to 299 characters" })
+			setError(true)
 		}
 	}
 
 	const handleEditAdd = (event) => {
 		if (event.length > 0 && event.length < 300) {
 			setContent(event)
-			setError({ state: false, helperText: "" });
+			setError(false);
 		} else {
 			setContent(event)
-			setError({ state: true, helperText: "length should be 1 to 299 characters" })
+			setError(true)
 		}
 	}
 
@@ -144,7 +157,7 @@ const AddSubtask = ({ subtasks, setSubtasks }) => {
 			<>
 				<Stack direction="row" >
 					<Button
-						onClick={handleAddSubtask}
+						onClick={() => { handleAddSubtask() }}
 						startIcon={<FormatListBulletedIcon />}>
 						Add subtask
 					</Button>
@@ -160,8 +173,8 @@ const AddSubtask = ({ subtasks, setSubtasks }) => {
 									autoFocus
 									id="standard-basic"
 									label="Subtask"
-									error={error.state}
-									helperText={error.helperText}
+									error={error}
+									helperText={error ? 'length should not be empty' : null}
 									value={content}
 									onChange={(event) => { handleEditAdd(event.target.value) }} />
 
@@ -211,21 +224,20 @@ const AddSubtask = ({ subtasks, setSubtasks }) => {
 				{
 					subtasks.map((subtask) => {
 						return (
-							<ListItem key={subtask.temp_id} sx={{ height: 35, paddingY: 2.5 }}>
+							<ListItem key={subtask.subtask_id} sx={{ height: 35, paddingY: 2.5 }}>
 								<ListItemIcon sx={{ minWidth: 35 }}>
 									<SubdirectoryArrowRightIcon fontSize='inherit' />
 								</ListItemIcon>
 								<TextField
 									sx={!subtask.isDeleted ? { width: "100%" } : { width: "100%", textDecoration: "line-through" }}
 									variant="standard"
-									disabled={subtask.isDeleted}
 									value={subtask.content}
-									error={subtask.error}
-									helperText={subtask.helperText}
-									onFocus={() => { handleFocus(subtask.temp_id) }}
-									onBlur={() => { handleClose(subtask.temp_id) }}
-									onChange={(event) => { handleEdit(event.target.value, subtask.temp_id); }} />
-								<EditButton isEdit={subtask.isEdit} isDeleted={subtask.isDeleted} id={subtask.temp_id} />
+									error={error}
+									helperText={error ? 'length should not be empty' : null}
+									onFocus={() => { handleFocus(subtask.subtask_id) }}
+									onBlur={() => { handleClose(subtask.subtask_id) }}
+									onChange={(event) => { handleEdit(event.target.value, subtask.subtask_id); }} />
+								<EditButton isEdit={subtask.isEdit} isDeleted={subtask.isDeleted} id={subtask.subtask_id} />
 							</ListItem>
 						)
 					})
