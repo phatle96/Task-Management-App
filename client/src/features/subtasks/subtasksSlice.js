@@ -77,16 +77,26 @@ const subtasksSlice = createSlice({
     initialState: subtasksAdapter.getInitialState({
         status: 'idle',
         error: null,
+        create: {
+            status: 'idle',
+            response: null,
+            error: null
+        },
+        update: {
+            status: 'idle',
+            response: null,
+            error: null
+        },
+        delete: {
+            status: 'idle',
+            response: null,
+            error: null
+        }
     }),
     reducers: {
-        subtaskList: (state, action) => {
-
-        },
-        subtaskFilter: (state, action) => {
-
-        },
-        subtaskSort: (state, action) => {
-
+        initSubtask: (state) => {
+            state.create.status = 'idle';
+            state.create.response = null
         },
     },
     extraReducers: {
@@ -107,29 +117,68 @@ const subtasksSlice = createSlice({
             }
         },
 
-        [createSubtask.fulfilled]: subtasksAdapter.addOne,
-        [createSubtask.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+        // Create state
+        [createSubtask.pending]: (state, action) => {
+            state.create.status = 'loading';
+            state.create.response = null
+            state.create.error = null;
         },
-
-        [deleteSubtask.fulfilled]: subtasksAdapter.removeOne,
+        [createSubtask.fulfilled]: (state, action) => {
+            if (state.create.status === 'loading') {
+                subtasksAdapter.addOne(state, action.payload)
+                state.create.response = action.payload;
+                state.create.status = 'succeeded'
+            }
+        },
+        [createSubtask.rejected]: (state, action) => {
+            if (state.create.status === 'loading') {
+                state.create.error = action.payload;
+                state.create.status = 'failed'
+            }
+        },
+        // Delete state
+        [deleteSubtask.pending]: (state, action) => {
+            state.delete.status = 'loading';
+            state.delete.error = null;
+            state.delete.response = null
+        },
+        [deleteSubtask.fulfilled]: (state, action) => {
+            if (state.delete.status === 'loading') {
+                subtasksAdapter.removeOne(state, action.payload.subtask_id)
+                state.delete.response = action.payload
+                state.delete.status = 'succeeded'
+            }
+        },
         [deleteSubtask.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+            if (state.delete.status === 'loading') {
+                state.delete.error = action.payload;
+                state.delete.status = 'failed'
+            }
+        },
+        // Update state
+        [updateSubtask.pending]: (state, action) => {
+            state.update.status = 'loading';
+            state.update.error = null;
+            state.update.response = null
         },
         [updateSubtask.fulfilled]: (state, action) => {
-            const subtaskId = action.payload.subtask_id;
-            state.entities[subtaskId] = action.payload;
+            if (state.update.status === 'loading') {
+                const subtaskId = action.payload.subtask_id;
+                state.entities[subtaskId] = action.payload;
+                state.update.response = action.payload;
+                state.update.status = 'succeeded';
+            }
         },
         [updateSubtask.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+            if (state.update.status === 'loading') {
+                state.update.response = action.payload;
+                state.update.status = 'failed';
+            }
         },
 
     }
 })
 
-export const { subtaskFilter, subtaskSort, subtaskRemoved } = subtasksSlice.actions
+export const { initSubtask } = subtasksSlice.actions
 
 export default subtasksSlice.reducer

@@ -14,10 +14,14 @@ const initialState = {
     alertField: {
         status: 'idle'
     },
+    subtaskAddField: {
+        status: 'idle'
+    },
     subtaskField: {
         status: 'idle',
+        id: null,
         error: false
-    }
+    },
 }
 
 const fieldsSlice = createSlice({
@@ -71,7 +75,7 @@ const fieldsSlice = createSlice({
         handleAlertField: {
             reducer: (state, action) => {
                 const { status } = action.payload;
-                state.alert.status = status;
+                state.alertField.status = status;
             },
             prepare: (status) => {
                 return {
@@ -79,10 +83,10 @@ const fieldsSlice = createSlice({
                 }
             }
         },
-        handleSubtaskField: {
+        handleSubtaskAddField: {
             reducer: (state, action) => {
                 const { status } = action.payload;
-                state.subtask.status = status;
+                state.subtaskAddField.status = status
             },
             prepare: (status) => {
                 return {
@@ -90,13 +94,21 @@ const fieldsSlice = createSlice({
                 }
             }
         },
+        handleSubtaskField: (state, action) => {
+            const { status, id, error } = action.payload
+            state.subtaskField.status = status;
+            state.subtaskField.id = id;
+            state.subtaskField.error = error;
+        },
+
     }
 })
 
 export const selectTaskFieldStatus = (state) => state.fields.taskField.status
 export const selectTaskFieldError = (state) => state.fields.taskField.error
 
-export const selectSubtaskFieldStatus = (state) => state.fields.subtaskField.status
+export const selectSubtaskField = (state) => state.fields.subtaskField
+export const selectSubtaskAddField = (state) => state.fields.subtaskAddField
 
 export const selectListFieldStatus = (state) => state.fields.listField.status
 export const selectPeopleFieldStatus = (state) => state.fields.peopleField.status
@@ -107,7 +119,9 @@ export const {
     handleTaskField,
     handleTaskError,
 
+    handleSubtaskAddField,
     handleSubtaskField,
+    handleSubtaskError,
 
     handleListField,
     handlePeopleField,

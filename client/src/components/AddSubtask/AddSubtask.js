@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-	Button, ClickAwayListener, IconButton, List, ListItem, ListItemIcon, Stack, TextField, Tooltip,
+	Button, IconButton, List, ListItem, ListItemIcon, Stack, TextField, Tooltip,
 } from "@mui/material";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import DoneIcon from '@mui/icons-material/Done';
@@ -8,135 +8,81 @@ import CloseIcon from '@mui/icons-material/Close';
 import UndoIcon from '@mui/icons-material/Undo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-import { nanoid } from 'nanoid'
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectTaskFieldError } from "../../features/fields/fieldsSlice";
-import { selectSubtasksByTaskId } from '../../features/subtasks/subtasksSlice';
+import { handleSubtaskAddField, handleSubtaskField, selectSubtaskAddField, selectSubtaskField, selectTaskFieldError } from "../../features/fields/fieldsSlice";
+import { createSubtask, selectSubtasksByTaskId } from '../../features/subtasks/subtasksSlice';
+import SubtaskTextField from '../SubtaskTextField/SubtaskTextField';
 
-const AddSubtask = ({ taskContent, setFocus, setSubtasks, task }) => {
+const AddSubtask = ({ taskContent, setFocus, task }) => {
 
 	const [content, setContent] = useState('');
 	const [error, setError] = useState(false);
-	const [handleAdd, setHandleAdd] = useState(false);
+	const [add, setAdd] = useState(false);
+
 
 	const dispatch = useDispatch();
 	const taskFieldError = useSelector(selectTaskFieldError)
+	const subtaskAddField = useSelector(selectSubtaskAddField)
 	const subtasks = useSelector((state) => selectSubtasksByTaskId(state, (task ? task.task_id : null)));
 
-	const handleAddSubtask = () => {
+	useEffect(() => {
+		switch (subtaskAddField.status) {
+			case 'idle': break
+			case 'on': break
+			case 'off': {
+				if (content.length) {
+					const payload = {
+						type: 'subtask',
+						payload: {
+							list: (task.list ? task.list._id : null),
+							task: task._id,
+							content: content
+						}
+					}
+					dispatch(createSubtask(payload))
+				}
+				setContent("")
+				dispatch(handleSubtaskAddField('idle'))
+				break
+			}
+		}
+	}, [subtaskAddField])
+
+	const handleAdd = () => {
 		if (!taskFieldError && taskContent) {
-			setHandleAdd(true);
-			setError(false)
+			setAdd(true);
 		} else {
 			setFocus(true)
 		}
 
 	};
 
-	const handleCancelAdd = () => {
-		setHandleAdd(false);
+	const handleCancel = () => {
 		setContent("")
+		setAdd(false);
 		setError(false)
 	};
 
-	const handleSaveAdd = () => {
-		if (content.length > 0 && content.length < 300) {
-			setHandleAdd(false);
-			setSubtasks([...subtasks, { temp_id: nanoid(5), content: content }]);
-			setError(false);
-			setContent("");
-		} else {
-			setError(true)
-		}
+	const handleFocus = () => {
+		dispatch(handleSubtaskAddField('on'))
 	}
 
-	const handleEditAdd = (event) => {
-		if (event.length > 0 && event.length < 300) {
+	const handleBlur = () => {
+		setAdd(false)
+		setError(false)
+		dispatch(handleSubtaskAddField('off'))
+	}
+
+	const handleEdit = (event) => {
+		if (event && event.length < 300) {
 			setContent(event)
 			setError(false);
 		} else {
 			setContent(event)
 			setError(true)
 		}
-	}
-
-	const handleEdit = (event, id) => {
-		const editing = subtasks.map((subtask) => {
-			if (subtask.temp_id === id) {
-				if (event.length > 0 && event.length < 300) {
-					return (
-						{ ...subtask, content: event, error: false }
-					)
-				} else {
-					return (
-						{ ...subtask, content: event, error: true }
-					)
-				}
-			} else {
-				return { ...subtask }
-			}
-		})
-		setSubtasks(editing);
-	}
-
-	const handleFocus = (id) => {
-		const editing = subtasks.map((subtask) => {
-			if (subtask.temp_id === id) {
-				return (
-					{ ...subtask, isEdit: true }
-				)
-			} else {
-				return { ...subtask, isEdit: false }
-			}
-		})
-		setSubtasks(editing);
-	}
-
-	const handleClose = (id) => {
-		const editing = subtasks.map((subtask) => {
-			if (subtask.temp_id === id) {
-				return (
-					{ ...subtask, isEdit: false }
-				)
-			} else {
-				return { ...subtask }
-			}
-		})
-		setSubtasks(editing);
-	}
-
-
-	const handleDelete = (id) => {
-		const deleted = subtasks.map((subtask) => {
-			if (subtask.temp_id === id) {
-				return (
-					{ ...subtask, isDeleted: true }
-				)
-			} else {
-				return { ...subtask }
-			}
-		})
-		setSubtasks(deleted);
-	}
-
-	const handleUndoDelete = (id) => {
-		const undoDelete = subtasks.map((subtask) => {
-			if (subtask.temp_id === id) {
-				return (
-					{ ...subtask, isDeleted: false }
-				)
-			} else {
-				return { ...subtask }
-			}
-		})
-		setSubtasks(undoDelete);
-	}
-
-	const handleConfirmDelete = (id) => {
-		const confirmDelete = subtasks.filter(subtask => subtask.temp_id !== id);
-		setSubtasks(confirmDelete);
 	}
 
 	const IconButtonStyled = ({ title, onClick, style }) => {
@@ -157,30 +103,29 @@ const AddSubtask = ({ taskContent, setFocus, setSubtasks, task }) => {
 			<>
 				<Stack direction="row" >
 					<Button
-						onClick={() => { handleAddSubtask() }}
+						onClick={() => { handleAdd() }}
 						startIcon={<FormatListBulletedIcon />}>
 						Add subtask
 					</Button>
 				</Stack>
 				{
-					handleAdd &&
+					add &&
 					(
 						<Stack direction="row" sx={{ alignItems: "center" }}>
-							<ClickAwayListener onClickAway={handleSaveAdd}>
-								<TextField
-									sx={{ width: "100%", paddingRight: 0.5 }}
-									variant="standard"
-									autoFocus
-									id="standard-basic"
-									label="Subtask"
-									error={error}
-									helperText={error ? 'length should not be empty' : null}
-									value={content}
-									onChange={(event) => { handleEditAdd(event.target.value) }} />
-
-							</ClickAwayListener>
-							<IconButtonStyled title='Cancel' onClick={handleCancelAdd} style='close' />
-							<IconButtonStyled title='Save' onClick={handleSaveAdd} style='done' />
+							<TextField
+								sx={{ width: "100%", paddingRight: 0.5 }}
+								variant="standard"
+								autoFocus
+								id="standard-basic"
+								label="Subtask"
+								error={error}
+								helperText={error ? 'length should not be empty' : null}
+								value={content}
+								onFocus={() => { handleFocus() }}
+								onBlur={() => { handleBlur() }}
+								onChange={(event) => { handleEdit(event.target.value) }} />
+							<IconButtonStyled title='Cancel' onClick={() => { handleCancel() }} style='close' />
+							<IconButtonStyled title='Save' onClick={() => { handleBlur() }} style='done' />
 
 						</Stack>
 					)
@@ -189,33 +134,6 @@ const AddSubtask = ({ taskContent, setFocus, setSubtasks, task }) => {
 			</>
 		)
 	}
-
-
-	const EditButton = ({ isDeleted, isEdit, id }) => {
-		return (
-			<Stack direction="row">
-				{
-					(isEdit && !isDeleted) && (
-						<>
-							<IconButtonStyled title='Delete' onClick={() => { handleDelete(id) }} style='close' />
-							<IconButtonStyled title='Save' onClick={() => { handleClose(id) }} style='done' />
-						</>
-					)
-				}
-				{
-					(isDeleted && isEdit) && (
-						<>
-							<IconButtonStyled title='Undo' onClick={() => { handleUndoDelete(id) }} style='undo' />
-							<IconButtonStyled title='Delete' onClick={() => { handleConfirmDelete(id) }} style='delete' />
-						</>
-					)
-				}
-			</Stack>
-		)
-	}
-
-
-
 
 	return (
 		<Stack direction="column">
@@ -228,16 +146,7 @@ const AddSubtask = ({ taskContent, setFocus, setSubtasks, task }) => {
 								<ListItemIcon sx={{ minWidth: 35 }}>
 									<SubdirectoryArrowRightIcon fontSize='inherit' />
 								</ListItemIcon>
-								<TextField
-									sx={!subtask.isDeleted ? { width: "100%" } : { width: "100%", textDecoration: "line-through" }}
-									variant="standard"
-									value={subtask.content}
-									error={error}
-									helperText={error ? 'length should not be empty' : null}
-									onFocus={() => { handleFocus(subtask.subtask_id) }}
-									onBlur={() => { handleClose(subtask.subtask_id) }}
-									onChange={(event) => { handleEdit(event.target.value, subtask.subtask_id); }} />
-								<EditButton isEdit={subtask.isEdit} isDeleted={subtask.isDeleted} id={subtask.subtask_id} />
+								<SubtaskTextField subtask={subtask} />
 							</ListItem>
 						)
 					})

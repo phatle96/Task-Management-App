@@ -1,5 +1,10 @@
 const Subtask = require('../models/subtask.model');
 
+exports.find_all_subtasks = async () => {
+	const subtasks = await Subtask.find({ is_deleted: false }).populate(['task', 'person', 'list']).exec();
+	return subtasks;
+};
+
 exports.find_subtask_query = async (req_param) => {
 	const query = { ...req_param, is_deleted: false };
 	const result = await Subtask.findOne(query).exec();
@@ -9,6 +14,7 @@ exports.find_subtask_query = async (req_param) => {
 exports.create_subtask_query = async (req_body) => {
 	const subtask = req_body;
 	result = await Subtask.create(subtask);
+	result = await result.populate(['list', 'task', 'person']);
 	return result;
 };
 

@@ -31,17 +31,15 @@ const payload = {
 		in: ['body'],
 		isLength: {
 			errorMessage: "Content should be at least 1 to 300 characters long",
-			options: { min: 1, max: 300, },
+			options: { max: 300, },
 		},
-		escape: true,
+		optional: {
+			options: { nullable: true },
+		},
 	},
 
 	list: {
 		in: ['body'],
-		isLength: {
-			errorMessage: "List is invalid",
-			options: { min: 1, max: 50 },
-		},
 		optional: {
 			options: { nullable: true },
 		},
@@ -50,9 +48,8 @@ const payload = {
 
 	task: {
 		in: ['body'],
-		isLength: {
-			errorMessage: 'Task is invalid',
-			options: { min: 1, max: 50 },
+		optional: {
+			options: { nullable: true },
 		},
 		escape: true,
 	},

@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 
 const SubtaskSchema = new Schema({
     subtask_id: { type: String, required: true, unique: true, default: () => `subtask_${uuidv4()}` },
-    content: { type: String, required: true, maxLength: 300 },
-    list: { type: Schema.Types.ObjectId, required: true, ref: 'List' },
-    task: { type: Schema.Types.ObjectId, required: true, ref: 'Task' },
+    content: { type: String, required: true, maxLength: 300, default: "" },
+    list: { type: Schema.Types.ObjectId, ref: 'List', default: null },
+    task: { type: Schema.Types.ObjectId, required: true, ref: 'Task', default: null },
     person: [{ type: Schema.Types.ObjectId, ref: 'Person' }],
     alert: { type: Date },
     is_completed: { type: Boolean, required: true, default: false },

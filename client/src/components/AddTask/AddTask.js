@@ -68,12 +68,8 @@ const AddTask = ({ task }) => {
 
     useEffect(() => {
         switch (taskStatus) {
-            case 'idle': {
-                break
-            }
-            case 'on': {
-                break
-            }
+            case 'idle': break
+            case 'on': break
             case 'off': {
                 if (taskContent.length && taskContent !== taskRef.current) {
                     if (!task) {
@@ -97,6 +93,7 @@ const AddTask = ({ task }) => {
                     };
                 }
                 dispatch(handleTaskField('idle'))
+                break
             }
         }
     }, [taskStatus])

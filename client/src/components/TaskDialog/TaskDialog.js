@@ -6,13 +6,15 @@ import { useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTask, } from "../../features/tasks/tasksSlice";
-import { handleTaskError, selectTaskFieldError } from "../../features/fields/fieldsSlice";
+import { handleSubtaskField, handleTaskError, selectSubtaskField, selectTaskFieldError } from "../../features/fields/fieldsSlice";
 
 
 const TaskDialog = ({ data, open, setOpen }) => {
 
     const taskCreated = useSelector((state) => state.tasks.create.response)
+
     const taskFieldError = useSelector(selectTaskFieldError)
+    const subtaskField = useSelector(selectSubtaskField)
 
     data = data ? data : (taskCreated ? taskCreated : null)
 
@@ -22,7 +24,7 @@ const TaskDialog = ({ data, open, setOpen }) => {
     const dispatch = useDispatch();
 
     const handleClose = () => {
-        if (!taskFieldError) {
+        if (!taskFieldError && !subtaskField.error) {
             setOpen(false);
         } else {
             setOpenAlert(true)
@@ -38,6 +40,7 @@ const TaskDialog = ({ data, open, setOpen }) => {
         setOpenAlert(false)
         setOpen(false)
         dispatch(handleTaskError(false))
+        dispatch(handleSubtaskField({ ...subtaskField, error: false }))
     }
 
     const handleDelete = () => {
@@ -97,8 +100,9 @@ const TaskDialog = ({ data, open, setOpen }) => {
                         Error!
                     </DialogTitle>
                     <DialogContent>
-                        Task content should not be empty.
-                        Continue editing?
+                        {(taskFieldError && !subtaskField.error) && 'Task should not be empty. Continue editing?'}
+                        {(subtaskField.error && !taskFieldError) && 'Subtask should not be empty. Continue editing?'}
+                        {(subtaskField.error && taskFieldError) && 'Task and subtask should not be empty. Continue editing?'}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleDiscard} color='error' >Discard</Button>
