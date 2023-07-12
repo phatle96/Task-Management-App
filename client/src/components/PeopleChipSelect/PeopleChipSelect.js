@@ -6,13 +6,15 @@ import { Avatar } from '@mui/material';
 
 import { useState } from 'react';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectAllPeople } from '../../features/people/peopleSlice';
+import { handlePeopleField } from '../../features/fields/fieldsSlice';
 
 
 
 export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
 
+    const dispatch = useDispatch();
     const people = useSelector(selectAllPeople)
     const [inputChange, setInputChange] = useState('')
 
@@ -50,8 +52,8 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
                 autoSelect={inputChange}
                 onInputChange={(event, value) => { setInputChange(value) }}
                 onChange={(event, newValue) => {
-                    console.log(event.target.id)
                     setSelectPeople(newValue)
+                    dispatch(handlePeopleField('on'))
                 }}
                 renderTags={(tagValue, getTagProps) =>
                     tagValue.map((option, index) => (

@@ -39,7 +39,7 @@ export const axiosPut = async (payload) => {
     try {
 
         const type = payload.id.match('[a-z]*');
-        response = await axios.put(`http://localhost:8080/api/${type}/${payload.id}/update`, payload.payload);
+        response = await axios.put(`http://localhost:8080/api/${type}/${payload.id}/update/${payload.option ? payload.option + '/' : ''}`, payload.payload);
 
         if (response.status === 200) {
             return response.data

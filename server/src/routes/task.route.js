@@ -30,6 +30,11 @@ router.put('/:task_id/update',
 	checkSchema(task_schema.update_task_schema), validator(),
 	task_handler.update_task);
 
+//PUT request to unset field of task
+router.put('/:task_id/update/unset',
+	checkSchema(task_schema.update_task_schema), validator(),
+	task_handler.unset_task);
+
 //DELETE request to delete task
 router.delete('/:task_id/delete',
 	checkSchema(task_schema.delete_task_schema), validator(),

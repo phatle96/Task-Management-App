@@ -27,6 +27,11 @@ router.put('/:subtask_id/update',
 	checkSchema(subtask_schema.update_subtask_schema), validator(),
 	subtask_handler.update_subtask);
 
+//PUT request to unset field of task
+router.put('/:subtask_id/update/unset',
+	checkSchema(subtask_schema.update_subtask_schema), validator(),
+	subtask_handler.unset_subtask);
+
 //DELETE request to delete subtask
 router.delete('/:subtask_id/delete',
 	checkSchema(subtask_schema.delete_subtask_schema), validator(),

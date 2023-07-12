@@ -1,6 +1,4 @@
 import { Checkbox, IconButton, Stack, TextField, Tooltip } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import UndoIcon from '@mui/icons-material/Undo';
@@ -9,6 +7,8 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 import { useEffect, useRef, useState } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
 
 import { handleSubtaskField, selectSubtaskField, } from "../../features/fields/fieldsSlice";
 import { deleteSubtask, updateSubtask } from '../../features/subtasks/subtasksSlice';
@@ -45,8 +45,8 @@ const SubtaskTextField = ({ subtask }) => {
                         payload: { content: content }
                     }
                     dispatch(updateSubtask(payload))
+                    dispatch(handleSubtaskField({ status: 'idle', id: null, error: false }))
                 }
-                dispatch(handleSubtaskField({ status: 'idle', id: null, error: false }))
                 break
             }
         }
@@ -94,6 +94,7 @@ const SubtaskTextField = ({ subtask }) => {
             payload: { is_deleted: true }
         }
         dispatch(deleteSubtask(payload));
+        dispatch(handleSubtaskField({ status: 'idle', id: null, error: false }))
     }
 
     const handleChecked = () => {
@@ -143,7 +144,7 @@ const SubtaskTextField = ({ subtask }) => {
     return (
         <>
             <TextField
-                sx={!subtask.is_completed ? { width: "100%" } : { width: "100%", textDecoration: "line-through" }}
+                sx={(subtaskField.status === 'on' && subtaskField.id === subtask.subtask_id) ? { width: "100%" } : (!subtask.is_completed ? { width: "100%" } : { width: "100%", textDecoration: "line-through" })}
                 variant="standard"
                 value={content}
                 inputProps={{ maxLength: 300 }}
@@ -162,6 +163,7 @@ const SubtaskTextField = ({ subtask }) => {
                     icon={<RadioButtonUncheckedIcon />}
                     checkedIcon={<RadioButtonCheckedIcon />}
                     onChange={() => handleChecked()}
+                    disabled={subtask.subtask_id === subtaskField.id && subtaskField.error}
                     checked={subtask.is_completed ? true : false}
                 />
             }

@@ -56,7 +56,7 @@ export const selectSubtasksByList = createSelector(
         if (filters.list === null) {
             return subtasks
         } else {
-            return subtasks.filter((subtask) => subtask.list.list_id === filters.list);
+            return subtasks.filter((subtask) => subtask.list && subtask.list.list_id === filters.list);
         };
     }
 )

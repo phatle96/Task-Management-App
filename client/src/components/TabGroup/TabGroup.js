@@ -30,17 +30,14 @@ export default function TabGroup() {
 
     const handleChange = (e, newValue) => {
         setValue(newValue);
-        console.log('tab value', newValue)
         switch (newValue) {
             case '1': {
                 dispatch(tasksCompletedFilterChanged({ completed: false }))
-                console.log(filters)
                 break
             }
 
             case '2': {
                 dispatch(tasksCompletedFilterChanged({ completed: true }))
-                console.log(filters)
                 break
             }
             default:

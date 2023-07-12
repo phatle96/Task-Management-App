@@ -5,6 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { Switch, FormControlLabel, Box } from '@mui/material';
 import dayjs from 'dayjs';
+import { DateTime } from "luxon";
 
 const DateTimeSelect = ({ setAlert }) => {
 	const [checked, setChecked] = useState(false)
@@ -15,7 +16,7 @@ const DateTimeSelect = ({ setAlert }) => {
 	};
 
 	return (
-		<Box paddingTop={1}>
+		<Box>
 			<FormControlLabel control={<Switch
 				checked={checked}
 				onChange={handleChange} />} label="Set alert" />

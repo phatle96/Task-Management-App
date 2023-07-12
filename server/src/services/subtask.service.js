@@ -13,18 +13,31 @@ exports.find_subtask_query = async (req_param) => {
 
 exports.create_subtask_query = async (req_body) => {
 	const subtask = req_body;
-	result = await Subtask.create(subtask);
-	result = await result.populate(['list', 'task', 'person']);
+	const result = await Subtask.create(subtask);
+	await result.populate(['list', 'task', 'person']);
 	return result;
 };
 
 exports.find_and_update_subtask_query = async (req_param, req_body) => {
 	const query = { ...req_param, is_deleted: false };
 	const subtask = req_body;
-	const options = { new: true, timestamps: true, };
+	const options = { new: true, timestamps: true, overwrite: true };
 	const result = await Subtask.findOneAndUpdate(query, subtask, options).populate(['list', 'task', 'person']).exec();
 	return result;
 };
+
+exports.unset_subtask_query = async (req_param, req_body) => {
+	const query = { ...req_param, is_deleted: false }
+	const { list } = req_body
+	const subtask = await Subtask.findOne(query)
+	if (list) {
+		subtask.list = undefined
+	}
+	const result = await subtask.save()
+	await result.populate(['person', 'task'])
+	return result
+
+}
 
 exports.delete_subtask_query = async (req_param) => {
 	// Find real subtask object id

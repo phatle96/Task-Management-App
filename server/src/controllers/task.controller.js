@@ -6,7 +6,8 @@ const {
 	find_subtask_query,
 	find_and_update_task_query,
 	delete_task_query,
-	create_task_query } = require('../services/task.service');
+	create_task_query,
+	unset_task_query } = require('../services/task.service');
 
 //View all task on GET
 exports.tasks = async (req, res, next) => {
@@ -74,6 +75,17 @@ exports.update_task = async (req, res, next) => {
 		return res.status(500).json({ 500: "Controller Error" });
 	}
 };
+
+exports.unset_task = async (req, res, next) => {
+	try {
+		const req_param = req.params;
+		const req_body = matchedData(req, { locations: ['body'] });
+		const task = await unset_task_query(req_param, req_body);
+		return res.status(200).json(task);
+	} catch (err) {
+		return res.status(500).json({ 500: err });
+	}
+}
 
 // Delete task on DELETE
 exports.delete_task = async (req, res, next) => {

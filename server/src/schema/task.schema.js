@@ -36,6 +36,9 @@ const payload = {
             errorMessage: "Name should be at least 1 to 300 characters long",
             options: { max: 300 },
         },
+        optional: {
+            options: { nullable: true },
+        },
     },
 
     list: {

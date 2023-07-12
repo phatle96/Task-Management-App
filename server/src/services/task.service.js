@@ -24,18 +24,31 @@ exports.find_subtask_query = async (req_param) => {
 
 exports.create_task_query = async (req_body) => {
 	const task = req_body;
-	result = await Task.create(task);
-	result = await result.populate(['list', 'person']);
+	const result = await Task.create(task);
+	await result.populate(['list', 'person']);
 	return result;
 };
 
 exports.find_and_update_task_query = async (req_param, req_body) => {
 	const query = { ...req_param, is_deleted: false };
 	const task = req_body;
-	const options = { new: true, timestamps: true };
+	const options = { new: true, timestamps: true, overwrite: true };
 	const result = await Task.findOneAndUpdate(query, task, options).populate(['person', 'list']).exec();
 	return result;
 };
+
+exports.unset_task_query = async (req_param, req_body) => {
+	const query = { ...req_param, is_deleted: false }
+	const { list } = req_body
+	const task = await Task.findOne(query)
+	if (list) {
+		task.list = undefined
+	}
+	const result = await task.save()
+	await result.populate(['person'])
+	return result
+
+}
 
 exports.delete_task_query = async (req_param) => {
 	// Find real task object id

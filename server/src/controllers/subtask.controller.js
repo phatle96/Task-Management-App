@@ -5,8 +5,9 @@ const {
 	find_subtask_query,
 	find_and_update_subtask_query,
 	delete_subtask_query,
-	create_subtask_query, 
-	find_all_subtasks} = require('../services/subtask.service');
+	create_subtask_query,
+	find_all_subtasks, 
+	unset_subtask_query} = require('../services/subtask.service');
 
 //View all subtask on GET
 exports.subtasks = async (req, res, next) => {
@@ -59,6 +60,17 @@ exports.update_subtask = async (req, res, next) => {
 		return res.status(500).json({ 500: "Controller Error" });
 	}
 };
+
+exports.unset_subtask = async (req, res, next) => {
+	try {
+		const req_param = req.params;
+		const req_body = matchedData(req, { locations: ['body'] });
+		const task = await unset_subtask_query(req_param, req_body);
+		return res.status(200).json(task);
+	} catch (err) {
+		return res.status(500).json({ 500: err });
+	}
+}
 
 // Delete subtask on DELETE
 exports.delete_subtask = async (req, res, next) => {

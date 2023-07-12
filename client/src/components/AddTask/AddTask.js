@@ -1,4 +1,4 @@
-import { ClickAwayListener, Stack, TextField, } from "@mui/material";
+import { Stack, TextField, } from "@mui/material";
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DataTimeSelect/DateTimeSelect";
 
@@ -17,8 +17,12 @@ import {
     selectPeopleFieldStatus,
     selectAlertFieldStatus,
     handleTaskField,
-    handleTaskError
+    handleTaskError,
+    handleListField,
+    handlePeopleField
 } from "../../features/fields/fieldsSlice";
+import AlertSelect from "../AlertSelect/AlertSelect";
+import { selectSubtasksByTaskId, updateSubtask } from "../../features/subtasks/subtasksSlice";
 
 
 const AddTask = ({ task }) => {
@@ -26,6 +30,7 @@ const AddTask = ({ task }) => {
     const dispatch = useDispatch();
     const filters = useSelector(selectFilters);
     const selectInitList = useSelector((state) => selectListById(state, task ? (task.list ? task.list.list_id : null) : filters.list));
+    const subtasks = useSelector((state) => selectSubtasksByTaskId(state, (task ? task.task_id : null)));
 
     const initList = () => {
         if (selectInitList === undefined) {
@@ -66,6 +71,7 @@ const AddTask = ({ task }) => {
 
     const taskRef = useRef(initContent())
 
+    //handle content
     useEffect(() => {
         switch (taskStatus) {
             case 'idle': break
@@ -97,6 +103,55 @@ const AddTask = ({ task }) => {
             }
         }
     }, [taskStatus])
+
+    // handle list
+    useEffect(() => {
+        switch (listStatus) {
+            case 'idle': break
+            case 'on': break
+            case 'off': {
+                if (task) {
+                    const payload = {
+                        id: task.task_id,
+                        option: list ? false : 'unset',
+                        payload: { list: list ? list._id : 1 }
+                    }
+                    dispatch(updateTask(payload))
+                    if (subtasks) {
+                        subtasks.map((subtask) => {
+                            const subtask_payload = {
+                                id: subtask.subtask_id,
+                                option: list ? false : 'unset',
+                                payload: { list: list ? list._id : 1 }
+                            }
+                            dispatch(updateSubtask(subtask_payload))
+                        })
+                    }
+                }
+                dispatch(handleListField('idle'))
+                break
+            }
+        }
+
+    }, [listStatus])
+
+    // handle person
+    useEffect(() => {
+        switch (peopleStatus) {
+            case 'idle': break
+            case 'on': {
+                if (task) {
+                    const payload = {
+                        id: task.task_id,
+                        payload: { person: selectPeople }
+                    }
+                    dispatch(updateTask(payload))
+                }
+                dispatch(handlePeopleField('idle'))
+                break
+            }
+        }
+    }, [peopleStatus])
 
     const handleFocus = (event) => {
         dispatch(handleTaskField('on'))
@@ -139,8 +194,9 @@ const AddTask = ({ task }) => {
                 onBlur={(event) => { handleBlur(event) }}
             />
             <PeopleChipSelect selectPeople={selectPeople} setSelectPeople={setSelectPeople} />
-            <DateTimeSelect setAlert={setAlert} />
             <AddSubtask taskContent={taskContent} setFocus={setFocus} task={task} />
+            <DateTimeSelect setAlert={setAlert} />
+            {/* <AlertSelect /> */}
         </Stack>
     )
 }

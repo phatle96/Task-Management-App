@@ -73,12 +73,12 @@ const SubTask = ({ task }) => {
                                 />
                                 {subtask.is_completed ?
                                     (
-                                        <Typography variant="body2"
+                                        <Typography variant='body2'
                                             sx={{ textDecoration: "line-through", borderBottom: 0.5, borderColor: "lightslategrey", width: "100%" }}>
                                             {subtask.content}
                                         </Typography>
                                     ) : (
-                                        <Typography variant="body2"
+                                        <Typography variant='body2'
                                             sx={{ borderBottom: 0.5, borderColor: "lightslategrey", width: "100%" }}>
                                             {subtask.content}
                                         </Typography>

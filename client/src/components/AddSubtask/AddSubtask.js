@@ -11,7 +11,7 @@ import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRig
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { handleSubtaskAddField, handleSubtaskField, selectSubtaskAddField, selectSubtaskField, selectTaskFieldError } from "../../features/fields/fieldsSlice";
+import { handleSubtaskAddField, selectSubtaskAddField, selectTaskFieldError } from "../../features/fields/fieldsSlice";
 import { createSubtask, selectSubtasksByTaskId } from '../../features/subtasks/subtasksSlice';
 import SubtaskTextField from '../SubtaskTextField/SubtaskTextField';
 
@@ -142,7 +142,7 @@ const AddSubtask = ({ taskContent, setFocus, task }) => {
 				{
 					subtasks.map((subtask) => {
 						return (
-							<ListItem key={subtask.subtask_id} sx={{ height: 35, paddingY: 2.5 }}>
+							<ListItem key={subtask.subtask_id} sx={{ height: 35 }}>
 								<ListItemIcon sx={{ minWidth: 35 }}>
 									<SubdirectoryArrowRightIcon fontSize='inherit' />
 								</ListItemIcon>
