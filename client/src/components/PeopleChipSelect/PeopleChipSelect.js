@@ -41,6 +41,9 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
     return (
         <Stack spacing={3} sx={{ width: "100%" }} >
             <Autocomplete
+                sx={{
+                    "& .MuiOutlinedInput-root": { borderRadius: 3, backgroundColor: "whitesmoke", borderColor: "lightgrey" }
+                }}
                 multiple
                 id="tags-standard"
                 options={people}

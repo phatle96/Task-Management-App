@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-	Button, IconButton, List, ListItem, ListItemIcon, Stack, TextField, Tooltip,
+	Button, IconButton, List, ListItem, ListItemIcon, Paper, Stack, TextField, Tooltip,
 } from "@mui/material";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import DoneIcon from '@mui/icons-material/Done';
@@ -136,23 +136,25 @@ const AddSubtask = ({ taskContent, setFocus, task }) => {
 	}
 
 	return (
-		<Stack direction="column">
-			<AddButton />
-			<List sx={{ display: "flex", flexDirection: "column-reverse" }}>
-				{
-					subtasks.map((subtask) => {
-						return (
-							<ListItem key={subtask.subtask_id} sx={{ height: 35 }}>
-								<ListItemIcon sx={{ minWidth: 35 }}>
-									<SubdirectoryArrowRightIcon fontSize='inherit' />
-								</ListItemIcon>
-								<SubtaskTextField subtask={subtask} />
-							</ListItem>
-						)
-					})
-				}
-			</List>
-		</Stack>
+		<Paper variant="outlined" sx={{ borderColor: "lightgrey", backgroundColor: "whitesmoke", borderRadius:3 }}>
+			<Stack direction="column" sx={{ margin: 1 }}>
+				<AddButton />
+				<List sx={{ display: "flex", flexDirection: "column-reverse" }}>
+					{
+						subtasks.map((subtask) => {
+							return (
+								<ListItem key={subtask.subtask_id} sx={{ height: 35 }}>
+									<ListItemIcon sx={{ minWidth: 35 }}>
+										<SubdirectoryArrowRightIcon fontSize='inherit' />
+									</ListItemIcon>
+									<SubtaskTextField subtask={subtask} />
+								</ListItem>
+							)
+						})
+					}
+				</List>
+			</Stack>
+		</Paper>
 	)
 }
 

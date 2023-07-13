@@ -1,6 +1,6 @@
-import { Stack, TextField, } from "@mui/material";
+import { Box, Divider, FormControl, FormControlLabel, FormLabel, Paper, Stack, Switch, TextField, Typography, } from "@mui/material";
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
-import DateTimeSelect from "../DataTimeSelect/DateTimeSelect";
+import DateTimeSelect from "../DateTimeSelect/DateTimeSelect";
 
 import AddSubtask from "../AddSubtask/AddSubtask";
 import ListFolder from "../ListFolder/ListFolder";
@@ -21,15 +21,18 @@ import {
     handleListField,
     handlePeopleField
 } from "../../features/fields/fieldsSlice";
-import AlertSelect from "../AlertSelect/AlertSelect";
 import { selectSubtasksByTaskId, updateSubtask } from "../../features/subtasks/subtasksSlice";
+import AlertSelect from "../AlertSelect/AlertSelect";
 
 
 const AddTask = ({ task }) => {
 
     const dispatch = useDispatch();
     const filters = useSelector(selectFilters);
-    const selectInitList = useSelector((state) => selectListById(state, task ? (task.list ? task.list.list_id : null) : filters.list));
+    const selectInitList = useSelector((state) => selectListById(
+        state,
+        task ? (task.list ? task.list.list_id : null) : filters.list
+    ));
     const subtasks = useSelector((state) => selectSubtasksByTaskId(state, (task ? task.task_id : null)));
 
     const initList = () => {
@@ -60,6 +63,7 @@ const AddTask = ({ task }) => {
     const [list, setList] = useState(initList);
     const [selectPeople, setSelectPeople] = useState(initPeople);
     const [alert, setAlert] = useState('');
+    const [isAllDay, setAllDay] = useState(false)
 
     const [error, setError] = useState(false);
     const [focus, setFocus] = useState(false);
@@ -153,6 +157,33 @@ const AddTask = ({ task }) => {
         }
     }, [peopleStatus])
 
+    const SwitchAllDay = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <FormControlLabel
+                    sx={{ display: 'flex', width: 'fit-content' }}
+                    control={
+                        <Switch
+                            color="info"
+                            checked={isAllDay}
+                            onChange={() => { handleAllDayToggle() }}
+                            inputProps={{ 'aria-label': 'set-day' }} />
+                    }
+                    label="Set Day" />
+                <FormControlLabel
+                    sx={{ display: 'flex', width: 'fit-content' }}
+                    control={
+                        <Switch
+                            color="info"
+                            checked={isAllDay}
+                            onChange={() => { handleAllDayToggle() }}
+                            inputProps={{ 'aria-label': 'all-day-toggle' }} />
+                    }
+                    label="All Day" />
+            </Box>
+        )
+    }
+
     const handleFocus = (event) => {
         dispatch(handleTaskField('on'))
     }
@@ -174,11 +205,18 @@ const AddTask = ({ task }) => {
         }
     }
 
+    const handleAllDayToggle = () => {
+        setAllDay(!isAllDay)
+    }
+
 
     return (
         <Stack display="flex" direction="column" justifyContent="center" spacing={1.5}>
             <ListFolder setList={setList} list={list} />
+            <Divider />
             <TextField
+                sx={{ borderColor: "lightgrey" }}
+                InputProps={{ sx: { borderRadius: 3, backgroundColor: 'whitesmoke' } }}
                 variant="outlined"
                 id="task-content"
                 label="Your task here!"
@@ -195,8 +233,13 @@ const AddTask = ({ task }) => {
             />
             <PeopleChipSelect selectPeople={selectPeople} setSelectPeople={setSelectPeople} />
             <AddSubtask taskContent={taskContent} setFocus={setFocus} task={task} />
-            <DateTimeSelect setAlert={setAlert} />
-            {/* <AlertSelect /> */}
+            <Divider />
+            <SwitchAllDay />
+            <DateTimeSelect isAllDay={isAllDay} label='Start date' />
+            <DateTimeSelect isAllDay={isAllDay} label='End date' />
+            <Divider />
+
+            <AlertSelect />
         </Stack>
     )
 }

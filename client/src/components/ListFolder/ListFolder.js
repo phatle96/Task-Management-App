@@ -38,11 +38,12 @@ const ListFolder = ({ list, setList }) => {
 
 
 	return (
-		<Box sx={{ paddingBottom: 1, display: 'flex' }}>
+		<Box sx={{ display: 'flex' }}>
 			<Chip
+				variant='outlined'
 				icon={<FolderOpenIcon />}
 				label={
-					<Stack direction='row' spacing={1} display='flex' sx={{ alignItems: 'center' }}>
+					<Stack direction='row' spacing={0.5} display='flex' sx={{ alignItems: 'center' }}>
 						<Typography variant='caption' sx={{ marginBottom: -0.5 }}>
 							{list === null || list === undefined ? '' : list.name}
 						</Typography>
@@ -55,7 +56,7 @@ const ListFolder = ({ list, setList }) => {
 				aria-haspopup="true"
 				aria-expanded={open ? 'true' : undefined}
 				onClick={(e) => { handleOpen(e) }}
-				sx={{ paddingBottom: 0 }}
+				sx={{ paddingBottom: 0, backgroundColor: "whitesmoke" }}
 			/>
 			<Menu
 				id="basic-menu"
