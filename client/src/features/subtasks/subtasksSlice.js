@@ -5,7 +5,7 @@ import { selectFilters } from '../filters/filtersSlice';
 export const fetchSubtasks = createAsyncThunk(
     'subtasks/fetchSubtasks',
     async () => {
-        const data = await axiosFetch('http://localhost:8080/api/subtask/all');
+        const data = await axiosFetch('/subtask/all');
         return data;
     }
 )

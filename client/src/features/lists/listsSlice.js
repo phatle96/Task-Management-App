@@ -1,10 +1,10 @@
-import { createAsyncThunk, createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { axiosPost, axiosDelete, axiosPut, axiosFetch } from '../../utils/api';
 
 export const fetchLists = createAsyncThunk(
     'lists/fetchLists',
     async () => {
-        const data = await axiosFetch('http://localhost:8080/api/list/all');
+        const data = await axiosFetch('/list/all');
         return data;
     }
 )

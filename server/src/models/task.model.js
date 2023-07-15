@@ -11,6 +11,8 @@ const TaskSchema = new Schema({
     alert: { type: Date, default: null },
     start_date: { type: Date, default: null },
     end_date: { type: Date, default: null },
+    is_allday: { type: Boolean, default: false },
+    is_errordate: { type: Boolean, default: false },
     is_completed: { type: Boolean, required: true, default: false },
     is_deleted: { type: Boolean, required: true, default: false },
     deleted_at: { type: Date, expires: '30d' },

@@ -78,13 +78,20 @@ const payload = {
         escape: true
     },
 
-    start_date: {
+    is_allday: {
         in: ['body'],
         optional: {
             options: { nullable: true },
         },
-        isISO8601: {
-            errorMessage: 'Invalid date',
+        isBoolean: {
+            errorMessage: 'Invalid boolean'
+        },
+    },
+
+    start_date: {
+        in: ['body'],
+        optional: {
+            options: { nullable: true },
         },
         escape: true
     },
@@ -94,8 +101,15 @@ const payload = {
         optional: {
             options: { nullable: true },
         },
-        isISO8601: {
-            errorMessage: 'Invalid date',
+        escape: true
+    },
+    is_errordate: {
+        in: ['body'],
+        optional: {
+            options: { nullable: true },
+        },
+        isBoolean: {
+            errorMessage: 'Invalid boolean'
         },
         escape: true
     },

@@ -61,9 +61,9 @@ const SubTask = ({ task }) => {
                             {completed}/{total} completed
                         </Typography>
                     </AccordionSummary>
-                    <AccordionDetails >
+                    <AccordionDetails sx={{ display: 'flex', flexDirection: 'column-reverse' }}>
                         {data.map(subtask => (
-                            <Stack direction="row" key={subtask.subtask_id} sx={{ alignItems: "center" }}>
+                            <Stack direction="row" key={subtask.subtask_id} sx={{ alignItems: "center", }} >
                                 <Checkbox
                                     inputProps={{ 'aria-label': `${subtask.subtask_id}` }}
                                     icon={<RadioButtonUncheckedIcon />}

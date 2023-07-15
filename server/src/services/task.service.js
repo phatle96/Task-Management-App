@@ -39,10 +39,25 @@ exports.find_and_update_task_query = async (req_param, req_body) => {
 
 exports.unset_task_query = async (req_param, req_body) => {
 	const query = { ...req_param, is_deleted: false }
-	const { list } = req_body
+	const { list, start_date, end_date, is_allday, is_errordate, alert } = req_body
 	const task = await Task.findOne(query)
 	if (list) {
 		task.list = undefined
+	}
+	if (start_date) {
+		task.start_date = undefined
+	}
+	if (end_date) {
+		task.end_date = undefined
+	}
+	if (is_allday) {
+		task.is_allday = undefined
+	}
+	if (alert) {
+		task.alert = undefined
+	}
+	if (is_errordate) {
+		task.is_errordate = undefined
 	}
 	const result = await task.save()
 	await result.populate(['person'])

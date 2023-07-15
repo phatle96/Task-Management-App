@@ -4,7 +4,7 @@ import { axiosPost, axiosDelete, axiosPut, axiosFetch } from '../../utils/api';
 export const fetchPeople = createAsyncThunk(
     'people/fetchPeople',
     async () => {
-        const data = await axiosFetch('http://localhost:8080/api/person/all');
+        const data = await axiosFetch('/person/all');
         return data;
     }
 )

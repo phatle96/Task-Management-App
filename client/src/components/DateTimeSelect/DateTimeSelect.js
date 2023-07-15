@@ -1,104 +1,170 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { DateTime } from "luxon";
-import { ClickAwayListener, Paper, Stack } from "@mui/material";
+import { Box, Button, ClickAwayListener, Paper, Stack } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { DateField, StaticDatePicker, StaticDateTimePicker } from "@mui/x-date-pickers";
 
-const DateTimeSelect = ({ isAllDay, label }) => {
+import { DateField, DatePickerToolbar, StaticDatePicker, StaticTimePicker, TimeField, TimePickerToolbar } from "@mui/x-date-pickers";
+import { handleUpdateDateTimeField } from "../../features/fields/fieldsSlice";
+import { useDispatch } from "react-redux";
 
-	const [dateValue, setDateValue] = useState(DateTime.now());
+const DateTimeSelect = ({ value, setValue, isSetDay, isAllDay, label, error }) => {
+
 	const [focusDate, setFocusDate] = useState(false);
+	const [focusTime, setFocusTime] = useState(false)
 
-	const [datetimeValue, setDatetimeValue] = useState(DateTime.now());
-	const [focusDatetime, setFocusDatetime] = useState(false);
+	const valueRef = useRef(value)
+	const dispatch = useDispatch();
 
 	const handleFocusDate = () => {
 		setFocusDate(true)
+		setFocusTime(false)
 	}
 
-	const handleBlurDate = () => {
+	const handleFocusTime = () => {
 		setFocusDate(false)
+		setFocusTime(true)
 	}
 
-	const handleFocusDatetime = () => {
-		setFocusDatetime(true)
+	const handleSave = () => {
+		setValue(value)
+		valueRef.current = value
+		setFocusDate(false)
+		setFocusTime(false)
+		dispatch(handleUpdateDateTimeField('on'))
 	}
 
-	const handleBlurDatetime = () => {
-		setFocusDatetime(false)
+	const handleResetDateTime = () => {
+		setValue(valueRef.current)
+		setFocusDate(false)
+		setFocusTime(false)
 	}
 
-	const MyDatePicker = () => {
+	function CustomDateToolbar(props) {
 		return (
-			<ClickAwayListener onClickAway={() => { handleBlurDate() }}>
-				<Stack direction='column' sx={{ paddingY: 0.5, }}>
-					<LocalizationProvider dateAdapter={AdapterLuxon}>
-						<DateField
-							InputProps={{ sx: { borderRadius: 3, backgroundColor: 'whitesmoke' } }}
-							label={label}
-							value={dateValue}
-							onChange={(event) => { setDateValue(event) }}
-							onFocus={() => { handleFocusDate() }}
-						/>
-						{
-							(focusDate) &&
-							<StaticDatePicker
-								autoFocus
-								sx={{ borderRadius: 3, backgroundColor: 'whitesmoke', border: 1, borderColor: 'lightgrey', marginTop: 1 }}
-								orientation='landscape'
-								value={dateValue}
-								onChange={(event) => {
-									setDateValue(event)
-								}}
-							/>
-						}
-					</LocalizationProvider>
+			<Box
+				// Pass the className to the root element to get correct layout
+				className={props.className}
+				sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+				<DatePickerToolbar {...props} />
+				<Stack direction='row' sx={{ marginRight: 1.5, marginTop: -5.5 }} >
+					<Button
+						variant="text"
+						onClick={() => { handleResetDateTime() }}>
+						Close
+					</Button>
+					<Button
+						variant="text"
+						disabled={valueRef.current === value}
+						onClick={() => { handleSave() }}>
+						Save
+					</Button>
 				</Stack>
-			</ClickAwayListener>
-		)
+
+			</Box>
+		);
 	}
 
-	const MyDateTimePicker = () => {
+	function CustomTimeToolbar(props) {
 		return (
-			<ClickAwayListener onClickAway={() => { handleBlurDatetime() }}>
-				<Stack direction='column' sx={{ paddingY: 0.5, }}>
-					<LocalizationProvider dateAdapter={AdapterLuxon}>
-						<DateTimeField
-							InputProps={{ sx: { borderRadius: 3, backgroundColor: 'whitesmoke' } }}
-							label={label}
-							value={datetimeValue}
-							onChange={(event) => { setDatetimeValue(event) }}
-							onFocus={() => { handleFocusDatetime() }}
-						/>
-
-						{
-							(focusDatetime) &&
-							<StaticDateTimePicker
-								autoFocus
-								sx={{ borderRadius: 3, backgroundColor: 'whitesmoke', border: 1, borderColor: 'lightgrey', marginTop: 1 }}
-								orientation='landscape'
-								value={datetimeValue}
-								onChange={(event) => {
-									setDatetimeValue(event)
-								}}
-							/>
-						}
-					</LocalizationProvider>
+			<Box
+				// Pass the className to the root element to get correct layout
+				className={props.className}
+				sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+				<TimePickerToolbar {...props} />
+				<Stack direction='row' sx={{ marginRight: 1.5, marginTop: -5.5 }} >
+					<Button
+						variant="text"
+						onClick={() => { handleResetDateTime() }}>
+						Close
+					</Button>
+					<Button
+						variant="text"
+						onClick={() => { handleSave() }}>
+						Save
+					</Button>
 				</Stack>
-			</ClickAwayListener>
-		)
+			</Box>
+		);
 	}
-
-
 
 	return (
-		<>
-			{
-				isAllDay ? <MyDatePicker /> : < MyDateTimePicker />
-			}
-		</>
+
+		<Stack direction='column' sx={{ paddingY: 0.5, }}>
+			<LocalizationProvider dateAdapter={AdapterLuxon}>
+				<Stack direction='row' spacing={1} sx={{ display: 'flex' }}>
+					<DateField
+						readOnly
+						sx={{ width: '-webkit-fill-available' }}
+						disabled={!isSetDay}
+						InputProps={{ sx: { borderRadius: 3, backgroundColor: 'whitesmoke', } }}
+						label={label}
+						value={value}
+						error={error}
+						helperText={error && 'Error! Event is not appear in calender'}
+						onChange={(event) => { setValue(event) }}
+						onFocus={() => { handleFocusDate() }}
+					/>
+					{!isAllDay &&
+						<TimeField
+							readOnly
+							sx={{ width: '-webkit-fill-available' }}
+							disabled={(!isSetDay || (isSetDay && isAllDay))}
+							label='Time'
+							value={value}
+							error={error}
+							InputProps={{ sx: { borderRadius: 3, backgroundColor: 'whitesmoke' } }}
+							onChange={(event) => { setValue(event) }}
+							onFocus={() => { handleFocusTime() }}
+						/>
+					}
+				</Stack>
+
+				{
+					(focusDate) &&
+					<StaticDatePicker
+						autoFocus
+						slots={{
+							toolbar: CustomDateToolbar,
+						}}
+						slotProps={{
+							actionBar: {
+								actions: ['today'],
+							},
+						}}
+						disabled={!isSetDay}
+						sx={{ borderRadius: 3, backgroundColor: 'whitesmoke', border: 1, borderColor: 'lightgrey', marginTop: 1 }}
+						value={value}
+						error={error}
+						onChange={(event) => {
+							setValue(event)
+						}}
+					/>
+				}
+				{
+					(focusTime) &&
+					<StaticTimePicker
+						autoFocus
+						slots={{
+							toolbar: CustomTimeToolbar,
+						}}
+						slotProps={{
+							actionBar: {
+								actions: [],
+							},
+						}}
+						sx={{ borderRadius: 3, backgroundColor: 'whitesmoke', border: 1, borderColor: 'lightgrey', marginTop: 1 }}
+						disabled={(!isSetDay || (isSetDay && isAllDay))}
+						value={value}
+						error={error}
+						onChange={(newValue) => {
+							setValue(newValue)
+							console.log(newValue)
+						}}
+					/>
+				}
+			</LocalizationProvider>
+		</Stack>
 	)
 }
 

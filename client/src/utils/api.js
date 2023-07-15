@@ -1,10 +1,24 @@
 import axios from "axios";
 
+axios.defaults.baseURL = 'http://localhost:8080/api';
+
+// const dateKeyRx = /date/i;
+
 export const axiosFetch = async (url) => {
     let response
 
     try {
-        response = await axios.get(url);
+        response = await axios({
+            url: url,
+            method: 'get',
+            // transformResponse:
+            //     [
+            //         (data) =>
+            //             JSON.parse(data, (key, value) =>
+            //                 dateKeyRx.test(key) ? new Date(value) : value),
+            //     ],
+
+        });
 
         if (response.status === 200) {
             return response.data
@@ -21,7 +35,7 @@ export const axiosPost = async (payload) => {
     let response
     try {
 
-        response = await axios.post(`http://localhost:8080/api/${payload.type}/create`, payload.payload);
+        response = await axios.post(`/${payload.type}/create`, payload.payload);
 
         if (response.status === 200) {
             return response.data
@@ -39,7 +53,8 @@ export const axiosPut = async (payload) => {
     try {
 
         const type = payload.id.match('[a-z]*');
-        response = await axios.put(`http://localhost:8080/api/${type}/${payload.id}/update/${payload.option ? payload.option + '/' : ''}`, payload.payload);
+        const option = payload.option ? (payload.option + '/') : ''
+        response = await axios.put(`/${type}/${payload.id}/update/${option}`, payload.payload);
 
         if (response.status === 200) {
             return response.data
@@ -57,7 +72,7 @@ export const axiosDelete = async (payload) => {
     try {
 
         const type = payload.id.match('[a-z]*');
-        response = await axios.delete(`http://localhost:8080/api/${type}/${payload.id}/delete`);
+        response = await axios.delete(`/${type}/${payload.id}/delete`);
 
         if (response.status === 200) {
             return response.data

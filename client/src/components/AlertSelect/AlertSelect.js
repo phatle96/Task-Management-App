@@ -2,7 +2,7 @@ import { Autocomplete, Stack, TextField, Typography } from "@mui/material"
 import { useState } from "react";
 
 
-const AlertSelect = () => {
+const AlertSelect = ({ isSetDay }) => {
 
     const [value, setValue] = useState(null)
     const [inputChange, setInputChange] = useState('')
@@ -12,6 +12,7 @@ const AlertSelect = () => {
             sx={{
                 "& .MuiOutlinedInput-root": { borderRadius: 3, backgroundColor: "whitesmoke", borderColor: "lightgrey" },
             }}
+            disabled={!isSetDay}
             options={alertOptions}
             getOptionLabel={(option) => option.name}
             id="alert-select"

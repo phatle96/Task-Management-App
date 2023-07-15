@@ -136,10 +136,10 @@ const AddSubtask = ({ taskContent, setFocus, task }) => {
 	}
 
 	return (
-		<Paper variant="outlined" sx={{ borderColor: "lightgrey", backgroundColor: "whitesmoke", borderRadius:3 }}>
+		<Paper variant="outlined" sx={{ borderColor: 'darkgray', backgroundColor: "whitesmoke", borderRadius: 3 }}>
 			<Stack direction="column" sx={{ margin: 1 }}>
 				<AddButton />
-				<List sx={{ display: "flex", flexDirection: "column-reverse" }}>
+				<List sx={{ display: "flex", flexDirection: "column-reverse", padding: 0 }}>
 					{
 						subtasks.map((subtask) => {
 							return (

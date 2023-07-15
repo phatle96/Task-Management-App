@@ -1,16 +1,21 @@
-import { Box, Divider, FormControl, FormControlLabel, FormLabel, Paper, Stack, Switch, TextField, Typography, } from "@mui/material";
+import { Button, Chip, Divider, Stack, TextField, Typography, } from "@mui/material";
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DateTimeSelect/DateTimeSelect";
 
 import AddSubtask from "../AddSubtask/AddSubtask";
 import ListFolder from "../ListFolder/ListFolder";
+import AlertSelect from "../AlertSelect/AlertSelect";
+import SetDaySwitch from "../SetDaySwitch/SetDaySwitch";
 
 import { useEffect, useRef, useState } from "react";
+
+import { DateTime } from "luxon";
 
 import { useSelector, useDispatch } from "react-redux";
 import { selectFilters } from "../../features/filters/filtersSlice";
 import { selectListById } from "../../features/lists/listsSlice";
 import { createTask, updateTask, } from "../../features/tasks/tasksSlice";
+import { selectSubtasksByTaskId, updateSubtask } from "../../features/subtasks/subtasksSlice";
 import {
     selectTaskFieldStatus,
     selectListFieldStatus,
@@ -19,11 +24,12 @@ import {
     handleTaskField,
     handleTaskError,
     handleListField,
-    handlePeopleField
+    handlePeopleField,
+    selectSetDayField,
+    handleSetDayField,
+    selectUpdateDateTimeFieldStatus,
+    handleUpdateDateTimeField
 } from "../../features/fields/fieldsSlice";
-import { selectSubtasksByTaskId, updateSubtask } from "../../features/subtasks/subtasksSlice";
-import AlertSelect from "../AlertSelect/AlertSelect";
-
 
 const AddTask = ({ task }) => {
 
@@ -59,11 +65,57 @@ const AddTask = ({ task }) => {
         }
     }
 
+    const initFromDate = () => {
+        if (task) {
+            if (task.start_date) {
+                const dt = DateTime.fromISO(task.start_date)
+                return dt
+            } else {
+                const dt = DateTime.now()
+                return dt
+            }
+        } else {
+            const dt = DateTime.now()
+            return dt
+        }
+    }
+
+
+    const initToDate = () => {
+        if (task) {
+            if (task.end_date) {
+                const dt = DateTime.fromISO(task.end_date)
+                return dt
+            } else {
+                const dt = DateTime.now().plus({ hours: 1 })
+                return dt
+            }
+        } else {
+            const dt = DateTime.now().plus({ hours: 1 })
+            return dt
+        }
+    }
+
+    const initSetDay = () => {
+        if (task) {
+            if (task.start_date) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+
     const [taskContent, setTaskContent] = useState(initContent);
     const [list, setList] = useState(initList);
     const [selectPeople, setSelectPeople] = useState(initPeople);
-    const [alert, setAlert] = useState('');
+    const [fromDate, setFromDate] = useState(initFromDate);
+    const [toDate, setToDate] = useState(initToDate);
+    const [isSetDay, setDay] = useState(initSetDay)
     const [isAllDay, setAllDay] = useState(false)
+    const [alert, setAlert] = useState('');
 
     const [error, setError] = useState(false);
     const [focus, setFocus] = useState(false);
@@ -71,6 +123,8 @@ const AddTask = ({ task }) => {
     const taskStatus = useSelector(selectTaskFieldStatus);
     const listStatus = useSelector(selectListFieldStatus);
     const peopleStatus = useSelector(selectPeopleFieldStatus);
+    const setDayStatus = useSelector(selectSetDayField);
+    const updateDateTimeStatus = useSelector(selectUpdateDateTimeFieldStatus)
     const alertStatus = useSelector(selectAlertFieldStatus);
 
     const taskRef = useRef(initContent())
@@ -157,32 +211,70 @@ const AddTask = ({ task }) => {
         }
     }, [peopleStatus])
 
-    const SwitchAllDay = () => {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <FormControlLabel
-                    sx={{ display: 'flex', width: 'fit-content' }}
-                    control={
-                        <Switch
-                            color="info"
-                            checked={isAllDay}
-                            onChange={() => { handleAllDayToggle() }}
-                            inputProps={{ 'aria-label': 'set-day' }} />
+    // handle Date time
+    useEffect(() => {
+        switch (setDayStatus) {
+            case 'idle': break
+            case true: {
+                if (task) {
+                    const payload = {
+                        id: task.task_id,
+                        payload: {
+                            is_errordate: false,
+                            is_allday: isAllDay,
+                            start_date: isAllDay ? fromDate.toISODate() : fromDate.toISO(),
+                            end_date: isAllDay ? toDate.toISODate() : toDate.toISO(),
+                        }
                     }
-                    label="Set Day" />
-                <FormControlLabel
-                    sx={{ display: 'flex', width: 'fit-content' }}
-                    control={
-                        <Switch
-                            color="info"
-                            checked={isAllDay}
-                            onChange={() => { handleAllDayToggle() }}
-                            inputProps={{ 'aria-label': 'all-day-toggle' }} />
+                    dispatch(updateTask(payload))
+                }
+                dispatch(handleSetDayField('idle'))
+                break
+            }
+            case false: {
+                if (task) {
+                    const payload = {
+                        id: task.task_id,
+                        option: 'unset',
+                        payload: {
+                            is_errordate: 1,
+                            is_allday: 1,
+                            start_date: 1,
+                            end_date: 1,
+                        }
                     }
-                    label="All Day" />
-            </Box>
-        )
-    }
+                    dispatch(updateTask(payload))
+                }
+                dispatch(handleSetDayField('idle'))
+                break
+            }
+        }
+
+    }, [setDayStatus])
+
+    // handle update time
+    useEffect(() => {
+        switch (updateDateTimeStatus) {
+            case 'idle': break
+            case 'on': {
+                if (task) {
+                    const error = toDate.diff(fromDate).as('milliseconds') > 0 ? false : true
+                    const payload = {
+                        id: task.task_id,
+                        payload: {
+                            is_errordate: error,
+                            is_allday: isAllDay,
+                            start_date: isAllDay ? fromDate.toISODate() : fromDate.toISO(),
+                            end_date: isAllDay ? toDate.toISODate() : toDate.toISO(),
+                        }
+                    }
+                    dispatch(updateTask(payload))
+                }
+                dispatch(handleUpdateDateTimeField('idle'))
+            }
+        }
+    }, [updateDateTimeStatus])
+
 
     const handleFocus = (event) => {
         dispatch(handleTaskField('on'))
@@ -205,15 +297,16 @@ const AddTask = ({ task }) => {
         }
     }
 
-    const handleAllDayToggle = () => {
-        setAllDay(!isAllDay)
+    const handleResetDate = () => {
+        console.log('yes')
     }
-
 
     return (
         <Stack display="flex" direction="column" justifyContent="center" spacing={1.5}>
             <ListFolder setList={setList} list={list} />
-            <Divider />
+            <Divider sx={{ paddingBottom: 1 }} >
+                <Chip label='Task & assign' />
+            </Divider>
             <TextField
                 sx={{ borderColor: "lightgrey" }}
                 InputProps={{ sx: { borderRadius: 3, backgroundColor: 'whitesmoke' } }}
@@ -233,14 +326,28 @@ const AddTask = ({ task }) => {
             />
             <PeopleChipSelect selectPeople={selectPeople} setSelectPeople={setSelectPeople} />
             <AddSubtask taskContent={taskContent} setFocus={setFocus} task={task} />
-            <Divider />
-            <SwitchAllDay />
-            <DateTimeSelect isAllDay={isAllDay} label='Start date' />
-            <DateTimeSelect isAllDay={isAllDay} label='End date' />
-            <Divider />
-
-            <AlertSelect />
-        </Stack>
+            <Divider sx={{ paddingTop: 2, paddingBottom: 1 }} >
+                <Chip label='Date time' />
+            </Divider>
+            <SetDaySwitch setDay={setDay} isSetDay={isSetDay} setAllDay={setAllDay} isAllDay={isAllDay} task={task} setFocus={setFocus} />
+            <DateTimeSelect
+                value={fromDate}
+                setValue={setFromDate}
+                isSetDay={isSetDay}
+                isAllDay={isAllDay}
+                label='Start date' />
+            <DateTimeSelect
+                value={toDate}
+                setValue={setToDate}
+                isSetDay={isSetDay}
+                isAllDay={isAllDay}
+                error={(toDate.diff(fromDate).as('milliseconds') > 0 ? false : true)}
+                label='End date' />
+            <Divider sx={{ paddingTop: 2, paddingBottom: 1 }} >
+                <Chip label='Alert' />
+            </Divider>
+            <AlertSelect isSetDay={isSetDay} />
+        </Stack >
     )
 }
 

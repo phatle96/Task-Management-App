@@ -22,6 +22,12 @@ const initialState = {
         id: null,
         error: false
     },
+    setDayField: {
+        status: 'idle'
+    },
+    updateDateTimeField: {
+        status: 'idle'
+    }
 }
 
 const fieldsSlice = createSlice({
@@ -100,6 +106,28 @@ const fieldsSlice = createSlice({
             state.subtaskField.id = id;
             state.subtaskField.error = error;
         },
+        handleSetDayField: {
+            reducer: (state, action) => {
+                const { status } = action.payload;
+                state.setDayField.status = status
+            },
+            prepare: (status) => {
+                return {
+                    payload: { status }
+                }
+            }
+        },
+        handleUpdateDateTimeField: {
+            reducer: (state, action) => {
+                const { status } = action.payload;
+                state.updateDateTimeField.status = status
+            },
+            prepare: (status) => {
+                return {
+                    payload: { status }
+                }
+            }
+        }
 
     }
 })
@@ -109,6 +137,9 @@ export const selectTaskFieldError = (state) => state.fields.taskField.error
 
 export const selectSubtaskField = (state) => state.fields.subtaskField
 export const selectSubtaskAddField = (state) => state.fields.subtaskAddField
+
+export const selectSetDayField = (state) => state.fields.setDayField.status
+export const selectUpdateDateTimeFieldStatus = (state) => state.fields.updateDateTimeField.status
 
 export const selectListFieldStatus = (state) => state.fields.listField.status
 export const selectPeopleFieldStatus = (state) => state.fields.peopleField.status
@@ -122,6 +153,9 @@ export const {
     handleSubtaskAddField,
     handleSubtaskField,
     handleSubtaskError,
+
+    handleSetDayField,
+    handleUpdateDateTimeField,
 
     handleListField,
     handlePeopleField,
