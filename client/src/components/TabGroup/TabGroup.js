@@ -74,7 +74,8 @@ export default function TabGroup() {
                     </TabList>
                 </Stack >
                 <Stack direction="row" sx={{ paddingLeft: 3, paddingTop: 3 }} >
-                    <StyledToggleButton />
+                    {(value === '1' || value === '2') &&
+                        < StyledToggleButton />}
                 </Stack>
                 <TabPanel value={value}>
                     {renderTabPanel()}

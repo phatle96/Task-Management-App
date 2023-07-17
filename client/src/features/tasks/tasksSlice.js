@@ -1,12 +1,18 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, createSelector } from '@reduxjs/toolkit';
-import { axiosPost, axiosPut, axiosFetch } from '../../utils/api';
 import { selectFilters } from '../filters/filtersSlice';
+
+import { axiosPost, axiosPut, axiosFetch } from '../../utils/api';
+import { stringToPastelColor } from '../../utils/color';
+
 
 export const fetchTasks = createAsyncThunk(
     'tasks/fetchTasks',
     async () => {
         const data = await axiosFetch('/task/all');
-        return data;
+        return data.map(task => ({
+            ...task,
+            color: stringToPastelColor(task.task_id, 'hsl')
+        }));
     }
 )
 
@@ -14,7 +20,10 @@ export const createTask = createAsyncThunk(
     'tasks/createTask',
     async (payload) => {
         const response = await axiosPost(payload);
-        return response;
+        return {
+            ...response,
+            color: stringToPastelColor(response.task_id, 'hsl')
+        };
     }
 );
 
@@ -22,7 +31,10 @@ export const updateTask = createAsyncThunk(
     'tasks/updateTask',
     async (payload) => {
         const response = await axiosPut(payload);
-        return response;
+        return {
+            ...response,
+            color: stringToPastelColor(response.task_id, 'hsl')
+        };
     }
 );
 
@@ -30,7 +42,10 @@ export const deleteTask = createAsyncThunk(
     'tasks/deleteTask',
     async (payload) => {
         const response = await axiosPut(payload);
-        return response;
+        return {
+            ...response,
+            color: stringToPastelColor(response.task_id, 'hsl')
+        };
     }
 );
 

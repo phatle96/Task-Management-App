@@ -1,42 +1,35 @@
 import Chip from '@mui/material/Chip';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Avatar } from '@mui/material';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAllPeople } from '../../features/people/peopleSlice';
+import { createPerson, initPerson, selectAllPeople } from '../../features/people/peopleSlice';
 import { handlePeopleField } from '../../features/fields/fieldsSlice';
+import { stringToPastelColor } from '../../utils/color';
 
 
+const filter = createFilterOptions();
 
 export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
 
     const dispatch = useDispatch();
     const people = useSelector(selectAllPeople)
-    const [inputChange, setInputChange] = useState('')
+    const personCreated = useSelector((state) => state.people.create.response)
+    const personCreateStatus = useSelector((state) => state.people.create.status)
 
-    function stringToColor(string) {
-        let hash = 0;
-        let i;
-
-        /* eslint-disable no-bitwise */
-        for (i = 0; i < string.length; i += 1) {
-            hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    useEffect(() => {
+        switch (personCreateStatus) {
+            case 'succeeded': {
+                setSelectPeople([...selectPeople, personCreated])
+                dispatch(initPerson())
+                break
+            }
         }
-
-        let color = '#';
-
-        for (i = 0; i < 3; i += 1) {
-            const value = (hash >> (i * 8)) & 0xff;
-            color += `00${value.toString(16)}`.slice(-2);
-        }
-        /* eslint-enable no-bitwise */
-
-        return color;
-    }
+    }, [personCreateStatus])
 
     return (
         <Stack spacing={3} sx={{ width: "100%" }} >
@@ -46,22 +39,56 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
                 }}
                 multiple
                 id="tags-standard"
-                options={people}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.person_id === value.person_id}
                 value={selectPeople}
+                onChange={(event, newValue) => {
+                    dispatch(handlePeopleField('on'))
+                    const isAddNew = newValue ? newValue.filter(person => person.inputValue) : []
+                    if (isAddNew.length === 0) {
+                        setSelectPeople(newValue)
+                    } else {
+                        const payload = {
+                            type: 'person',
+                            payload: {
+                                name: isAddNew[0].inputValue
+                            }
+                        }
+                        dispatch(createPerson(payload))
+                    }
+                }}
+                options={people}
+                getOptionLabel={(option) => {
+                    if (typeof option === 'string') {
+                        return option.name;
+                    }
+                    // Add "xxx" option created dynamically
+                    if (option.inputValue) {
+                        return option.name;
+                    }
+                    // Regular option
+                    return option.name;
+                }}
+                isOptionEqualToValue={(option, value) => option.person_id === value.person_id}
+                filterOptions={(options, params) => {
+                    const filtered = filter(options, params);
+                    const { inputValue } = params;
+                    // Suggest the creation of a new value
+                    const isExisting = options.some((option) => inputValue === option.name);
+                    if (inputValue !== '' && !isExisting) {
+                        filtered.push({
+                            inputValue,
+                            name: `Add "${inputValue}"`,
+                        });
+                    }
+
+                    return filtered;
+                }}
+                handleHomeEndKeys
                 filterSelectedOptions
                 autoHighlight
-                autoSelect={inputChange}
-                onInputChange={(event, value) => { setInputChange(value) }}
-                onChange={(event, newValue) => {
-                    setSelectPeople(newValue)
-                    dispatch(handlePeopleField('on'))
-                }}
                 renderTags={(tagValue, getTagProps) =>
                     tagValue.map((option, index) => (
                         <Chip
-                            avatar={<Avatar sx={{ bgcolor: stringToColor(`${option.name}`) }}>{option.default_avatar}</Avatar>}
+                            avatar={<Avatar sx={{ bgcolor: stringToPastelColor(option.name, 'hex') }}>{option.default_avatar}</Avatar>}
                             label={option.name}
                             {...getTagProps({ index })}
                         />

@@ -68,7 +68,9 @@ const AddTask = ({ task }) => {
     const initFromDate = () => {
         if (task) {
             if (task.start_date) {
-                const dt = DateTime.fromISO(task.start_date)
+
+                console.log(typeof (task.start_date))
+                const dt = DateTime.fromJSDate(task.start_date)
                 return dt
             } else {
                 const dt = DateTime.now()
@@ -84,7 +86,7 @@ const AddTask = ({ task }) => {
     const initToDate = () => {
         if (task) {
             if (task.end_date) {
-                const dt = DateTime.fromISO(task.end_date)
+                const dt = DateTime.fromJSDate(task.end_date)
                 return dt
             } else {
                 const dt = DateTime.now().plus({ hours: 1 })
@@ -108,13 +110,25 @@ const AddTask = ({ task }) => {
         }
     }
 
+    const initAllDay = () => {
+        if (task) {
+            if (task.is_allday) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+
     const [taskContent, setTaskContent] = useState(initContent);
     const [list, setList] = useState(initList);
     const [selectPeople, setSelectPeople] = useState(initPeople);
     const [fromDate, setFromDate] = useState(initFromDate);
     const [toDate, setToDate] = useState(initToDate);
     const [isSetDay, setDay] = useState(initSetDay)
-    const [isAllDay, setAllDay] = useState(false)
+    const [isAllDay, setAllDay] = useState(initAllDay)
     const [alert, setAlert] = useState('');
 
     const [error, setError] = useState(false);
@@ -209,7 +223,7 @@ const AddTask = ({ task }) => {
                 break
             }
         }
-    }, [peopleStatus])
+    }, [selectPeople])
 
     // handle Date time
     useEffect(() => {
@@ -222,8 +236,8 @@ const AddTask = ({ task }) => {
                         payload: {
                             is_errordate: false,
                             is_allday: isAllDay,
-                            start_date: isAllDay ? fromDate.toISODate() : fromDate.toISO(),
-                            end_date: isAllDay ? toDate.toISODate() : toDate.toISO(),
+                            start_date: fromDate.toISO(),
+                            end_date: toDate.toISO(),
                         }
                     }
                     dispatch(updateTask(payload))
@@ -258,7 +272,7 @@ const AddTask = ({ task }) => {
             case 'idle': break
             case 'on': {
                 if (task) {
-                    const error = toDate.diff(fromDate).as('milliseconds') > 0 ? false : true
+                    const error = toDate.diff(fromDate).as('milliseconds') >= 0 ? false : true
                     const payload = {
                         id: task.task_id,
                         payload: {
@@ -295,10 +309,6 @@ const AddTask = ({ task }) => {
             setTaskContent(event);
             setError(false);
         }
-    }
-
-    const handleResetDate = () => {
-        console.log('yes')
     }
 
     return (
@@ -341,7 +351,7 @@ const AddTask = ({ task }) => {
                 setValue={setToDate}
                 isSetDay={isSetDay}
                 isAllDay={isAllDay}
-                error={(toDate.diff(fromDate).as('milliseconds') > 0 ? false : true)}
+                error={(toDate.diff(fromDate).as('milliseconds') >= 0 ? false : true)}
                 label='End date' />
             <Divider sx={{ paddingTop: 2, paddingBottom: 1 }} >
                 <Chip label='Alert' />

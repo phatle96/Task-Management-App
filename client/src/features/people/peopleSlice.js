@@ -1,18 +1,20 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { axiosPost, axiosDelete, axiosPut, axiosFetch } from '../../utils/api';
+
+import { axiosPost, axiosPut, axiosFetch } from '../../utils/api';
+
 
 export const fetchPeople = createAsyncThunk(
     'people/fetchPeople',
     async () => {
         const data = await axiosFetch('/person/all');
-        return data;
+        return data
     }
 )
 
 export const createPerson = createAsyncThunk(
     'people/createPerson',
-    async (type, payload) => {
-        const response = await axiosPost(type, payload);
+    async (payload) => {
+        const response = await axiosPost(payload);
         return response;
     }
 );
@@ -28,7 +30,7 @@ export const updatePerson = createAsyncThunk(
 export const deletePerson = createAsyncThunk(
     'people/deletePerson',
     async (payload) => {
-        const response = await axiosDelete(payload);
+        const response = await axiosPut(payload);
         return response;
     }
 );
@@ -55,16 +57,26 @@ const peopleSlice = createSlice({
     initialState: peopleAdapter.getInitialState({
         status: 'idle',
         error: null,
+        create: {
+            status: 'idle',
+            response: null,
+            error: null
+        },
+        update: {
+            status: 'idle',
+            response: null,
+            error: null
+        },
+        delete: {
+            status: 'idle',
+            response: null,
+            error: null
+        }
     }),
     reducers: {
-        personList: (state, action) => {
-
-        },
-        personFilter: (state, action) => {
-
-        },
-        personSort: (state, action) => {
-
+        initPerson: (state) => {
+            state.create.status = 'idle';
+            state.create.response = null
         },
     },
     extraReducers: {
@@ -85,30 +97,71 @@ const peopleSlice = createSlice({
             }
         },
 
-        [createPerson.fulfilled]: peopleAdapter.addOne,
+        // Create state
+        [createPerson.pending]: (state, action) => {
+            state.create.status = 'loading';
+            state.create.response = null
+            state.create.error = null;
+        },
+        [createPerson.fulfilled]: (state, action) => {
+            if (state.create.status === 'loading') {
+                peopleAdapter.addOne(state, action.payload)
+                state.create.response = action.payload;
+                state.create.status = 'succeeded'
+            }
+        },
         [createPerson.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+            if (state.create.status === 'loading') {
+                state.create.error = action.payload;
+                state.create.status = 'failed'
+            }
         },
 
-        [deletePerson.fulfilled]: peopleAdapter.removeOne,
+        // Delete state
+        [deletePerson.pending]: (state, action) => {
+            state.delete.status = 'loading';
+            state.delete.error = null;
+            state.delete.response = null
+        },
+        [deletePerson.fulfilled]: (state, action) => {
+            if (state.delete.status === 'loading') {
+                peopleAdapter.removeOne(state, action.payload.person_id)
+                state.delete.response = action.payload
+                state.delete.status = 'succeeded'
+            }
+        },
         [deletePerson.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+            if (state.delete.status === 'loading') {
+                state.delete.error = action.payload;
+                state.delete.status = 'failed'
+            }
+        },
+
+        // Update state
+        [updatePerson.pending]: (state, action) => {
+            state.update.status = 'loading';
+            state.update.error = null;
+            state.update.response = null
         },
         [updatePerson.fulfilled]: (state, action) => {
-            const personId = action.payload.person_id;
-            state.entities[personId] = action.payload;
-            state.status = 'succeeded';
+            if (state.update.status === 'loading') {
+                const personId = action.payload.person_id;
+                state.entities[personId] = action.payload;
+                state.update.response = action.payload;
+                state.update.status = 'succeeded';
+            }
         },
         [updatePerson.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+            if (state.update.status === 'loading') {
+                state.update.response = action.payload;
+                state.update.status = 'failed';
+            }
         },
+
 
     }
 })
 
-export const { personFilter, personSort, personRemoved } = peopleSlice.actions
+export const { initPerson } = peopleSlice.actions
 
 export default peopleSlice.reducer

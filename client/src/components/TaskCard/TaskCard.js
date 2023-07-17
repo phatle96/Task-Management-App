@@ -3,28 +3,10 @@ import { Box, Typography, Stack, Avatar, AvatarGroup, Tooltip, Chip } from '@mui
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
+import { stringToPastelColor } from '../../utils/color';
+
 
 const TaskCard = ({ data }) => {
-
-	function stringToColor(string) {
-		let hash = 0;
-		let i;
-
-		/* eslint-disable no-bitwise */
-		for (i = 0; i < string.length; i += 1) {
-			hash = string.charCodeAt(i) + ((hash << 5) - hash);
-		}
-
-		let color = '#';
-
-		for (i = 0; i < 3; i += 1) {
-			const value = (hash >> (i * 8)) & 0xff;
-			color += `00${value.toString(16)}`.slice(-2);
-		}
-		/* eslint-enable no-bitwise */
-
-		return color;
-	}
 
 	const dateString = (date) => {
 		const d = new Date(date);
@@ -81,7 +63,7 @@ const TaskCard = ({ data }) => {
 									{data.person.map(person => (
 										<Tooltip title={person.name} key={person.person_id}>
 											<Avatar alt={person.name}
-												sx={{ bgcolor: stringToColor(`${person.name}`), width: 23, height: 23 }}>
+												sx={{ bgcolor: stringToPastelColor(person.name, 'hex'), width: 23, height: 23 }}>
 												{person.default_avatar}
 											</Avatar>
 										</Tooltip>

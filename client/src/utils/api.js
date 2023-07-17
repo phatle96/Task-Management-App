@@ -2,7 +2,7 @@ import axios from "axios";
 
 axios.defaults.baseURL = 'http://localhost:8080/api';
 
-// const dateKeyRx = /date/i;
+const dateKeyRx = /_date/i;
 
 export const axiosFetch = async (url) => {
     let response
@@ -11,12 +11,12 @@ export const axiosFetch = async (url) => {
         response = await axios({
             url: url,
             method: 'get',
-            // transformResponse:
-            //     [
-            //         (data) =>
-            //             JSON.parse(data, (key, value) =>
-            //                 dateKeyRx.test(key) ? new Date(value) : value),
-            //     ],
+            transformResponse:
+                [
+                    (data) =>
+                        JSON.parse(data, (key, value) =>
+                            dateKeyRx.test(key) ? (value ? new Date(value) : value) : value),
+                ],
 
         });
 
@@ -35,7 +35,17 @@ export const axiosPost = async (payload) => {
     let response
     try {
 
-        response = await axios.post(`/${payload.type}/create`, payload.payload);
+        response = await axios({
+            url: `/${payload.type}/create`,
+            method: 'post',
+            data: payload.payload,
+            transformResponse:
+                [
+                    (data) =>
+                        JSON.parse(data, (key, value) =>
+                            dateKeyRx.test(key) ? (value ? new Date(value) : value) : value),
+                ],
+        })
 
         if (response.status === 200) {
             return response.data
@@ -54,7 +64,17 @@ export const axiosPut = async (payload) => {
 
         const type = payload.id.match('[a-z]*');
         const option = payload.option ? (payload.option + '/') : ''
-        response = await axios.put(`/${type}/${payload.id}/update/${option}`, payload.payload);
+        response = await axios({
+            url: `/${type}/${payload.id}/update/${option}`,
+            method: 'put',
+            data: payload.payload,
+            transformResponse:
+                [
+                    (data) =>
+                        JSON.parse(data, (key, value) =>
+                            dateKeyRx.test(key) ? (value ? new Date(value) : value) : value),
+                ],
+        })
 
         if (response.status === 200) {
             return response.data

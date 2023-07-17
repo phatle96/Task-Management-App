@@ -1,11 +1,13 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, Tooltip } from "@mui/material";
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import RestoreIcon from '@mui/icons-material/Restore';
 import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
 import AddTask from "../AddTask/AddTask";
 
 import { useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTask, } from "../../features/tasks/tasksSlice";
+import { deleteTask, updateTask, } from "../../features/tasks/tasksSlice";
 import { handleSubtaskField, handleTaskError, selectSubtaskField, selectTaskFieldError } from "../../features/fields/fieldsSlice";
 
 
@@ -22,6 +24,15 @@ const TaskDialog = ({ data, open, setOpen }) => {
     const [openAlert, setOpenAlert] = useState(false)
 
     const dispatch = useDispatch();
+
+    const handleCompleted = () => {
+        const payload = {
+            id: data.task_id,
+            payload: { is_completed: !data.is_completed }
+        }
+        dispatch(updateTask(payload))
+        setOpen(false)
+    }
 
     const handleClose = () => {
         if (!taskFieldError && !subtaskField.error) {
@@ -64,13 +75,21 @@ const TaskDialog = ({ data, open, setOpen }) => {
                 maxWidth="sm"
                 fullWidth={1}
             >
-                <DialogTitle id="add-note" >
+                <DialogTitle id="add-note" sx={{ display: 'flex' }}>
                     {data ? (!remove ? 'Editing note' : 'Want to delete?') : 'Take a note'}
                     <Tooltip title='synchronizing...' placement='bottom'>
                         <span>
                             <SynchronizeLoading />
                         </span>
                     </Tooltip>
+                    {data &&
+                        <Button
+                            onClick={() => { handleCompleted() }}
+                            sx={{ marginLeft: 'auto' }}
+                            endIcon={data.is_completed ? <RestoreIcon /> : <DoneAllIcon />}>
+                            {data.is_completed ? 'Mark as doing' : 'Mark as completed'}
+                        </Button>
+                    }
                 </DialogTitle>
                 <DialogContent dividers={1} sx={remove ? { pointerEvents: "none", opacity: 0.8, filter: "blur(1.5px)" } : {}}>
                     <AddTask task={data} />
