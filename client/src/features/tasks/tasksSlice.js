@@ -4,6 +4,8 @@ import { selectFilters } from '../filters/filtersSlice';
 import { axiosPost, axiosPut, axiosFetch } from '../../utils/api';
 import { stringToPastelColor } from '../../utils/color';
 
+import { DateTime } from 'luxon'
+
 
 export const fetchTasks = createAsyncThunk(
     'tasks/fetchTasks',
@@ -11,7 +13,9 @@ export const fetchTasks = createAsyncThunk(
         const data = await axiosFetch('/task/all');
         return data.map(task => ({
             ...task,
-            color: stringToPastelColor(task.task_id, 'hsl')
+            color: stringToPastelColor(task.task_id, 'hsl'),
+            relativeStartDate: task.start_date ? DateTime.fromJSDate(task.start_date).toRelativeCalendar() : null,
+            relativeEndDate: task.end_date ? DateTime.fromJSDate(task.end_date).toRelativeCalendar() : null,
         }));
     }
 )
@@ -22,7 +26,9 @@ export const createTask = createAsyncThunk(
         const response = await axiosPost(payload);
         return {
             ...response,
-            color: stringToPastelColor(response.task_id, 'hsl')
+            color: stringToPastelColor(response.task_id, 'hsl'),
+            relativeStartDate: response.start_date ? DateTime.fromJSDate(response.start_date).toRelativeCalendar() : null,
+            relativeEndDate: response.end_date ? DateTime.fromJSDate(response.end_date).toRelativeCalendar() : null,
         };
     }
 );
@@ -33,7 +39,9 @@ export const updateTask = createAsyncThunk(
         const response = await axiosPut(payload);
         return {
             ...response,
-            color: stringToPastelColor(response.task_id, 'hsl')
+            color: stringToPastelColor(response.task_id, 'hsl'),
+            relativeStartDate: response.start_date ? DateTime.fromJSDate(response.start_date).toRelativeCalendar() : null,
+            relativeEndDate: response.end_date ? DateTime.fromJSDate(response.end_date).toRelativeCalendar() : null,
         };
     }
 );
@@ -44,7 +52,9 @@ export const deleteTask = createAsyncThunk(
         const response = await axiosPut(payload);
         return {
             ...response,
-            color: stringToPastelColor(response.task_id, 'hsl')
+            color: stringToPastelColor(response.task_id, 'hsl'),
+            relativeStartDate: response.start_date ? DateTime.fromJSDate(response.start_date).toRelativeCalendar() : null,
+            relativeEndDate: response.end_date ? DateTime.fromJSDate(response.end_date).toRelativeCalendar() : null,
         };
     }
 );

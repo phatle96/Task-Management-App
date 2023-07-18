@@ -9,7 +9,7 @@ import TaskDialog from '../TaskDialog/TaskDialog'
 
 const defaultTZ = DateTime.local().zoneName
 
-export default function MyCalendar() {
+export default function DialogCalendar() {
     const [timezone, setTimezone] = useState(defaultTZ)
     const [open, setOpen] = useState(false);
     const [select, setSelect] = useState();
@@ -56,7 +56,6 @@ export default function MyCalendar() {
                         color: event.color,
                         task_id: event.task_id,
                         allDay: event.is_allday
-
                     }
                 )),
                 scrollToTime: DateTime.local().toJSDate(),
@@ -69,14 +68,9 @@ export default function MyCalendar() {
         }
     }, [])
 
-    const handleSelectEvent = (event) => {
-        setSelect(event.task_id)
-        setOpen(true);
-    }
-
 
     return (
-        <Box sx={{ height: 950 }}>
+        <Box sx={{ height: 600 }}>
             <Calendar
                 defaultDate={defaultDate}
                 defaultView={Views.MONTH}
@@ -85,10 +79,8 @@ export default function MyCalendar() {
                 getNow={getNow}
                 localizer={localizer}
                 scrollToTime={scrollToTime}
-                onSelectEvent={(event) => { handleSelectEvent(event) }}
                 popup
             />
-            <TaskDialog data={selectTask} open={open} setOpen={setOpen} />
         </Box>
     )
 }

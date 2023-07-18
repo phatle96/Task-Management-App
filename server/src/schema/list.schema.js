@@ -30,7 +30,12 @@ const payload = {
 		},
 		escape: true,
 	},
-
+	emoji: {
+		in: ['body',],
+		optional: {
+			options: { nullable: true },
+		},
+	},
 	is_deleted: {
 		in: ['body'],
 		optional: {

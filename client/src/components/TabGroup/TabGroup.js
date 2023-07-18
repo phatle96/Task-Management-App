@@ -67,7 +67,7 @@ export default function TabGroup() {
                                 <>
                                     <Tab selected={tab.value === value} onChange={handleChange} label={tab.label} value={tab.value} key={tab.value} />
                                     {(tab.value === '1' || tab.value === '2') && value === tab.value &&
-                                        <StyledBadge badgeContent={totalTasks} color="primary" />}
+                                        <StyledBadge badgeContent={totalTasks} color="primary" sx={{ zIndex: 'inherit' }} />}
                                 </>
                             )
                         })}

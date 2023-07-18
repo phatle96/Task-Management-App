@@ -1,4 +1,4 @@
-import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon } from "@mui/material";
+import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon, Typography } from "@mui/material";
 import { useEffect } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import DensitySmallIcon from '@mui/icons-material/DensitySmall';
@@ -63,7 +63,7 @@ const NavBar = () => {
 							sx={{ borderRadius: '10px' }}>
 							<ListItemIcon sx={{ justifyContent: 'center' }}>
 								<Avatar>
-									<DensitySmallIcon />
+									A
 								</Avatar>
 							</ListItemIcon>
 							<ListItemText
@@ -92,8 +92,10 @@ const NavBar = () => {
 								selected={filters.list === list.list_id}
 							>
 								<ListItemIcon sx={{ justifyContent: 'center' }}>
-									<Avatar >
-										<WorkIcon />
+									<Avatar sx={{ bgcolor: list.color }}>
+										<Typography variant="button">
+											{list.name.charAt(0)}
+										</Typography>
 									</Avatar>
 								</ListItemIcon>
 								<ListItemText

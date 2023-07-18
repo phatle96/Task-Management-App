@@ -73,7 +73,8 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
                     const { inputValue } = params;
                     // Suggest the creation of a new value
                     const isExisting = options.some((option) => inputValue === option.name);
-                    if (inputValue !== '' && !isExisting) {
+                    const isExistingValue = selectPeople.some((selected) => inputValue === selected.name)
+                    if (inputValue !== '' && !isExisting && !isExistingValue) {
                         filtered.push({
                             inputValue,
                             name: `Add "${inputValue}"`,
@@ -85,6 +86,7 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
                 handleHomeEndKeys
                 filterSelectedOptions
                 autoHighlight
+                clearOnBlur
                 renderTags={(tagValue, getTagProps) =>
                     tagValue.map((option, index) => (
                         <Chip

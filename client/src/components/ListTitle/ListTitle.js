@@ -1,15 +1,16 @@
-import { Avatar, Button, Icon, Stack, Typography } from "@mui/material"
+import { Avatar, Box, Button, Icon, IconButton, Popover, Popper, Stack, Typography } from "@mui/material"
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
 import TaskDialog from "../TaskDialog/TaskDialog";
 
-import { useState, } from "react";
+import React, { useState, } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { selectListById } from "../../features/lists/listsSlice";
 import { initTask } from "../../features/tasks/tasksSlice";
 
-
+import EmojiPicker, { Emoji, EmojiStyle } from 'emoji-picker-react';
+import { stringToPastelColor } from "../../utils/color";
 
 const ListTitle = () => {
 
@@ -18,39 +19,24 @@ const ListTitle = () => {
     const list = useSelector((state) => selectListById(state, listId))
 
     const [open, setOpen] = useState(false);
-    
+
     const handleOpen = () => {
         dispatch(initTask())
         setOpen(true)
     };
 
-    const subtasksStatus = useSelector((state) => state.subtasks.status)
-    const tasksStatus = useSelector((state) => state.tasks.status)
-    const listsStatus = useSelector((state) => state.lists.status)
-
-    const list_name = () => {
-        if (listId === null) {
-            return 'All Tasks';
-        } else {
-            return list.name;
-        }
-    }
-
     return (
         <Stack direction="column" paddingY={2} paddingLeft={2} display="flex" spacing={1}>
             <Stack direction="row" sx={{ paddingLeft: 2 }}>
                 <Typography variant="h4" noWrap={1} sx={{ paddingRight: 5, width: '100%', maxWidth: 800 }}>
-                    {list_name()}
-                    <SynchronizeLoading state={
-                        (subtasksStatus === 'loading' ||
-                            tasksStatus === 'loading' ||
-                            listsStatus === 'loading')} />
+                    {listId ? list.name : 'All Tasks'}
+                    {/* <SynchronizeLoading /> */}
                 </Typography>
             </Stack>
             <Stack direction="row" >
                 <Button>
-                    <Avatar>
-                        A
+                    <Avatar sx={list && { bgcolor: list.color }}>
+                        {list ? list.name.charAt(0) : 'A'}
                     </Avatar>
                 </Button>
                 <Button
@@ -65,6 +51,7 @@ const ListTitle = () => {
                 </Button>
                 <TaskDialog open={open} setOpen={setOpen} />
             </Stack>
+
         </Stack>
     )
 }

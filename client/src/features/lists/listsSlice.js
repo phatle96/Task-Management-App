@@ -1,18 +1,22 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { axiosPost, axiosDelete, axiosPut, axiosFetch } from '../../utils/api';
+import { axiosPost, axiosPut, axiosFetch } from '../../utils/api';
+import { stringToPastelColor } from '../../utils/color';
 
 export const fetchLists = createAsyncThunk(
     'lists/fetchLists',
     async () => {
         const data = await axiosFetch('/list/all');
-        return data;
+        return data.map(list => ({
+            ...list,
+            color: stringToPastelColor(list.list_id, 'hsl'),
+        }));
     }
 )
 
 export const createList = createAsyncThunk(
     'lists/createList',
-    async (type, payload) => {
-        const response = await axiosPost(type, payload);
+    async (payload) => {
+        const response = await axiosPost(payload);
         return response;
     }
 );
@@ -28,7 +32,7 @@ export const updateList = createAsyncThunk(
 export const deleteList = createAsyncThunk(
     'lists/deleteList',
     async (payload) => {
-        const response = await axiosDelete(payload);
+        const response = await axiosPut(payload);
         return response;
     }
 );
@@ -56,15 +60,24 @@ const listsSlice = createSlice({
     initialState: listsAdapter.getInitialState({
         status: 'idle',
         error: null,
+        create: {
+            status: 'idle',
+            response: null,
+            error: null
+        },
+        update: {
+            status: 'idle',
+            response: null,
+            error: null
+        },
+        delete: {
+            status: 'idle',
+            response: null,
+            error: null
+        }
     }),
     reducers: {
-        listList: (state, action) => {
-
-        },
-        listFilter: (state, action) => {
-
-        },
-        listSort: (state, action) => {
+        initList: (state, action) => {
 
         },
     },
@@ -85,28 +98,70 @@ const listsSlice = createSlice({
                 state.error = action.payload;
             }
         },
-
-        [createList.fulfilled]: listsAdapter.addOne,
+        //Create
+        [createList.pending]: (state, action) => {
+            state.create.status = 'loading';
+            state.create.response = null
+            state.create.error = null;
+        },
+        [createList.fulfilled]: (state, action) => {
+            if (state.create.status === 'loading') {
+                listsAdapter.addOne(state, action.payload)
+                state.create.response = action.payload;
+                state.create.status = 'succeeded'
+            }
+        },
         [createList.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+            if (state.create.status === 'loading') {
+                state.create.error = action.payload;
+                state.create.status = 'failed'
+            }
         },
 
-        [deleteList.fulfilled]: listsAdapter.removeOne,
+        // Delete state
+        [deleteList.pending]: (state, action) => {
+            state.delete.status = 'loading';
+            state.delete.error = null;
+            state.delete.response = null
+        },
+        [deleteList.fulfilled]: (state, action) => {
+            if (state.delete.status === 'loading') {
+                listsAdapter.removeOne(state, action.payload.list_id)
+                state.delete.response = action.payload
+                state.delete.status = 'succeeded'
+            }
+        },
         [deleteList.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+            if (state.delete.status === 'loading') {
+                state.delete.error = action.payload;
+                state.delete.status = 'failed'
+            }
         },
 
-        [updateList.fulfilled]: listsAdapter.updateOne,
+        // Update state
+        [updateList.pending]: (state, action) => {
+            state.update.status = 'loading';
+            state.update.error = null;
+            state.update.response = null
+        },
+        [updateList.fulfilled]: (state, action) => {
+            if (state.update.status === 'loading') {
+                const listId = action.payload.list_id;
+                state.entities[listId] = action.payload;
+                state.update.response = action.payload;
+                state.update.status = 'succeeded';
+            }
+        },
         [updateList.rejected]: (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
+            if (state.update.status === 'loading') {
+                state.update.response = action.payload;
+                state.update.status = 'failed';
+            }
         },
 
     }
 })
 
-export const { listFilter, listSort, listRemoved } = listsSlice.actions
+export const { initList } = listsSlice.actions
 
 export default listsSlice.reducer

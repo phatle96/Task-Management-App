@@ -1,7 +1,7 @@
-import { Button, Chip, Divider, Stack, TextField, Typography, } from "@mui/material";
+import { Chip, Divider, Stack, TextField, } from "@mui/material";
+
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DateTimeSelect/DateTimeSelect";
-
 import AddSubtask from "../AddSubtask/AddSubtask";
 import ListFolder from "../ListFolder/ListFolder";
 import AlertSelect from "../AlertSelect/AlertSelect";
@@ -30,6 +30,7 @@ import {
     selectUpdateDateTimeFieldStatus,
     handleUpdateDateTimeField
 } from "../../features/fields/fieldsSlice";
+import DialogCalendar from "../Calendar/DialogCalendar";
 
 const AddTask = ({ task }) => {
 
@@ -68,8 +69,6 @@ const AddTask = ({ task }) => {
     const initFromDate = () => {
         if (task) {
             if (task.start_date) {
-
-                console.log(typeof (task.start_date))
                 const dt = DateTime.fromJSDate(task.start_date)
                 return dt
             } else {
@@ -236,8 +235,8 @@ const AddTask = ({ task }) => {
                         payload: {
                             is_errordate: false,
                             is_allday: isAllDay,
-                            start_date: fromDate.toISO(),
-                            end_date: toDate.toISO(),
+                            start_date: isAllDay ? fromDate.set({ hour: 0 }).toISO() : fromDate.toISO(),
+                            end_date: isAllDay ? toDate.set({ hour: 23, minute: 59, second: 59 }).toISO() : toDate.toISO(),
                         }
                     }
                     dispatch(updateTask(payload))
@@ -273,13 +272,15 @@ const AddTask = ({ task }) => {
             case 'on': {
                 if (task) {
                     const error = toDate.diff(fromDate).as('milliseconds') >= 0 ? false : true
+                    console.log('from', fromDate.set({ hour: 0 }))
+                    console.log('to', toDate.set({ hour: 23, minute: 59, second: 59 }))
                     const payload = {
                         id: task.task_id,
                         payload: {
                             is_errordate: error,
                             is_allday: isAllDay,
-                            start_date: isAllDay ? fromDate.toISODate() : fromDate.toISO(),
-                            end_date: isAllDay ? toDate.toISODate() : toDate.toISO(),
+                            start_date: isAllDay ? fromDate.set({ hour: 0 }).toISO() : fromDate.toISO(),
+                            end_date: isAllDay ? toDate.set({ hour: 23, minute: 59, second: 59 }).toISO() : toDate.toISO(),
                         }
                     }
                     dispatch(updateTask(payload))
@@ -353,6 +354,7 @@ const AddTask = ({ task }) => {
                 isAllDay={isAllDay}
                 error={(toDate.diff(fromDate).as('milliseconds') >= 0 ? false : true)}
                 label='End date' />
+            <DialogCalendar />
             <Divider sx={{ paddingTop: 2, paddingBottom: 1 }} >
                 <Chip label='Alert' />
             </Divider>
