@@ -1,8 +1,6 @@
 import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon, Typography } from "@mui/material";
 import { useEffect } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import DensitySmallIcon from '@mui/icons-material/DensitySmall';
-import WorkIcon from '@mui/icons-material/Work';
 import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -31,13 +29,20 @@ const NavBar = () => {
 		dispatch(listFilterChanged({ list: null }))
 	}
 
+	const handleCreateList = () => {
+		dispatch(listFilterChanged({ list: 'create' }))
+	}
+
 	return (
 		<Box position="static">
-			<Box sx={{ maxWidth: 300 }}>
+			<Box sx={{ maxWidth: 245 }}>
 				<List
 					sx={{ display: { lg: "block", md: "block", sm: "none", xs: "none", height: 56 }, }}>
 					<ListItem>
-						<ListItemButton sx={{ height: 60 }}>
+						<ListItemButton
+							selected={filters.list === 'create'}
+							onClick={handleCreateList}
+							sx={{ minHeight: 30, borderRadius: '10px' }}>
 							<ListItemIcon sx={{ justifyContent: 'center' }}>
 								<Avatar>
 									<AddIcon />
@@ -45,14 +50,8 @@ const NavBar = () => {
 							</ListItemIcon>
 							<ListItemText
 								primary="Create new list"
-								primaryTypographyProps={{
-									letterSpacing: 0.5,
-									noWrap: true
-								}}
-								sx={{
-									display: { lg: "block", md: "none", sm: "none", xs: "none" },
-									paddingLeft: 0.5
-								}} />
+								primaryTypographyProps={{ letterSpacing: 0.5, noWrap: true }}
+								sx={{ display: { lg: "block", md: "none", sm: "none", xs: "none" }, paddingLeft: 0.5 }} />
 						</ListItemButton>
 					</ListItem>
 					<Divider />

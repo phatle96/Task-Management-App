@@ -28,6 +28,9 @@ const payload = {
 			errorMessage: "Name should be at least 1 to 100 characters long",
 			options: { min: 1, max: 100 },
 		},
+		optional: {
+			options: { nullable: true },
+		},
 		escape: true,
 	},
 	emoji: {
@@ -40,10 +43,6 @@ const payload = {
 		in: ['body'],
 		optional: {
 			options: { nullable: true },
-		},
-		isLength: {
-			errorMessage: "Delete state should not be included",
-			options: { max: 0 },
 		},
 		escape: true,
 	},

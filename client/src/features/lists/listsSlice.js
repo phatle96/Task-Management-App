@@ -17,7 +17,10 @@ export const createList = createAsyncThunk(
     'lists/createList',
     async (payload) => {
         const response = await axiosPost(payload);
-        return response;
+        return {
+            ...response,
+            color: stringToPastelColor(response.list_id, 'hsl'),
+        };
     }
 );
 
@@ -25,7 +28,10 @@ export const updateList = createAsyncThunk(
     'lists/updateList',
     async (payload) => {
         const response = await axiosPut(payload);
-        return response;
+        return {
+            ...response,
+            color: stringToPastelColor(response.list_id, 'hsl'),
+        };
     }
 );
 
@@ -77,8 +83,9 @@ const listsSlice = createSlice({
         }
     }),
     reducers: {
-        initList: (state, action) => {
-
+        initList: (state) => {
+            state.create.status = 'idle';
+            state.create.response = null
         },
     },
     extraReducers: {
