@@ -11,6 +11,8 @@ import MyCalendar from '../Calendar/Calendar';
 import { selectTasksByStatusLength } from '../../features/tasks/tasksSlice';
 import { tasksCompletedFilterChanged, selectFilters } from '../../features/filters/filtersSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
+import PeopleList from '../PeopleList/PeopleList';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -50,6 +52,7 @@ export default function TabGroup() {
             '1': <TaskContainer />,
             '2': <TaskContainer />,
             '3': <MyCalendar />,
+            '4': <PeopleList />
         }
         return (
             tabPanel[value]
@@ -60,17 +63,28 @@ export default function TabGroup() {
         <Stack position="relative" display="flex"
             sx={{ typography: 'body1', display: { lg: "block", md: "block", sm: "block", xs: "block" } }} >
             <TabContext value={value}>
-                <Stack display="flex" direction="column" justifyContent="space-between" sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Stack
+                    display="flex"
+                    direction="column"
+                    justifyContent="space-between"
+                    sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList aria-label="tab-list" sx={{ display: "flex" }}>
                         {tabs?.map((tab) => {
                             return (
                                 <>
-                                    <Tab selected={tab.value === value} onChange={handleChange} label={tab.label} value={tab.value} key={tab.value} />
+                                    <Tab
+                                        selected={tab.value === value}
+                                        onChange={handleChange}
+                                        label={tab.label}
+                                        value={tab.value}
+                                        key={tab.value}
+                                    />
                                     {(tab.value === '1' || tab.value === '2') && value === tab.value &&
                                         <StyledBadge badgeContent={totalTasks} color="primary" sx={{ zIndex: 'inherit' }} />}
                                 </>
                             )
                         })}
+
                     </TabList>
                 </Stack >
                 <Stack direction="row" sx={{ paddingLeft: 3, paddingTop: 3 }} >
@@ -91,4 +105,5 @@ const tabs = [
     { label: "Doing", value: '1' },
     { label: "Complete", value: '2' },
     { label: "Calendar", value: '3' },
+    { label: "People", value: '4' }
 ]

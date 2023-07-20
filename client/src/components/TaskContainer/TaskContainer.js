@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, initTask, selectTasksByStatus, updateTask } from "../../features/tasks/tasksSlice";
 import { fetchSubtasks } from "../../features/subtasks/subtasksSlice";
 import { fetchPeople } from "../../features/people/peopleSlice";
+import ListFolder from "../ListFolder/ListFolder";
 
 
 const TaskContainer = () => {
@@ -81,9 +82,12 @@ const TaskContainer = () => {
 									}} >
 									<TaskCard data={task} />
 									<SubTask task={task} />
-									<Box sx={{ display: "flex", justifyContent: "flex-end", paddingRight: 1, paddingTop: 2 }}>
-										{task.list && <Chip icon={<FolderOpenIcon />} label={task.list.name} size="small" />}
-									</Box>
+									{task.list &&
+										<Box
+											onClick={(event => { event.stopPropagation() })}
+											sx={{ display: "flex", justifyContent: "flex-end", paddingRight: 1, paddingTop: 2 }}>
+											<ListFolder list={task.list} task={task} />
+										</Box>}
 								</Stack>
 							</Stack>
 						</Paper>

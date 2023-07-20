@@ -7,8 +7,10 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { selectAllLists } from '../../features/lists/listsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleListField, selectListFieldStatus } from '../../features/fields/fieldsSlice';
+import { updateTask } from '../../features/tasks/tasksSlice';
+import { stringToPastelColor } from '../../utils/color';
 
-const ListFolder = ({ list, setList }) => {
+const ListFolder = ({ list, setList, task }) => {
 
 	const [anchorEl, setAnchorEl] = useState(null);
 
@@ -28,10 +30,26 @@ const ListFolder = ({ list, setList }) => {
 
 		} else if (select === 'none') {
 			setAnchorEl(null);
-			setList(null);
+			setList && setList(null)
+			if (task) {
+				const payload = {
+					id: task.task_id,
+					option: 'unset',
+					payload: { list: 1 }
+				}
+				dispatch(updateTask(payload))
+			}
+
 		} else {
 			setAnchorEl(null);
-			setList(select);
+			setList && setList(select);
+			if (task) {
+				const payload = {
+					id: task.task_id,
+					payload: { list: select._id }
+				}
+				dispatch(updateTask(payload))
+			}
 		}
 		dispatch(handleListField('off'))
 	};
@@ -41,7 +59,15 @@ const ListFolder = ({ list, setList }) => {
 		<Box sx={{ display: 'flex' }}>
 			<Chip
 				variant='outlined'
-				icon={<FolderOpenIcon />}
+				icon={
+					list ?
+						<Avatar sx={{ bgcolor: stringToPastelColor(list.list_id, 'hsl'), width: '1em', height: '1em' }}>
+							<Typography variant='button' color='whitesmoke'>
+								{list.name.charAt(0)}
+							</Typography>
+						</Avatar> :
+						<FolderOpenIcon />
+				}
 				label={
 					<Stack direction='row' spacing={0.5} display='flex' sx={{ alignItems: 'center' }}>
 						<Typography variant='caption' sx={{ marginBottom: -0.5 }}>
