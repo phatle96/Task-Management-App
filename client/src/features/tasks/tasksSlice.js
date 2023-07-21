@@ -5,6 +5,7 @@ import { axiosPost, axiosPut, axiosFetch } from '../../utils/api';
 import { stringToPastelColor } from '../../utils/color';
 
 import { DateTime } from 'luxon'
+import { selectPersonById } from '../people/peopleSlice';
 
 
 export const fetchTasks = createAsyncThunk(
@@ -108,6 +109,22 @@ export const selectTasksByStatusLength = createSelector(
         return tasks.length
     }
 )
+
+
+export const selectTaskByListThenPerson = createSelector(
+    [
+        selectTasksByList,
+        (state, person_id) => person_id,
+    ],
+    (tasks, person_id) => {
+        return (
+            tasks.filter(
+                (task) => task.person.some((p) => p.person_id === person_id)
+            ))
+    }
+)
+
+
 
 const tasksSlice = createSlice({
     name: 'tasks',

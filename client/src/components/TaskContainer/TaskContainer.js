@@ -15,7 +15,7 @@ import { fetchPeople } from "../../features/people/peopleSlice";
 import ListFolder from "../ListFolder/ListFolder";
 
 
-const TaskContainer = () => {
+const TaskContainer = ({ tasks }) => {
 
 	const [open, setOpen] = useState(false);
 	const [editTask, setEditTask] = useState();
@@ -24,7 +24,11 @@ const TaskContainer = () => {
 	const tasksStatus = useSelector((state) => state.tasks.status);
 	const subtasksStatus = useSelector((state) => state.subtasks.status);
 	const peopleStatus = useSelector((state) => state.people.status);
-	const tasks = useSelector(selectTasksByStatus);
+	const taskByStatus = useSelector(selectTasksByStatus)
+
+	if (!tasks) {
+		tasks = taskByStatus
+	}
 
 	// fetch tasks
 	useEffect(() => {
