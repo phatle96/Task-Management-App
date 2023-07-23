@@ -78,6 +78,10 @@ const peopleSlice = createSlice({
             state.create.status = 'idle';
             state.create.response = null
         },
+        initDeletePerson: (state) => {
+            state.delete.status = 'idle';
+            state.delete.response = null
+        }
     },
     extraReducers: {
         [fetchPeople.pending]: (state, action) => {
@@ -162,6 +166,6 @@ const peopleSlice = createSlice({
     }
 })
 
-export const { initPerson } = peopleSlice.actions
+export const { initPerson, initDeletePerson } = peopleSlice.actions
 
 export default peopleSlice.reducer

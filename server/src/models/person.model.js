@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const PersonSchema = new Schema(
 	{
 		person_id: { type: String, required: true, unique: true, default: () => `person_${uuidv4()}` },
-		name: { type: String, unique: true, required: true, maxLength: 100 },
+		name: { type: String, required: true, maxLength: 100 },
 		avatar: { type: String },
 		default_avatar: { type: String, default: defaultAvatar },
 		is_deleted: { type: Boolean, required: true, default: false },

@@ -1,8 +1,11 @@
-import { Avatar, Button, Icon, IconButton, InputBase, Menu, MenuItem, Stack } from "@mui/material"
+import { Avatar, Box, Button, Icon, IconButton, InputBase, Menu, MenuItem, Stack, Tooltip } from "@mui/material"
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
 import TaskDialog from "../TaskDialog/TaskDialog";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import PersonIcon from '@mui/icons-material/Person';
 
 import React, { useEffect, useRef, useState, } from "react";
 
@@ -65,6 +68,7 @@ const ListTitle = () => {
                     }
                 }
                 dispatch(updateList(payload))
+                contentRef.current = content
             }
         } else if (listId === 'create') {
             const payload = {
@@ -113,7 +117,9 @@ const ListTitle = () => {
 
     return (
         <Stack direction="column" paddingY={2} paddingLeft={2} display="flex" spacing={1}>
-            <Stack direction="row" sx={{ paddingLeft: 2, alignItems: 'center' }}
+            <Stack
+                direction="row"
+                sx={{ paddingLeft: 2, alignItems: 'center' }}
                 onMouseOver={() => { (list || listId === 'create') && setShowEdit(true) }}
                 onMouseOut={() => { (list || listId === 'create') && setShowEdit(false) }} >
                 {
@@ -131,7 +137,23 @@ const ListTitle = () => {
                     onFocus={(event) => { event.target.select() }}
                     onChange={(event) => { handleChangeListName(event.target.value) }}
                     onBlur={() => { handleBlur() }}
-                    sx={{ fontSize: 'xx-large', fontWeight: 400, '& .Mui-disabled': { WebkitTextFillColor: 'rgba(0,0,0,0.87)' } }} />
+                    sx={{
+                        fontSize: 'xx-large',
+                        fontWeight: 400,
+                        '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: 'rgba(0,0,0,0.87)' }
+                    }} />
+                <Box sx={{ display: 'flex', flexDirection: 'row', paddingRight: 2 }}>
+                    <IconButton size='small'>
+                        <Tooltip title='Notification'>
+                            <NotificationsIcon color='info' />
+                        </Tooltip>
+                    </IconButton>
+                    <IconButton size='small'>
+                        <Tooltip title='Account'>
+                            <PersonIcon color="info" />
+                        </Tooltip>
+                    </IconButton>
+                </Box>
             </Stack>
             <Stack direction="row" >
                 <Button>

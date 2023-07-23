@@ -24,7 +24,7 @@ const TaskCard = ({ data }) => {
 					</Stack>
 					<Box>
 						{
-							data.person && (
+							data?.person && (
 								<AvatarGroup max={5} sx={{ '& .MuiAvatar-root': { width: 23, height: 23, fontSize: 15 }, justifyContent: "flex-end" }}>
 									{data.person.map(person => (
 										<Tooltip title={person.name} key={person.person_id}>

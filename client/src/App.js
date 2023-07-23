@@ -1,5 +1,5 @@
 import { React } from "react";
-import { Box, Stack, } from "@mui/material";
+import { Box, Button, Stack, } from "@mui/material";
 import Appbar from "./components/Appbar/Appbar"
 import BottomAppBar from "./components/BottomAppbar/BottomAppbar";
 import NavBar from "./components/NavBar/NavBar";
@@ -12,34 +12,27 @@ import TaskContainer from "./components/TaskContainer/TaskContainer";
 export default function App() {
 	return (
 		<Router>
-			<Box sx={{ width: '100%', height: '100%' }}>
-				<Stack direction="column" justifyContent="space-between">
-					<Box sx={{ /* backgroundColor: "info.main" */ }}>
-						<Appbar />
-					</Box>
-					<Stack direction="row" >
-						<Box sx={{ /* backgroundColor: "secondary.main" */ }} >
-							<NavBar />
-						</Box>
-						<Box sx={{ width: '100%' }}>
-							<Stack direction="column">
-								<Box sx={{ /* backgroundColor: "info.main" */ }}>
-									<ListTitle />
-								</Box>
-								<Grid2 container >
-									<Grid2 xs={12} sm={12} md={12} lg={12}
-										sx={{ display: { xs: "block", sm: "block", md: "block", lg: "block" }, /* backgroundColor: "error.main"  */ }}>
-										<TabGroup />
-									</Grid2>
+			<Box position="fixed" justifyContent="space-between" sx={{ width: '100%' }}>
+				<Stack direction="row" >
+					<NavBar />
+					<Box overflow='auto' height='100vh' sx={{ width: '100%' }}>
+						<Stack direction="column">
+							<Box >
+								<ListTitle />
+							</Box>
+							<Grid2 container >
+								<Grid2 xs={12} sm={12} md={12} lg={12}
+									sx={{ display: { xs: "block", sm: "block", md: "block", lg: "block" }, /* backgroundColor: "error.main"  */ }}>
+									<TabGroup />
 								</Grid2>
-							</Stack>
-						</Box>
-					</Stack>
-					<Box sx={{ display: { xs: "block", sm: "block", md: "none", lg: "none" }, /* backgroundColor: "text.disabled" */ }}>
-						<BottomAppBar />
+							</Grid2>
+						</Stack>
 					</Box>
 				</Stack>
+				<Box sx={{ display: { xs: "block", sm: "block", md: "none", lg: "none" }, /* backgroundColor: "text.disabled" */ }}>
+					<BottomAppBar />
+				</Box>
 			</Box>
-		</Router>
+		</Router >
 	);
 }

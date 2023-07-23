@@ -1,6 +1,7 @@
-import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon, Typography } from "@mui/material";
+import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon, Typography, Button, Stack } from "@mui/material";
 import { useEffect } from "react";
 import AddIcon from '@mui/icons-material/Add';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -35,7 +36,19 @@ const NavBar = () => {
 
 	return (
 		<Box position="static">
-			<Box sx={{ maxWidth: 245 }}>
+			<Stack direction='row' sx={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+				<Avatar back sx={{ display: { lg: "none", md: "flex", sm: "none", xs: "none" } }}>
+					<TextSnippetIcon />
+				</Avatar>
+				<Button
+					size="large"
+					fullWidth
+					startIcon={<TextSnippetIcon />}
+					sx={{ display: { lg: "flex", md: "none", sm: "none", xs: "none" } }}>
+					Remind me things
+				</Button>
+			</Stack>
+			<Box overflow='auto' flexDirection="column" display="flex" height='100vh' sx={{ maxWidth: 245 }}>
 				<List
 					sx={{ display: { lg: "block", md: "block", sm: "none", xs: "none", height: 56 }, }}>
 					<ListItem>
@@ -49,13 +62,13 @@ const NavBar = () => {
 								</Avatar>
 							</ListItemIcon>
 							<ListItemText
-								primary="Create new list"
+								primary="New list"
 								primaryTypographyProps={{ letterSpacing: 0.5, noWrap: true }}
 								sx={{ display: { lg: "block", md: "none", sm: "none", xs: "none" }, paddingLeft: 0.5 }} />
 						</ListItemButton>
 					</ListItem>
 					<Divider />
-					<ListItem component={Link} to="/">
+					<ListItem overflow='auto' component={Link} to="/">
 						<ListItemButton
 							onClick={handleResetFilter}
 							selected={filters.list === null}

@@ -14,6 +14,7 @@ export const fetchTasks = createAsyncThunk(
         const data = await axiosFetch('/task/all');
         return data.map(task => ({
             ...task,
+            person: task.person?.filter((person) => person.is_deleted === false),
             color: stringToPastelColor(task.task_id, 'hsl'),
             relativeStartDate: task.start_date ? DateTime.fromJSDate(task.start_date).toRelativeCalendar() : null,
             relativeEndDate: task.end_date ? DateTime.fromJSDate(task.end_date).toRelativeCalendar() : null,

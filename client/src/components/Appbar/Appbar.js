@@ -28,6 +28,8 @@ const Search = styled('div')(({ theme }) => ({
 	},
 }));
 
+const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
+
 const SearchIconWrapper = styled('div')(({ theme }) => ({
 	padding: theme.spacing(0, 2),
 	height: '100%',
@@ -69,8 +71,8 @@ export default function SearchAppBar() {
 		setAnchorEl(null);
 	};
 	return (
-		<Box sx={{ flexGrow: 1 }} >
-			<AppBar position="static">
+		<Box  >
+			<AppBar position="fixed">
 				<Toolbar>
 					<IconButton
 						size="large"
@@ -79,7 +81,7 @@ export default function SearchAppBar() {
 						aria-label="open drawer"
 						sx={{ mr: 2, display: { xs: 'block', sm: 'none' } }}
 					>
-						<Avatar sx={{backgroundColor:"white"}}>
+						<Avatar sx={{ backgroundColor: "white" }}>
 							<AttachFileIcon color="primary" />
 						</Avatar>
 					</IconButton>
@@ -126,6 +128,7 @@ export default function SearchAppBar() {
 					</Menu>
 				</Toolbar>
 			</AppBar>
+			<Toolbar />
 		</Box >
 	);
 }

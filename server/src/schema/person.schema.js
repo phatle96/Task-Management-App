@@ -57,10 +57,6 @@ const payload = {
 		optional: {
 			options: { nullable: true },
 		},
-		isLength: {
-			errorMessage: "Delete state should not be included",
-			options: { max: 0 },
-		},
 		escape: true,
 	},
 

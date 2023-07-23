@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, initTask, selectTasksByStatus, updateTask } from "../../features/tasks/tasksSlice";
 import { fetchSubtasks } from "../../features/subtasks/subtasksSlice";
-import { fetchPeople } from "../../features/people/peopleSlice";
+import { fetchPeople, selectAllPeople } from "../../features/people/peopleSlice";
 import ListFolder from "../ListFolder/ListFolder";
 
 
@@ -25,6 +25,7 @@ const TaskContainer = ({ tasks }) => {
 	const subtasksStatus = useSelector((state) => state.subtasks.status);
 	const peopleStatus = useSelector((state) => state.people.status);
 	const taskByStatus = useSelector(selectTasksByStatus)
+	const allPeople = useSelector(selectAllPeople)
 
 	if (!tasks) {
 		tasks = taskByStatus
@@ -35,21 +36,21 @@ const TaskContainer = ({ tasks }) => {
 		if (tasksStatus === 'idle') {
 			dispatch(fetchTasks())
 		}
-	}, [tasksStatus, dispatch]);
+	}, [tasksStatus, allPeople]);
 
 	// fetch subtasks
 	useEffect(() => {
 		if (subtasksStatus === 'idle') {
 			dispatch(fetchSubtasks())
 		}
-	}, [subtasksStatus, dispatch]);
+	}, [subtasksStatus]);
 
 	// fetch people
 	useEffect(() => {
 		if (peopleStatus === 'idle') {
 			dispatch(fetchPeople())
 		}
-	}, [peopleStatus, dispatch]);
+	}, [peopleStatus]);
 
 	const handleChecked = (task) => {
 		const payload = {
