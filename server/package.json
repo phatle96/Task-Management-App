@@ -4,6 +4,9 @@
   "description": "",
   "main": "./src/server.js",
   "private": true,
+  "engines": {
+    "node": ">=16.0.0 <17.0.0"
+  },
   "scripts": {
     "production": "node ./src/server.js ",
     "dev": "nodemon -r dotenv/config ./src/server.js dotenv_config_path=.env.dev.local",
