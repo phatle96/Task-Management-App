@@ -12,13 +12,22 @@ export const fetchTasks = createAsyncThunk(
     'tasks/fetchTasks',
     async () => {
         const data = await axiosFetch('/task/all');
-        return data.map(task => ({
-            ...task,
-            person: task.person?.filter((person) => person.is_deleted === false),
-            color: stringToPastelColor(task.task_id, 'hsl'),
-            relativeStartDate: task.start_date ? DateTime.fromJSDate(task.start_date).toRelativeCalendar() : null,
-            relativeEndDate: task.end_date ? DateTime.fromJSDate(task.end_date).toRelativeCalendar() : null,
-        }));
+
+        const reduced = data.reduce((filtered, task) => {
+            if (task.list?.is_deleted === false || task.list === null) {
+                const filteredTask = {
+                    ...task,
+                    person: task.person?.filter((person) => person.is_deleted === false),
+                    color: stringToPastelColor(task.task_id, 'hsl'),
+                    relativeStartDate: task.start_date ? DateTime.fromJSDate(task.start_date).toRelativeCalendar() : null,
+                    relativeEndDate: task.end_date ? DateTime.fromJSDate(task.end_date).toRelativeCalendar() : null,
+                }
+                filtered.push(filteredTask)
+            }
+            return filtered
+        }, [])
+
+        return reduced
     }
 )
 
@@ -153,6 +162,9 @@ const tasksSlice = createSlice({
             state.create.status = 'idle';
             state.create.response = null
         },
+        initFetchTask: (state) => {
+            state.status = 'idle';
+        }
     },
     extraReducers: {
         // Fetch state
@@ -239,8 +251,6 @@ export const selectCreateTaskStatus = (state) => state.tasks.create.status
 export const selectUpdateTaskStatus = (state) => state.tasks.update.status
 export const selectDeleteTaskStatus = (state) => state.tasks.delete.status
 
-export const {
-    initTask,
-} = tasksSlice.actions
+export const { initTask, initFetchTask } = tasksSlice.actions
 
 export default tasksSlice.reducer

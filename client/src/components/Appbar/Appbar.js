@@ -14,7 +14,6 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 
 const Search = styled('div')(({ theme }) => ({
-	position: 'relative',
 	borderRadius: theme.shape.borderRadius,
 	backgroundColor: alpha(theme.palette.common.white, 0.15),
 	'&:hover': {
@@ -28,7 +27,6 @@ const Search = styled('div')(({ theme }) => ({
 	},
 }));
 
-const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
 	padding: theme.spacing(0, 2),

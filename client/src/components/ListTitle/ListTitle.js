@@ -3,16 +3,16 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import EditIcon from '@mui/icons-material/Edit';
 import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
 import TaskDialog from "../TaskDialog/TaskDialog";
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import PersonIcon from '@mui/icons-material/Person';
+
+
 
 import React, { useEffect, useRef, useState, } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { createList, deleteList, initList, selectListById, updateList } from "../../features/lists/listsSlice";
-import { initTask } from "../../features/tasks/tasksSlice";
+import { createList, deleteList, initDeleteList, initList, selectListById, updateList } from "../../features/lists/listsSlice";
+import { fetchTasks, initFetchTask, initTask } from "../../features/tasks/tasksSlice";
 import { listFilterChanged } from "../../features/filters/filtersSlice";
+import ToolOption from "../ToolOption/ToolOption";
 
 
 const ListTitle = () => {
@@ -50,6 +50,7 @@ const ListTitle = () => {
         setAnchorEl(null);
     }
     //----------------
+
 
     const contentRef = useRef(null)
 
@@ -110,7 +111,9 @@ const ListTitle = () => {
     useEffect(() => {
         switch (deleteListState.status) {
             case 'succeeded': {
+                dispatch(initDeleteList())
                 dispatch(listFilterChanged({ list: null }))
+                dispatch(initFetchTask())
             }
         }
     }, [deleteListState.status])
@@ -142,18 +145,7 @@ const ListTitle = () => {
                         fontWeight: 400,
                         '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: 'rgba(0,0,0,0.87)' }
                     }} />
-                <Box sx={{ display: 'flex', flexDirection: 'row', paddingRight: 2 }}>
-                    <IconButton size='small'>
-                        <Tooltip title='Notification'>
-                            <NotificationsIcon color='info' />
-                        </Tooltip>
-                    </IconButton>
-                    <IconButton size='small'>
-                        <Tooltip title='Account'>
-                            <PersonIcon color="info" />
-                        </Tooltip>
-                    </IconButton>
-                </Box>
+                <ToolOption />
             </Stack>
             <Stack direction="row" >
                 <Button>

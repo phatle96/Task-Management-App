@@ -74,7 +74,7 @@ const PeopleList = () => {
                         }
                     })
                     return (
-                        <Grid2 xs={3} sm={3} md={3} lg={3} >
+                        <Grid2 xs={3} sm={3} md={3} lg={3} key={person.person_id} >
                             <Paper
                                 variant='outlined'
                                 sx={{ minHeight: 150, display: 'flex', justifyContent: 'center', alignItems: 'center' }}

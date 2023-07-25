@@ -13,6 +13,7 @@ import { fetchTasks, initTask, selectTasksByStatus, updateTask } from "../../fea
 import { fetchSubtasks } from "../../features/subtasks/subtasksSlice";
 import { fetchPeople, selectAllPeople } from "../../features/people/peopleSlice";
 import ListFolder from "../ListFolder/ListFolder";
+import { selectAllLists } from "../../features/lists/listsSlice";
 
 
 const TaskContainer = ({ tasks }) => {
@@ -31,12 +32,13 @@ const TaskContainer = ({ tasks }) => {
 		tasks = taskByStatus
 	}
 
+
 	// fetch tasks
 	useEffect(() => {
 		if (tasksStatus === 'idle') {
 			dispatch(fetchTasks())
 		}
-	}, [tasksStatus, allPeople]);
+	}, [tasksStatus]);
 
 	// fetch subtasks
 	useEffect(() => {
@@ -69,7 +71,7 @@ const TaskContainer = ({ tasks }) => {
 
 	const TasksList = () => {
 		return (
-			tasks.map(
+			tasks?.map(
 				task => {
 					return (
 						<Paper display="flex" key={task.task_id} variant="outlined" sx={{ paddingBottom: 2, width: 'inherit', marginBottom: 1 }} >

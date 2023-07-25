@@ -2,9 +2,9 @@ const List = require('../models/list.model');
 const Task = require('../models/task.model');
 const Subtask = require('../models/subtask.model');
 
-exports.find_all_list = async() =>{
+exports.find_all_list = async () => {
 	const fields = null
-	const lists = await List.find({}, fields).exec();
+	const lists = await List.find({ is_deleted: false }, fields).exec();
 	return lists;
 }
 
@@ -21,7 +21,7 @@ exports.find_list_task_query = async (req_param) => {
 	if (list_object == null || list_object.length == 0) {
 		return list_object;
 	} else {
-		const task_query = {list: list_object};
+		const task_query = { list: list_object };
 		const result = Task.find(task_query).exec();
 		return result;
 	}
@@ -33,7 +33,7 @@ exports.find_list_subtask_query = async (req_param) => {
 	if (list_object == null || list_object.length == 0) {
 		return list_object;
 	} else {
-		const subtask_query = {list: list_object};
+		const subtask_query = { list: list_object };
 		const result = Subtask.find(subtask_query).exec();
 		return result;
 	}

@@ -87,6 +87,10 @@ const listsSlice = createSlice({
             state.create.status = 'idle';
             state.create.response = null
         },
+        initDeleteList: (state) => {
+            state.delete.status = 'idle';
+            state.delete.response = null
+        },
     },
     extraReducers: {
         [fetchLists.pending]: (state, action) => {
@@ -169,6 +173,6 @@ const listsSlice = createSlice({
     }
 })
 
-export const { initList } = listsSlice.actions
+export const { initList, initDeleteList } = listsSlice.actions
 
 export default listsSlice.reducer
