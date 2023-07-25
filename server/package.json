@@ -5,7 +5,7 @@
   "main": "./src/server.js",
   "private": true,
   "scripts": {
-    "production": "node -r dotenv/config ./src/server.js dotenv_config_path=.env.dev.local",
+    "production": "node ./src/server.js ",
     "dev": "nodemon -r dotenv/config ./src/server.js dotenv_config_path=.env.dev.local",
     "test": "cross-env NODE_ENV=test jest --testTimeout=10000 "
   },
