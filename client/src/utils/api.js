@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://localhost:8080/api';
+axios.defaults.baseURL = 'https://demo-task-management.onrender.com/api';
 
 const dateKeyRx = /_date/i;
 
