@@ -11,6 +11,7 @@ module.exports = {
             console.log(`DB is connected to ${mongoDB}`);
         } catch (err) {
             console.log(`Could not connect to DB (${mongoDB})`);
+            console.log('error: ', err)
         }
     },
     async disconnect() {
