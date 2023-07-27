@@ -20,7 +20,7 @@ const NavBar = () => {
 		if (status === 'idle') {
 			dispatch(fetchLists())
 		}
-	}, [status, dispatch])
+	}, [status])
 
 	const handleFilter = (list) => {
 		dispatch(listFilterChanged({ list: list.list_id }))

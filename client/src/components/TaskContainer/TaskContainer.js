@@ -64,6 +64,7 @@ const TaskContainer = ({ tasks }) => {
 		const payload = {
 			id: task.task_id,
 			payload: {
+				content: task.content,
 				is_completed: !task.is_completed
 			}
 		};

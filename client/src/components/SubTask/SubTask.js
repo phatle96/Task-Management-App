@@ -36,6 +36,7 @@ const SubTask = ({ task }) => {
         const payload = {
             id: subtask.subtask_id,
             payload: {
+                content: subtask.content,
                 is_completed: !subtask.is_completed
             }
         };
