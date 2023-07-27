@@ -21,7 +21,6 @@ const TaskContainer = ({ tasks }) => {
 
 	const [open, setOpen] = useState(false);
 	const [editTask, setEditTask] = useState();
-	const [data, setData] = useState(tasks)
 
 	const dispatch = useDispatch();
 	const tasksStatus = useSelector((state) => state.tasks.status);
@@ -29,15 +28,6 @@ const TaskContainer = ({ tasks }) => {
 	const peopleStatus = useSelector((state) => state.people.status);
 	const taskByStatus = useSelector(selectTasksByStatus)
 	const filterChange = useSelector(selectFilters)
-
-	useEffect(() => {
-		if (!tasks) {
-			setData(taskByStatus)
-			console.log('tasks', tasks)
-			console.log('data', taskByStatus)
-		}
-	}, [taskByStatus, filterChange.list, dispatch])
-
 
 	// fetch tasks
 	useEffect(() => {
@@ -76,9 +66,9 @@ const TaskContainer = ({ tasks }) => {
 		setEditTask(task)
 	}
 
-	const TasksList = () => {
+	const TasksList = ({ data }) => {
 		return (
-			data?.map(
+			data.map(
 				task => {
 					return (
 						<Paper display="flex" key={task.task_id} variant="outlined" sx={{ paddingBottom: 2, width: 'inherit', marginBottom: 1 }} >
@@ -114,7 +104,7 @@ const TaskContainer = ({ tasks }) => {
 	return (
 		<>
 			<Grid2 container xs={12} sm={12} md={12} lg={12}>
-				<TasksList />
+				<TasksList data={tasks ? tasks : taskByStatus} />
 			</Grid2>
 			<TaskDialog data={editTask} open={open} setOpen={setOpen} />
 		</>
