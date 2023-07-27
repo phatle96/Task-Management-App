@@ -14,6 +14,7 @@ import PeopleList from '../PeopleList/PeopleList';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export default function TabGroup() {
+	const taskByStatus = useSelector(selectTasksByStatus)
 
 	const tabs = [
 		{ value: '1', label: "Doing" },

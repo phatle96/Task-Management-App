@@ -27,28 +27,27 @@ const TaskContainer = ({ tasks }) => {
 	const subtasksStatus = useSelector((state) => state.subtasks.status);
 	const peopleStatus = useSelector((state) => state.people.status);
 	const taskByStatus = useSelector(selectTasksByStatus)
-	const filterChange = useSelector(selectFilters)
 
 	// fetch tasks
 	useEffect(() => {
 		if (tasksStatus === 'idle') {
 			dispatch(fetchTasks())
 		}
-	}, [tasksStatus]);
+	}, [tasksStatus, dispatch]);
 
 	// fetch subtasks
 	useEffect(() => {
 		if (subtasksStatus === 'idle') {
 			dispatch(fetchSubtasks())
 		}
-	}, [subtasksStatus]);
+	}, [subtasksStatus, dispatch]);
 
 	// fetch people
 	useEffect(() => {
 		if (peopleStatus === 'idle') {
 			dispatch(fetchPeople())
 		}
-	}, [peopleStatus]);
+	}, [peopleStatus, dispatch]);
 
 	const handleChecked = (task) => {
 		const payload = {

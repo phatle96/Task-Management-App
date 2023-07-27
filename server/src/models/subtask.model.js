@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const Schema = mongoose.Schema;
 
 const SubtaskSchema = new Schema({
-    subtask_id: { type: String, required: true, unique: true, default: () => `subtask_${uuidv4()}` },
+    subtask_id: { type: String, unique: true, default: () => `subtask_${uuidv4()}` },
     content: { type: String, required: true, maxLength: 300, default: "" },
     list: { type: Schema.Types.ObjectId, ref: 'List', default: null },
     task: { type: Schema.Types.ObjectId, required: true, ref: 'Task', default: null },

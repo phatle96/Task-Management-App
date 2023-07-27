@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const PersonSchema = new Schema(
 	{
-		person_id: { type: String, required: true, unique: true, default: () => `person_${uuidv4()}` },
+		person_id: { type: String, unique: true, default: () => `person_${uuidv4()}` },
 		name: { type: String, required: true, maxLength: 100 },
 		avatar: { type: String },
 		default_avatar: { type: String, default: defaultAvatar },

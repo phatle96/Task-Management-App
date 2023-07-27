@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const Schema = mongoose.Schema;
 
 const TaskSchema = new Schema({
-    task_id: { type: String, required: true, unique: true, default: () => `task_${uuidv4()}` },
+    task_id: { type: String, unique: true, default: () => `task_${uuidv4()}` },
     content: { type: String, required: true, maxLength: 300, default: "" },
     list: { type: Schema.Types.ObjectId, ref: 'List', default: null },
     person: [{ type: Schema.Types.ObjectId, ref: 'Person' }],
