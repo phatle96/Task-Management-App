@@ -36,7 +36,7 @@ const TaskContainer = ({ tasks }) => {
 			console.log('tasks', tasks)
 			console.log('data', taskByStatus)
 		}
-	}, [taskByStatus, filterChange.list])
+	}, [taskByStatus, filterChange.list, dispatch])
 
 
 	// fetch tasks
