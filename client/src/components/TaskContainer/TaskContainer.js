@@ -13,24 +13,30 @@ import { fetchTasks, initTask, selectTasksByStatus, updateTask } from "../../fea
 import { fetchSubtasks } from "../../features/subtasks/subtasksSlice";
 import { fetchPeople, selectAllPeople } from "../../features/people/peopleSlice";
 import ListFolder from "../ListFolder/ListFolder";
-import { selectAllLists } from "../../features/lists/listsSlice";
+import { selectFilters } from "../../features/filters/filtersSlice";
+import { initDeleteList } from "../../features/lists/listsSlice";
 
 
 const TaskContainer = ({ tasks }) => {
 
 	const [open, setOpen] = useState(false);
 	const [editTask, setEditTask] = useState();
+	const [data, setData] = useState(tasks)
 
 	const dispatch = useDispatch();
 	const tasksStatus = useSelector((state) => state.tasks.status);
 	const subtasksStatus = useSelector((state) => state.subtasks.status);
 	const peopleStatus = useSelector((state) => state.people.status);
 	const taskByStatus = useSelector(selectTasksByStatus)
-	const allPeople = useSelector(selectAllPeople)
+	const filterChange = useSelector(selectFilters)
 
-	if (!tasks) {
-		tasks = taskByStatus
-	}
+	useEffect(() => {
+		if (!tasks) {
+			setData(taskByStatus)
+			console.log('tasks', tasks)
+			console.log('data', taskByStatus)
+		}
+	}, [taskByStatus, filterChange.list])
 
 
 	// fetch tasks
@@ -71,7 +77,7 @@ const TaskContainer = ({ tasks }) => {
 
 	const TasksList = () => {
 		return (
-			tasks?.map(
+			data?.map(
 				task => {
 					return (
 						<Paper display="flex" key={task.task_id} variant="outlined" sx={{ paddingBottom: 2, width: 'inherit', marginBottom: 1 }} >

@@ -9,8 +9,8 @@ import TaskDialog from "../TaskDialog/TaskDialog";
 import React, { useEffect, useRef, useState, } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { createList, deleteList, initDeleteList, initList, selectListById, updateList } from "../../features/lists/listsSlice";
-import { fetchTasks, initFetchTask, initTask } from "../../features/tasks/tasksSlice";
+import { createList, deleteList, initDeleteList, initList, selectAllLists, selectListById, updateList } from "../../features/lists/listsSlice";
+import { deleteTasksList, fetchTasks, initFetchTask, initTask, selectAllTasks, selectTasksByList } from "../../features/tasks/tasksSlice";
 import { listFilterChanged } from "../../features/filters/filtersSlice";
 import ToolOption from "../ToolOption/ToolOption";
 
@@ -23,6 +23,7 @@ const ListTitle = () => {
     const list = useSelector((state) => selectListById(state, listId))
     const createListState = useSelector((state) => state.lists.create)
     const deleteListState = useSelector((state) => state.lists.delete)
+    const tasks = useSelector(selectTasksByList)
 
     const [open, setOpen] = useState(false);
     const [showEdit, setShowEdit] = useState(false)
@@ -111,9 +112,9 @@ const ListTitle = () => {
     useEffect(() => {
         switch (deleteListState.status) {
             case 'succeeded': {
-                dispatch(initDeleteList())
+                dispatch(deleteTasksList(tasks.map(task => task?.task_id)))
                 dispatch(listFilterChanged({ list: null }))
-                dispatch(initFetchTask())
+                dispatch(initDeleteList())
             }
         }
     }, [deleteListState.status])

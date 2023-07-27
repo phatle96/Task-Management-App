@@ -164,6 +164,9 @@ const tasksSlice = createSlice({
         },
         initFetchTask: (state) => {
             state.status = 'idle';
+        },
+        deleteTasksList: (state, action) => {
+            tasksAdapter.removeMany(state, action.payload)
         }
     },
     extraReducers: {
@@ -251,6 +254,6 @@ export const selectCreateTaskStatus = (state) => state.tasks.create.status
 export const selectUpdateTaskStatus = (state) => state.tasks.update.status
 export const selectDeleteTaskStatus = (state) => state.tasks.delete.status
 
-export const { initTask, initFetchTask } = tasksSlice.actions
+export const { initTask, initFetchTask, deleteTasksList } = tasksSlice.actions
 
 export default tasksSlice.reducer
