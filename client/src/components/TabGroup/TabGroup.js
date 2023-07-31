@@ -4,17 +4,16 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import TaskContainer from '../TaskContainer/TaskContainer';
-import { Button, Chip, IconButton, Menu, MenuItem, Stack } from '@mui/material';
-import StyledToggleButton from '../StyledToggleButton/StyledToggleButton';
+import { Chip, IconButton, Menu, MenuItem, Stack } from '@mui/material';
+import FilterOptions from '../FilterOptions/FilterOptions';
 import MyCalendar from '../Calendar/Calendar';
-import { selectTasksByStatus, selectTasksByStatusLength } from '../../features/tasks/tasksSlice';
+import { selectTasksByStatusLength } from '../../features/tasks/tasksSlice';
 import { tasksCompletedFilterChanged } from '../../features/filters/filtersSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import PeopleList from '../PeopleList/PeopleList';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export default function TabGroup() {
-	const taskByStatus = useSelector(selectTasksByStatus)
 
 	const tabs = [
 		{ value: '1', label: "Doing" },
@@ -171,9 +170,9 @@ export default function TabGroup() {
 					</TabList>
 					<MoreMenu />
 				</Stack >
-				<Stack direction="row" sx={{ paddingLeft: 3, paddingTop: 3 }} >
+				<Stack direction="row"  >
 					{(value === '1' || value === '2') &&
-						< StyledToggleButton />}
+						< FilterOptions />}
 				</Stack>
 				<TabPanel value={value}>
 					{renderTabPanel()}

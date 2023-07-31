@@ -34,7 +34,7 @@ const SetDaySwitch = ({ setDay, isSetDay, setAllDay, isAllDay, setFocus, task })
                         onChange={() => { handleSetDayToggle() }}
                         inputProps={{ 'aria-label': 'set-day' }} />
                 }
-                label="Set Day" />
+                label="Set Event" />
             <FormControlLabel
                 sx={{ display: 'flex', width: 'fit-content' }}
                 control={

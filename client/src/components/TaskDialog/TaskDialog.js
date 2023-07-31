@@ -87,7 +87,7 @@ const TaskDialog = ({ data, open, setOpen }) => {
                             onClick={() => { handleCompleted() }}
                             sx={{ marginLeft: 'auto' }}
                             endIcon={data.is_completed ? <RestoreIcon /> : <DoneAllIcon />}>
-                            {data.is_completed ? 'Mark as doing' : 'Mark as completed'}
+                            {data.is_completed ? 'doing' : 'completed'}
                         </Button>
                     }
                 </DialogTitle>

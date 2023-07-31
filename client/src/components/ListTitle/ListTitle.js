@@ -1,7 +1,7 @@
-import { Avatar, Box, Button, Icon, IconButton, InputBase, Menu, MenuItem, Stack, Tooltip } from "@mui/material"
+import { Avatar, Box, Button, Icon, IconButton, InputBase, Menu, MenuItem, Stack } from "@mui/material"
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import EditIcon from '@mui/icons-material/Edit';
-import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
+// import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
 import TaskDialog from "../TaskDialog/TaskDialog";
 
 
@@ -9,8 +9,8 @@ import TaskDialog from "../TaskDialog/TaskDialog";
 import React, { useEffect, useRef, useState, } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { createList, deleteList, initDeleteList, initList, selectAllLists, selectListById, updateList } from "../../features/lists/listsSlice";
-import { deleteTasksList, fetchTasks, initFetchTask, initTask, selectAllTasks, selectTasksByList } from "../../features/tasks/tasksSlice";
+import { createList, deleteList, initDeleteList, initList, selectListById, updateList } from "../../features/lists/listsSlice";
+import { deleteTasksList, initTask, selectTasksByList } from "../../features/tasks/tasksSlice";
 import { listFilterChanged } from "../../features/filters/filtersSlice";
 import ToolOption from "../ToolOption/ToolOption";
 
@@ -99,7 +99,7 @@ const ListTitle = () => {
             contentRef.current = 'New list'
             setEditing(true)
         }
-    }, [listId])
+    }, [listId, dispatch])
 
     useEffect(() => {
         switch (createListState.status) {
@@ -120,33 +120,42 @@ const ListTitle = () => {
     }, [deleteListState.status])
 
     return (
-        <Stack direction="column" paddingY={2} paddingLeft={2} display="flex" spacing={1}>
+        <Stack direction="column" paddingY={2} paddingLeft={1} display="flex" spacing={1}>
             <Stack
                 direction="row"
                 sx={{ paddingLeft: 2, alignItems: 'center' }}
-                onMouseOver={() => { (list || listId === 'create') && setShowEdit(true) }}
-                onMouseOut={() => { (list || listId === 'create') && setShowEdit(false) }} >
-                {
-                    (showEdit && !editing) &&
-                    <IconButton onClick={() => { setEditing(true) }}>
-                        <EditIcon />
-                    </IconButton>
-                }
-                <InputBase
-                    fullWidth
-                    disabled={!editing}
-                    value={(list || listId === 'create') ? content : 'All task'}
-                    inputProps={{ maxLength: 150 }}
-                    inputRef={input => (input && editing) && input.focus()}
-                    onFocus={(event) => { event.target.select() }}
-                    onChange={(event) => { handleChangeListName(event.target.value) }}
-                    onBlur={() => { handleBlur() }}
-                    sx={{
-                        fontSize: 'xx-large',
-                        fontWeight: 400,
-                        '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: 'rgba(0,0,0,0.87)' }
-                    }} />
-                <ToolOption />
+            >
+
+                <Box
+                    sx={{ display: 'flex', width: '100%' }}
+                    onMouseOver={() => { (list || listId === 'create') && setShowEdit(true) }}
+                    onMouseOut={() => { (list || listId === 'create') && setShowEdit(false) }}>
+                    {
+                        (showEdit && !editing) &&
+                        <IconButton onClick={() => { setEditing(true) }}>
+                            <EditIcon />
+                        </IconButton>
+                    }
+                    <InputBase
+                        fullWidth
+                        disabled={!editing}
+                        value={(list || listId === 'create') ? content : 'All task'}
+                        inputProps={{ maxLength: 150 }}
+                        inputRef={input => (input && editing) && input.focus()}
+                        onFocus={(event) => { event.target.select() }}
+                        onChange={(event) => { handleChangeListName(event.target.value) }}
+                        onBlur={() => { handleBlur() }}
+                        sx={{
+                            fontSize: 'xx-large',
+                            fontWeight: 400,
+                            '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: 'rgba(0,0,0,0.87)' }
+                        }} />
+                </Box>
+                <Box
+                    onMouseOver={(e) => { e.stopPropagation() }}
+                    onMouseOut={(e) => { e.stopPropagation() }}>
+                    <ToolOption />
+                </Box>
             </Stack>
             <Stack direction="row" >
                 <Button>
@@ -170,7 +179,7 @@ const ListTitle = () => {
                 </Menu>
                 <Button
                     variant="outlined"
-                    sx={{ height: 45, width: '100%', maxWidth: 300, color: "dimgrey", borderRadius: 6, alignItems: "baseline", }}
+                    sx={{ height: 45, width: '100%', maxWidth: 300, color: "dimgrey", borderRadius: 6, alignItems: "baseline", marginRight: 2 }}
                     style={{ justifyContent: "flex-start", textTransform: 'none' }}
                     onClick={handleOpen}>
                     <Icon sx={{ marginRight: 1 }}>

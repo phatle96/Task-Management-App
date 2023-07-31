@@ -1,6 +1,5 @@
-import { Box, Checkbox, Chip, Paper, Stack } from "@mui/material";
+import { Box, Checkbox, Paper, Stack } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 import TaskCard from "../TaskCard/TaskCard";
 import SubTask from "../SubTask/SubTask";
@@ -11,10 +10,8 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, initTask, selectTasksByStatus, updateTask } from "../../features/tasks/tasksSlice";
 import { fetchSubtasks } from "../../features/subtasks/subtasksSlice";
-import { fetchPeople, selectAllPeople } from "../../features/people/peopleSlice";
+import { fetchPeople } from "../../features/people/peopleSlice";
 import ListFolder from "../ListFolder/ListFolder";
-import { selectFilters } from "../../features/filters/filtersSlice";
-import { initDeleteList } from "../../features/lists/listsSlice";
 
 
 const TaskContainer = ({ tasks }) => {

@@ -1,13 +1,12 @@
 import { React } from "react";
-import { Box, Button, Stack, } from "@mui/material";
+import { Box,Stack, } from "@mui/material";
 import Appbar from "./components/Appbar/Appbar"
 import BottomAppBar from "./components/BottomAppbar/BottomAppbar";
 import NavBar from "./components/NavBar/NavBar";
 import TabGroup from "./components/TabGroup/TabGroup";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import ListTitle from "./components/ListTitle/ListTitle";
-import { BrowserRouter as Router, Switch, Route, Redirect, } from 'react-router-dom'
-import TaskContainer from "./components/TaskContainer/TaskContainer";
+import { BrowserRouter as Router, } from 'react-router-dom'
 
 export default function App() {
 	return (
