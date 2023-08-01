@@ -18,7 +18,7 @@ export default function TabGroup() {
 	const tabs = [
 		{ value: '1', label: "Doing" },
 		{ value: '2', label: "Complete" },
-		{ value: '0', label: '' }
+		{ value: '0', label: 'Calendar' }
 	]
 
 	const tabPanel = {

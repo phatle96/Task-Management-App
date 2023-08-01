@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Avatar, BottomNavigation, BottomNavigationAction, Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, Typography } from '@mui/material';
+import { Avatar, Badge, BottomNavigation, BottomNavigationAction, Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, Typography } from '@mui/material';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAllLists } from '../../features/lists/listsSlice';
-import { listFilterChanged, selectFilters } from '../../features/filters/filtersSlice';
+import { listFilterChanged, resetFilter, selectFilters } from '../../features/filters/filtersSlice';
 import { Link } from 'react-router-dom';
 import TaskDialog from '../TaskDialog/TaskDialog';
-
+import HomeIcon from '@mui/icons-material/Home';
+import { selectAllTasks } from '../../features/tasks/tasksSlice';
 
 
 export default function BottomAppbar() {
@@ -19,6 +20,7 @@ export default function BottomAppbar() {
     const dispatch = useDispatch();
     const lists = useSelector(selectAllLists)
     const filters = useSelector(selectFilters);
+    const tasks = useSelector(selectAllTasks)
 
     const toggleDrawer = (list, openState) => {
         // if (
@@ -47,7 +49,7 @@ export default function BottomAppbar() {
 
     const list = () => (
         <Box role='presentation'>
-            <List>
+            <List >
                 <ListItem sx={{ paddingY: 0.25 }}>
                     <ListItemButton
                         sx={{ minHeight: 30, borderRadius: '10px' }}
@@ -93,6 +95,8 @@ export default function BottomAppbar() {
                         </ListItemIcon>
                         <ListItemText
                             primary='View All Tasks'
+                            secondary={tasks.filter(task => task.is_completed === false).length &&
+                                `${tasks.filter(task => task.is_completed === false).length} remaining`}
                             primaryTypographyProps={{
                                 fontWeight: 'medium',
                                 variant: 'body2',
@@ -123,6 +127,8 @@ export default function BottomAppbar() {
                             </ListItemIcon>
                             <ListItemText
                                 primary={list.name}
+                                secondary={tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length ?
+                                    `${tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length} remaining` : false}
                                 primaryTypographyProps={{
                                     fontWeight: 'medium',
                                     variant: 'body2',
@@ -165,7 +171,6 @@ export default function BottomAppbar() {
                 />
             </BottomNavigation>
             <SwipeableDrawer
-                swipeAreaWidth={56}
                 anchor='bottom'
                 open={open}
                 onClose={() => { toggleDrawer(null, false) }}

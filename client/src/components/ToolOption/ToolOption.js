@@ -85,7 +85,7 @@ const ToolOption = () => {
                 <StyledInputBase
                     placeholder="Search…"
                     inputProps={{ 'aria-label': 'search' }}
-                    onClick={handleClick}
+                    onChange={handleClick}
                 />
             </Search>
             <IconButton size='small' onClick={handleClick}>
@@ -99,6 +99,7 @@ const ToolOption = () => {
                 </Tooltip>
             </IconButton>
             <Snackbar
+                sx={{ bottom: { xs: 65 } }}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 open={open}
                 autoHideDuration={5000}

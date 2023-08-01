@@ -12,6 +12,9 @@ const filtersSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
+        resetFilter: (state) => {
+            return state = initialState
+        },
         listFilterChanged: (state, action) => {
             const { list } = action.payload;
             return state = { ...state, list: list };
@@ -54,6 +57,7 @@ export const selectFilters = (state) => state.filters
 
 
 export const {
+    resetFilter,
     listFilterChanged,
     tasksCompletedFilterChanged,
     peopleFilterChanged } = filtersSlice.actions

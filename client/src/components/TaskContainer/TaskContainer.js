@@ -67,10 +67,15 @@ const TaskContainer = ({ tasks }) => {
 			data.map(
 				task => {
 					return (
-						<Paper display="flex" key={task.task_id} variant="outlined" sx={{ paddingBottom: 2, width: 'inherit', marginBottom: 1 }} >
+						<Paper display="flex" key={task.task_id} variant="outlined" sx={{ paddingBottom: 2, width: 'inherit', marginBottom: 1, borderColor: 'darkgray' }} >
 							<Stack direction="row" sx={{ width: "100%" }}>
 								<Stack direction="column">
-									<Box sx={{ display: "flex", alignItems: "baseline", paddingTop: 7 }}>
+									<Box
+										sx={
+											(task.person?.length || task.start_date) ?
+												{ display: "flex", alignItems: "baseline", paddingTop: '58px' } :
+												{ display: "flex", alignItems: "baseline", paddingTop: '10px' }}
+									>
 										<Checkbox onChange={() => handleChecked(task)} checked={task.is_completed} />
 									</Box>
 								</Stack>
