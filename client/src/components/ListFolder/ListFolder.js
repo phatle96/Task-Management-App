@@ -2,7 +2,7 @@ import { useState, } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import { Avatar, Box, Chip, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Chip, Stack, Tooltip, Typography } from '@mui/material';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { selectAllLists } from '../../features/lists/listsSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -57,33 +57,35 @@ const ListFolder = ({ list, setList, task }) => {
 
 	return (
 		<Box sx={{ display: 'flex' }}>
-			<Chip
-				variant='outlined'
-				icon={
-					list ?
-						<Avatar sx={{ bgcolor: stringToPastelColor(list.list_id, 'hsl'), width: '1em', height: '1em' }}>
-							<Typography variant='button' color='whitesmoke'>
-								{list.name.charAt(0)}
+			<Tooltip title='select list' placement='top'>
+				<Chip
+					variant='outlined'
+					icon={
+						list ?
+							<Avatar sx={{ bgcolor: stringToPastelColor(list.list_id, 'hsl'), width: '1em', height: '1em' }}>
+								<Typography variant='button' color='whitesmoke'>
+									{list.name.charAt(0)}
+								</Typography>
+							</Avatar> :
+							<FolderOpenIcon />
+					}
+					label={
+						<Stack direction='row' spacing={0.5} display='flex' sx={{ alignItems: 'center' }}>
+							<Typography variant='caption' sx={{ marginBottom: -0.5 }}>
+								{list === null || list === undefined ? '' : list.name}
 							</Typography>
-						</Avatar> :
-						<FolderOpenIcon />
-				}
-				label={
-					<Stack direction='row' spacing={0.5} display='flex' sx={{ alignItems: 'center' }}>
-						<Typography variant='caption' sx={{ marginBottom: -0.5 }}>
-							{list === null || list === undefined ? '' : list.name}
-						</Typography>
-						<UnfoldMoreIcon fontSize='inherit' />
-					</Stack>
-				}
-				size="small"
-				id="basic-button"
-				aria-controls={open ? 'basic-menu' : undefined}
-				aria-haspopup="true"
-				aria-expanded={open ? 'true' : undefined}
-				onClick={(e) => { handleOpen(e) }}
-				sx={{ paddingBottom: 0, backgroundColor: "whitesmoke" }}
-			/>
+							<UnfoldMoreIcon fontSize='inherit' />
+						</Stack>
+					}
+					size="small"
+					id="basic-button"
+					aria-controls={open ? 'basic-menu' : undefined}
+					aria-haspopup="true"
+					aria-expanded={open ? 'true' : undefined}
+					onClick={(e) => { handleOpen(e) }}
+					sx={{ paddingBottom: 0, backgroundColor: "whitesmoke" }}
+				/>
+			</Tooltip>
 			<Menu
 				id="basic-menu"
 				anchorEl={anchorEl}

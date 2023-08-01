@@ -1,4 +1,4 @@
-import { Chip, Divider, Stack, TextField, } from "@mui/material";
+import { Chip, Divider, Stack, TextField, Tooltip, } from "@mui/material";
 
 import PeopleChipSelect from "../PeopleChipSelect/PeopleChipSelect";
 import DateTimeSelect from "../DateTimeSelect/DateTimeSelect";
@@ -32,7 +32,7 @@ import {
 } from "../../features/fields/fieldsSlice";
 import DialogCalendar from "../Calendar/DialogCalendar";
 
-const AddTask = ({ task }) => {
+const AddTask = ({ task, toggles }) => {
 
     const dispatch = useDispatch();
     const filters = useSelector(selectFilters);
@@ -316,7 +316,7 @@ const AddTask = ({ task }) => {
         <Stack display="flex" direction="column" justifyContent="center" spacing={1.5}>
             <ListFolder setList={setList} list={list} />
             <Divider sx={{ paddingBottom: 1 }} >
-                <Chip label='Task & assign' />
+                <Chip label='Task' />
             </Divider>
             <TextField
                 sx={{ borderColor: "lightgrey" }}
@@ -335,30 +335,49 @@ const AddTask = ({ task }) => {
                 onFocus={(event) => { handleFocus(event) }}
                 onBlur={(event) => { handleBlur(event) }}
             />
-            <PeopleChipSelect selectPeople={selectPeople} setSelectPeople={setSelectPeople} />
-            <AddSubtask taskContent={taskContent} setFocus={setFocus} task={task} />
-            <Divider sx={{ paddingTop: 2, paddingBottom: 1 }} >
-                <Chip label='Date time' />
-            </Divider>
-            <SetDaySwitch setDay={setDay} isSetDay={isSetDay} setAllDay={setAllDay} isAllDay={isAllDay} task={task} setFocus={setFocus} />
-            <DateTimeSelect
-                value={fromDate}
-                setValue={setFromDate}
-                isSetDay={isSetDay}
-                isAllDay={isAllDay}
-                label='Start date' />
-            <DateTimeSelect
-                value={toDate}
-                setValue={setToDate}
-                isSetDay={isSetDay}
-                isAllDay={isAllDay}
-                error={(toDate.diff(fromDate).as('milliseconds') >= 0 ? false : true)}
-                label='End date' />
-            <DialogCalendar />
-            <Divider sx={{ paddingTop: 2, paddingBottom: 1 }} >
-                <Chip label='Alert' />
-            </Divider>
-            <AlertSelect isSetDay={isSetDay} />
+            {
+                toggles?.includes('subtasks') &&
+                <AddSubtask taskContent={taskContent} setFocus={setFocus} task={task} />
+            }
+            {
+                toggles?.includes('person') &&
+                <>
+                    <Divider sx={{ paddingBottom: 1 }} >
+                        <Chip label='Assign' />
+                    </Divider>
+                    <PeopleChipSelect selectPeople={selectPeople} setSelectPeople={setSelectPeople} />
+                </>
+            }
+            {
+                toggles?.includes('event') &&
+                <>
+                    <Divider sx={{ paddingBottom: 1 }} >
+                        <Chip label='Event date' />
+                    </Divider>
+                    <SetDaySwitch setDay={setDay} isSetDay={isSetDay} setAllDay={setAllDay} isAllDay={isAllDay} task={task} setFocus={setFocus} />
+                    <DateTimeSelect
+                        value={fromDate}
+                        setValue={setFromDate}
+                        isSetDay={isSetDay}
+                        isAllDay={isAllDay}
+                        label='Start date' />
+                    <DateTimeSelect
+                        value={toDate}
+                        setValue={setToDate}
+                        isSetDay={isSetDay}
+                        isAllDay={isAllDay}
+                        error={(toDate.diff(fromDate).as('milliseconds') >= 0 ? false : true)}
+                        label='End date' />
+                    <Divider sx={{ paddingBottom: 1 }} >
+                        <Chip label='Calendar' />
+                    </Divider>
+                    <DialogCalendar />
+                </>
+            }
+            {
+                toggles?.includes('alert') &&
+                <AlertSelect isSetDay={isSetDay} />
+            }
         </Stack >
     )
 }

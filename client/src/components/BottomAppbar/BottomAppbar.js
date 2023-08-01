@@ -5,7 +5,6 @@ import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAllLists } from '../../features/lists/listsSlice';
 import { listFilterChanged, resetFilter, selectFilters } from '../../features/filters/filtersSlice';
-import { Link } from 'react-router-dom';
 import TaskDialog from '../TaskDialog/TaskDialog';
 import HomeIcon from '@mui/icons-material/Home';
 import { selectAllTasks } from '../../features/tasks/tasksSlice';
@@ -110,7 +109,7 @@ export default function BottomAppbar() {
                     </ListItemButton>
                 </ListItem>
                 {lists.map(list => (
-                    <ListItem component={Link} to={list.name} key={list.list_id} sx={{ paddingY: 0.25 }}>
+                    <ListItem  key={list.list_id} sx={{ paddingY: 0.25 }}>
                         <ListItemButton
                             sx={{ minHeight: 30, borderRadius: '10px' }}
                             component="a"

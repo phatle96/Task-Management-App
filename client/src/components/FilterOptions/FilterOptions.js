@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Chip, Divider, List, ListItem, ListSubheader, Snackbar, } from '@mui/material';
+import { Alert, Box, Chip, Divider, List, ListItem, ListSubheader, Snackbar, Stack, } from '@mui/material';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import EventIcon from '@mui/icons-material/Event';
@@ -34,21 +34,22 @@ export default function FilterOptions() {
 
 	return (
 		<>
-			<List
-				orientation="horizontal"
+			<Stack
+				direction='row'
+				spacing={1}
 				sx={{
-					display: 'flex', flexDirection: 'row', overflow: 'auto', width: '100%', position: 'relative',
+					overflow: 'auto', width: '100%', position: 'relative', display: 'flex', alignItems: 'center', paddingY: 0.5
 				}}>
 				{
 					featureOptions.map((feature) => (
 						<>
-							<ListSubheader key={feature.name}>
+							<Box key={feature.name}>
 								{feature.name}
-							</ListSubheader>
+							</Box>
 							{
 								feature.options.map(
 									(option) => (
-										<ListItem key={option.name} sx={{ paddingY: 0, paddingX: 0.5 }}
+										<Box key={option.name}
 											onClick={handleClick}>
 											<Chip
 												clickable
@@ -56,14 +57,15 @@ export default function FilterOptions() {
 												icon={option.icon}
 												label={option.name}
 											/>
-										</ListItem>
+										</Box>
 									)
 								)
 							}
+							<Divider orientation='vertical' sx={{ paddingRight: 2 }} />
 						</>
 					))
 				}
-			</List >
+			</Stack >
 			<Snackbar
 				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 				open={open}

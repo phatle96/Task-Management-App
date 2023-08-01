@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, initTask, selectTasksByStatus, updateTask } from "../../features/tasks/tasksSlice";
-import { fetchSubtasks } from "../../features/subtasks/subtasksSlice";
+import { fetchSubtasks, selectSubtasksByTaskId } from "../../features/subtasks/subtasksSlice";
 import { fetchPeople } from "../../features/people/peopleSlice";
 import ListFolder from "../ListFolder/ListFolder";
 
@@ -58,8 +58,8 @@ const TaskContainer = ({ tasks }) => {
 	}
 
 	const handleOpenCard = (task) => {
-		setOpen(true);
 		setEditTask(task)
+		setOpen(true);
 	}
 
 	const TasksList = ({ data }) => {

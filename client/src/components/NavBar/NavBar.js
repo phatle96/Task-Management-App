@@ -1,10 +1,6 @@
 import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon, Typography, Button, Stack, IconButton, Toolbar, Badge, Switch, FormControlLabel } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import { Link } from 'react-router-dom';
-import Filter3Icon from '@mui/icons-material/Filter3';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 import { useSelector, useDispatch } from 'react-redux'
 import { selectAllLists, fetchLists, } from "../../features/lists/listsSlice";
@@ -62,7 +58,7 @@ const NavBar = () => {
 						display: { lg: "flex", md: "flex", sm: "none", xs: "none" },
 						fontSize: 'x-large', fontStyle: 'italic', fontWeight: 100,
 						color: 'black', fontFamily: 'cursive',
-						'.Mui-focusVisible': { textDecoration: 'underline', textDecorationStyle: 'wavy', textDecorationThickness: 'from-font', }
+						'&:hover': { textDecoration: 'underline', textDecorationStyle: 'wavy', textDecorationThickness: 'from-font', }
 					}}>
 					A todo list
 				</Button>
@@ -87,7 +83,7 @@ const NavBar = () => {
 						</ListItemButton>
 					</ListItem>
 					<Divider />
-					<ListItem overflow='auto' component={Link} to="/">
+					<ListItem overflow='auto' >
 						<ListItemButton
 							onClick={handleResetFilter}
 							selected={filters.list === null}
@@ -127,7 +123,7 @@ const NavBar = () => {
 						</ListItemButton>
 					</ListItem>
 					{lists.map(list => (
-						<ListItem component={Link} to={list.name} key={list.list_id} sx={{ paddingY: 0.25 }}>
+						<ListItem key={list.list_id} sx={{ paddingY: 0.25 }}>
 							<ListItemButton
 								sx={{ minHeight: 30, borderRadius: '10px' }}
 								component="a"
@@ -172,7 +168,10 @@ const NavBar = () => {
 					))}
 				</List>
 			</Box>
-			<Box sx={{ display: 'flex', height: '60px', justifyContent: 'end', alignContent: 'center' }}>
+			<Box sx={{
+				display: 'flex', height: '60px', justifyContent: 'end', alignContent: 'center',
+				borderTopStyle: 'solid', borderColor: 'rgba(0, 0, 0, 0.12)', borderTopWidth: 'thin'
+			}}>
 				<FormControlLabel
 					sx={{ display: { lg: 'flex', md: 'flex', sm: 'flex', xs: 'none' } }}
 					control={<Switch
