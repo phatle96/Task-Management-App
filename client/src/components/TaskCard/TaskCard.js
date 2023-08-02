@@ -30,7 +30,7 @@ const TaskCard = ({ data }) => {
 										{data.person.map(person => (
 											<Tooltip title={person.name} key={person.person_id}>
 												<Avatar alt={person.name}
-													sx={{ bgcolor: stringToPastelColor(person.name, 'hex'), width: 23, height: 23 }}>
+													sx={{ bgcolor: stringToPastelColor(person.person_id, 'hex'), width: 23, height: 23 }}>
 													{person.default_avatar}
 												</Avatar>
 											</Tooltip>

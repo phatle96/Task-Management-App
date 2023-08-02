@@ -99,7 +99,7 @@ const PeopleList = () => {
                                     </IconButton>
                                     <Badge color='info' badgeContent={personDoingTask && personDoingTask.length} max={999}>
                                         <Avatar
-                                            sx={{ bgcolor: stringToPastelColor(person.name, 'hex') }}
+                                            sx={{ bgcolor: stringToPastelColor(person.person_id, 'hex') }}
                                             alt={person.name}
                                         />
                                     </Badge>

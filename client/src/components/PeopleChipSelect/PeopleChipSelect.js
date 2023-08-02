@@ -90,7 +90,7 @@ export default function PeopleChipSelect({ selectPeople, setSelectPeople }) {
                 renderTags={(tagValue, getTagProps) =>
                     tagValue.map((option, index) => (
                         <Chip
-                            avatar={<Avatar sx={{ bgcolor: stringToPastelColor(option.name, 'hex') }}>{option.default_avatar}</Avatar>}
+                            avatar={<Avatar sx={{ bgcolor: stringToPastelColor(option.person_id, 'hex') }}>{option.default_avatar}</Avatar>}
                             label={option.name}
                             {...getTagProps({ index })}
                         />
