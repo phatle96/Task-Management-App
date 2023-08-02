@@ -8,6 +8,7 @@ import { listFilterChanged, resetFilter, selectFilters } from '../../features/fi
 import TaskDialog from '../TaskDialog/TaskDialog';
 import HomeIcon from '@mui/icons-material/Home';
 import { selectAllTasks } from '../../features/tasks/tasksSlice';
+import NavListItemSkeleton from '../Skeletons/NavListItemSkeleton';
 
 
 export default function BottomAppbar() {
@@ -20,6 +21,7 @@ export default function BottomAppbar() {
     const lists = useSelector(selectAllLists)
     const filters = useSelector(selectFilters);
     const tasks = useSelector(selectAllTasks)
+    const status = useSelector((state) => state.lists.status);
 
     const toggleDrawer = (list, openState) => {
         // if (
@@ -108,39 +110,46 @@ export default function BottomAppbar() {
                         />
                     </ListItemButton>
                 </ListItem>
-                {lists.map(list => (
-                    <ListItem  key={list.list_id} sx={{ paddingY: 0.25 }}>
-                        <ListItemButton
-                            sx={{ minHeight: 30, borderRadius: '10px' }}
-                            component="a"
-                            onClick={() => { toggleDrawer(list, false) }}
-                            onKeyDown={() => { toggleDrawer(list, false) }}
-                            selected={filters.list === list.list_id}
-                        >
-                            <ListItemIcon sx={{ justifyContent: 'center' }}>
-                                <Avatar sx={{ bgcolor: list.color }}>
-                                    <Typography variant="button">
-                                        {list.name.charAt(0)}
-                                    </Typography>
-                                </Avatar>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={list.name}
-                                secondary={tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length ?
-                                    `${tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length} remaining` : false}
-                                primaryTypographyProps={{
-                                    fontWeight: 'medium',
-                                    variant: 'body2',
-                                    noWrap: true,
-                                    color: 'text.primary'
-                                }}
-                                sx={{
-                                    paddingLeft: 0.5
-                                }}
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
+                {
+                    status === 'loading' ?
+                        Array.from(Array(5).keys()).map(
+                            element =>
+                                <NavListItemSkeleton key={element} />
+                        ) :
+                        lists.map(list => (
+                            <ListItem key={list.list_id} sx={{ paddingY: 0.25 }}>
+                                <ListItemButton
+                                    sx={{ minHeight: 30, borderRadius: '10px' }}
+                                    component="a"
+                                    onClick={() => { toggleDrawer(list, false) }}
+                                    onKeyDown={() => { toggleDrawer(list, false) }}
+                                    selected={filters.list === list.list_id}
+                                >
+                                    <ListItemIcon sx={{ justifyContent: 'center' }}>
+                                        <Avatar sx={{ bgcolor: list.color }}>
+                                            <Typography variant="button">
+                                                {list.name.charAt(0)}
+                                            </Typography>
+                                        </Avatar>
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={list.name}
+                                        secondary={tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length ?
+                                            `${tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length} remaining` : false}
+                                        primaryTypographyProps={{
+                                            fontWeight: 'medium',
+                                            variant: 'body2',
+                                            noWrap: true,
+                                            color: 'text.primary'
+                                        }}
+                                        sx={{
+                                            paddingLeft: 0.5
+                                        }}
+                                    />
+                                </ListItemButton>
+                            </ListItem>
+                        ))
+                }
             </List>
         </Box>
     )

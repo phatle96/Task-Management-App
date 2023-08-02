@@ -12,6 +12,7 @@ import { fetchTasks, initTask, selectTasksByStatus, updateTask } from "../../fea
 import { fetchSubtasks, selectSubtasksByTaskId } from "../../features/subtasks/subtasksSlice";
 import { fetchPeople } from "../../features/people/peopleSlice";
 import ListFolder from "../ListFolder/ListFolder";
+import TaskCardSkeleton from "../Skeletons/TaskCardSkeleton";
 
 
 const TaskContainer = ({ tasks }) => {
@@ -105,7 +106,15 @@ const TaskContainer = ({ tasks }) => {
 	return (
 		<>
 			<Grid2 container xs={12} sm={12} md={12} lg={12}>
-				<TasksList data={tasks ? tasks : taskByStatus} />
+				{
+					tasksStatus === 'loading' ?
+						Array.from(Array(3).keys()).map(
+							element =>
+								< TaskCardSkeleton key={element} />
+						)
+						:
+						<TasksList data={tasks ? tasks : taskByStatus} />
+				}
 			</Grid2>
 			<TaskDialog data={editTask} open={open} setOpen={setOpen} />
 		</>
