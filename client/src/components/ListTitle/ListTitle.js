@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState, } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { createList, deleteList, initDeleteList, initList, selectListById, updateList } from "../../features/lists/listsSlice";
-import { deleteTasksList, initTask, selectTasksByList } from "../../features/tasks/tasksSlice";
+import { deleteTasksList, fetchTasks, initTask, selectTasksByList } from "../../features/tasks/tasksSlice";
 import { listFilterChanged } from "../../features/filters/filtersSlice";
 import ToolOption from "../ToolOption/ToolOption";
 
@@ -70,6 +70,7 @@ const ListTitle = () => {
                     }
                 }
                 dispatch(updateList(payload))
+                dispatch(fetchTasks())
                 contentRef.current = content
             }
         } else if (listId === 'create') {

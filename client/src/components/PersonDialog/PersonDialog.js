@@ -67,6 +67,7 @@ const PersonDialog = ({ person, open, setOpen, tabSelected, setTabSelect, setPre
                 }
             }
             dispatch(updatePerson(payload))
+            dispatch(fetchTasks())
         } else {
             setName(nameRef.current)
         }
@@ -110,7 +111,7 @@ const PersonDialog = ({ person, open, setOpen, tabSelected, setTabSelect, setPre
                         <Badge color='info' badgeContent={tasks && tasks.length} max={999} sx={{ marginRight: 2 }}>
                             <Avatar
                                 onClick={(event) => { handleOpenPerson(event) }}
-                                sx={person && { bgcolor: stringToPastelColor(person.name, 'hex'), }}
+                                sx={person && { bgcolor: stringToPastelColor(person.person_id, 'hex'), }}
                                 alt={person && person.name}
                             />
                         </Badge>

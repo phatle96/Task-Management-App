@@ -38,7 +38,8 @@ export default function FilterOptions() {
 				direction='row'
 				spacing={1}
 				sx={{
-					overflow: 'auto', width: '100%', position: 'relative', display: 'flex', alignItems: 'center', paddingY: 0.5
+					overflow: 'auto', width: '100%', position: 'relative', display: 'flex', alignItems: 'center',
+					paddingY: 1, paddingLeft: 2
 				}}>
 				{
 					featureOptions.map((feature) => (
