@@ -1,18 +1,20 @@
-import { Box, Checkbox, Paper, Stack } from "@mui/material";
+import { Alert, Box, Checkbox, Grow, Paper, Snackbar, Stack, Zoom } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import MuiAlert from '@mui/material/Alert';
 
 import TaskCard from "../TaskCard/TaskCard";
 import SubTask from "../SubTask/SubTask";
 import TaskDialog from "../TaskDialog/TaskDialog";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, initTask, selectTasksByStatus, updateTask } from "../../features/tasks/tasksSlice";
-import { fetchSubtasks, selectSubtasksByTaskId } from "../../features/subtasks/subtasksSlice";
+import { fetchSubtasks } from "../../features/subtasks/subtasksSlice";
 import { fetchPeople } from "../../features/people/peopleSlice";
 import ListFolder from "../ListFolder/ListFolder";
 import TaskCardSkeleton from "../Skeletons/TaskCardSkeleton";
+import { selectFilters } from "../../features/filters/filtersSlice";
 
 
 const TaskContainer = ({ tasks }) => {
@@ -25,6 +27,7 @@ const TaskContainer = ({ tasks }) => {
 	const subtasksStatus = useSelector((state) => state.subtasks.status);
 	const peopleStatus = useSelector((state) => state.people.status);
 	const taskByStatus = useSelector(selectTasksByStatus)
+	const filters = useSelector(selectFilters)
 
 	// fetch tasks
 	useEffect(() => {
@@ -103,18 +106,33 @@ const TaskContainer = ({ tasks }) => {
 		)
 	}
 
+	const Alert = React.forwardRef(function Alert(props, ref) {
+		return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+	});
+
 	return (
 		<>
 			<Grid2 container xs={12} sm={12} md={12} lg={12}>
 				{
 					tasksStatus === 'loading' ?
-						Array.from(Array(3).keys()).map(
-							element =>
-								< TaskCardSkeleton key={element} />
-						)
+						<>
+							{
+								Array.from(Array(3).keys()).map(
+									element =>
+										< TaskCardSkeleton key={element} />
+								)
+							}
+						</>
 						:
 						<TasksList data={tasks ? tasks : taskByStatus} />
 				}
+				<Snackbar open={tasksStatus === 'loading'} autoHideDuration={6000}
+					transitionDuration={{ exit: 9000 }}
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} >
+					<Alert severity="info" sx={{ width: '100%' }}>
+						Service is hosted on free tier server, will take a little time. Please be patient!
+					</Alert>
+				</Snackbar>
 			</Grid2>
 			<TaskDialog data={editTask} open={open} setOpen={setOpen} />
 		</>

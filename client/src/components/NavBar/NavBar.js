@@ -1,4 +1,4 @@
-import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon, Typography, Button, Stack, IconButton, Toolbar, Badge, Switch, FormControlLabel, Skeleton } from "@mui/material";
+import { Box, Avatar, List, ListItem, ListItemText, ListItemButton, Divider, ListItemIcon, Typography, Button, Stack, IconButton, Toolbar, Badge, Switch, FormControlLabel, Skeleton, Grow } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 
@@ -131,48 +131,51 @@ const NavBar = () => {
 									<NavListItemSkeleton key={element} />
 							) :
 							lists.map(list => (
-								<ListItem key={list.list_id} sx={{ paddingY: 0.25 }}>
-									<ListItemButton
-										sx={{ minHeight: 30, borderRadius: '10px' }}
-										component="a"
-										onClick={() => handleFilter(list)}
-										selected={filters.list === list.list_id}
-									>
-										<ListItemIcon sx={{ justifyContent: 'center' }}>
-											<Badge
-												variant={checked ? 'standard' : 'dot'}
-												badgeContent={tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length}
-												color="primary">
-												<Avatar sx={{ bgcolor: list.color }}>
-													<Typography variant="button">
-														{list.name.charAt(0)}
-													</Typography>
-												</Avatar>
-											</Badge>
-										</ListItemIcon>
-										<ListItemText
-											primary={list.name}
-											secondary={
-												checked ? false :
-													(
-														tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length ?
-															`${tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length} remaining` : false
-													)
-											}
-											primaryTypographyProps={{
-												fontWeight: 'medium',
-												variant: 'body2',
-												noWrap: true,
-												color: 'text.primary'
-											}}
-											sx={{
-												display: { lg: "block", md: "block", sm: "none", xs: "none" },
-												paddingLeft: 0.5
-											}}
-										//secondary={list.createdAt}
-										/>
-									</ListItemButton>
-								</ListItem>
+								<Grow in={!list.is_deleted}>
+									<ListItem key={list.list_id} sx={{ paddingY: 0.25 }}>
+										<ListItemButton
+											sx={{ minHeight: 30, borderRadius: '10px' }}
+											component="a"
+											onClick={() => handleFilter(list)}
+											selected={filters.list === list.list_id}
+										>
+											<ListItemIcon sx={{ justifyContent: 'center' }}>
+												<Badge
+													variant={checked ? 'standard' : 'dot'}
+													badgeContent={tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length}
+													color="primary">
+													<Avatar sx={{ bgcolor: list.color }}>
+														<Typography variant="button">
+															{list.name.charAt(0)}
+														</Typography>
+													</Avatar>
+												</Badge>
+											</ListItemIcon>
+											<ListItemText
+												primary={list.name}
+												secondary={
+													checked ? false :
+														(
+															tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length ?
+																`${tasks.filter(task => (task.list?.list_id === list?.list_id && task.is_completed === false)).length} remaining` : false
+														)
+												}
+												primaryTypographyProps={{
+													fontWeight: 'medium',
+													variant: 'body2',
+													noWrap: true,
+													color: 'text.primary'
+												}}
+												sx={{
+													display: { lg: "block", md: "block", sm: "none", xs: "none" },
+													paddingLeft: 0.5
+												}}
+											//secondary={list.createdAt}
+											/>
+										</ListItemButton>
+									</ListItem>
+								</Grow>
+
 							))}
 				</List>
 			</Box>

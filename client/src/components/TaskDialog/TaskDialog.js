@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, ToggleButton, ToggleButtonGroup, Tooltip, } from "@mui/material";
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import RestoreIcon from '@mui/icons-material/Restore';
 import SynchronizeLoading from "../SynchronizeLoading/SynchronizeLoading";
@@ -126,8 +126,7 @@ const TaskDialog = ({ data, open, setOpen }) => {
                 scroll='paper'
                 aria-labelledby="add-note-title"
                 maxWidth="sm"
-                fullWidth={1}
-            >
+                fullWidth={1}>
                 <DialogTitle id="add-note" sx={{ display: 'flex' }}>
                     {data ? (!remove ? 'Editing note' : 'Want to delete?') : 'Take a note'}
                     <Tooltip title='synchronizing...' placement='bottom'>
